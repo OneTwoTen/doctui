@@ -119,8 +119,7 @@ export const Combobox = defineComponent({
       activeValue.value === undefined
         ? -1
         : filtered.value.findIndex(
-            (option) =>
-              !option.disabled && option.value === activeValue.value,
+            (option) => !option.disabled && option.value === activeValue.value,
           ),
     );
     const inputValue = computed(() => {
@@ -144,8 +143,7 @@ export const Combobox = defineComponent({
       if (
         activeValue.value !== undefined &&
         filtered.value.some(
-          (option) =>
-            option.value === activeValue.value && !option.disabled,
+          (option) => option.value === activeValue.value && !option.disabled,
         )
       ) {
         return;
