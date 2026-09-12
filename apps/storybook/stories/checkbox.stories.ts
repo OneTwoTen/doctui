@@ -3,16 +3,39 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import { h, ref } from "vue";
 import { preview } from "./story-helpers";
 
-const meta = { title: "Inputs/Checkbox" } satisfies Meta;
+const sizeOptions = ["xs", "sm", "md", "lg", "xl"] as const;
+
+const meta = {
+  title: "Inputs/Checkbox",
+  component: Checkbox,
+  args: {
+    label: "Accept terms",
+    modelValue: true,
+    size: "md",
+    required: false,
+    disabled: false,
+  },
+  argTypes: {
+    modelValue: { control: "boolean" },
+    label: { control: "text" },
+    description: { control: "text" },
+    error: { control: "text" },
+    size: { control: "select", options: sizeOptions },
+    required: { control: "boolean" },
+    disabled: { control: "boolean" },
+    classNames: { control: "object" },
+    styles: { control: "object" },
+  },
+} satisfies Meta<typeof Checkbox>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Basic: Story = {
-  render: () =>
+  render: (args) =>
     preview(() => {
-      const checked = ref(true);
+      const checked = ref(Boolean(args.modelValue));
       return h(Checkbox, {
-        label: "Accept terms",
+        ...args,
         modelValue: checked.value,
         "onUpdate:modelValue": (value: boolean) => (checked.value = value),
       });
@@ -20,11 +43,12 @@ export const Basic: Story = {
 };
 
 export const Sizes: Story = {
-  render: () =>
+  render: (args) =>
     preview(() =>
       h(Group, { gap: "lg", align: "center" }, () =>
-        (["xs", "sm", "md", "lg", "xl"] as const).map((size) =>
+        sizeOptions.map((size) =>
           h(Checkbox, {
+            ...args,
             key: size,
             label: size.toUpperCase(),
             size,
@@ -36,26 +60,38 @@ export const Sizes: Story = {
 };
 
 export const States: Story = {
-  render: () =>
+  render: (args) =>
     preview(() =>
       h(Stack, { gap: "md" }, () => [
-        h(Checkbox, { label: "Unchecked", modelValue: false }),
-        h(Checkbox, { label: "Checked", modelValue: true }),
-        h(Checkbox, { label: "Required", modelValue: false, required: true }),
+        h(Checkbox, { ...args, label: "Unchecked", modelValue: false }),
+        h(Checkbox, { ...args, label: "Checked", modelValue: true }),
         h(Checkbox, {
+          ...args,
+          label: "Required",
+          modelValue: false,
+          required: true,
+        }),
+        h(Checkbox, {
+          ...args,
           label: "Error",
           modelValue: false,
           error: "Please accept this option.",
         }),
-        h(Checkbox, { label: "Disabled", modelValue: true, disabled: true }),
+        h(Checkbox, {
+          ...args,
+          label: "Disabled",
+          modelValue: true,
+          disabled: true,
+        }),
       ]),
     ),
 };
 
 export const Customization: Story = {
-  render: () =>
+  render: (args) =>
     preview(() =>
       h(Checkbox, {
+        ...args,
         label: "Custom indicator",
         modelValue: true,
         classNames: { indicator: "storybook-checkbox-indicator" },
