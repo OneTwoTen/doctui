@@ -30,6 +30,7 @@ export default defineConfig({
           { text: "Getting started", link: "/guide/getting-started" },
           { text: "Theming", link: "/guide/theming" },
           { text: "Basic components", link: "/guide/basic-components" },
+          { text: "Component taxonomy", link: "/guide/component-taxonomy" },
         ],
       },
     ],
