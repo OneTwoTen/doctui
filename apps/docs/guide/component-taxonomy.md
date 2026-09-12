@@ -1,6 +1,6 @@
 # Component taxonomy
 
-`doctui` classifies components by stable UI domains instead of roadmap phases. The same taxonomy is intended to drive Storybook navigation, documentation discovery, registries, and future MCP tools.
+`doctui` classifies components by stable UI domains instead of roadmap phases. The same taxonomy drives Storybook navigation, documentation discovery, registries, and future MCP tools.
 
 ## Canonical categories
 
