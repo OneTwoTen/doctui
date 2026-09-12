@@ -173,7 +173,7 @@ export const AdvancedProjectFilters: Story = {
           () =>
             "A realistic composition keeps single and multi-value filters on the same interaction contract.",
         ),
-        h(Group, { gap: "lg", align: "start" }, () => [
+        h(Group, { gap: "lg", align: "flex-start" }, () => [
           h(Select, {
             id: "project-framework",
             label: "Primary framework",
