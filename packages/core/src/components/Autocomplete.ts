@@ -5,13 +5,17 @@ import { Combobox, type ComboboxOption } from "./Combobox";
 export const Autocomplete = defineComponent({
   name: "DuiAutocomplete",
   inheritAttrs: false,
-  emits: { "update:modelValue": (_value: string) => true },
+  emits: {
+    "update:modelValue": (_value: string) => true,
+    clear: () => true,
+  },
   props: {
     modelValue: { type: String, default: "" },
     data: {
       type: Array as PropType<readonly ComboboxOption[]>,
       required: true,
     },
+    id: String,
     label: String,
     description: String,
     error: String,
@@ -35,6 +39,7 @@ export const Autocomplete = defineComponent({
           multiple: false,
           "onUpdate:modelValue": (value: string | number | null) =>
             emit("update:modelValue", String(value ?? "")),
+          onClear: () => emit("clear"),
         },
         slots,
       );
