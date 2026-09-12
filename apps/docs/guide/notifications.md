@@ -1,7 +1,35 @@
+<script setup lang="ts">
+import { Button, DoctuiProvider, Stack } from "@doctui/core";
+import {
+  Notifications,
+  createNotifications,
+} from "@doctui/notifications";
+
+const notifications = createNotifications({
+  limit: 4,
+  position: "top-end",
+});
+
+function showSaved() {
+  notifications.show({
+    title: "Saved",
+    message: "Your changes are ready.",
+    color: "success",
+  });
+}
+</script>
+
 # Notifications
 
 `@doctui/notifications` separates notification state from its renderer so an
 application can keep one store per app shell or feature area.
+
+<DoctuiProvider>
+  <Stack gap="md" style="max-width: 28rem;">
+    <Button color="success" @click="showSaved">Show notification</Button>
+    <Notifications :store="notifications" />
+  </Stack>
+</DoctuiProvider>
 
 ```ts
 import { Notifications, createNotifications } from '@doctui/notifications';

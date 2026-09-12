@@ -121,6 +121,12 @@ A public component is not complete until it has:
 - Storybook coverage.
 
 Docs examples must use idiomatic Vue and must compile.
+Every public component documented in VitePress must also have at least one
+live preview rendered by the actual exported component, not only a fenced code
+block. Register components globally in
+`apps/docs/.vitepress/theme/index.ts` (or import them locally) and load their
+public stylesheet. Do not leave PascalCase doctui tags as unresolved custom
+elements; verify the docs build/SSR output contains real component markup.
 
 When the metadata registry exists, treat it as the shared machine-readable representation consumed by generated API docs, LLM artifacts and MCP. Do not manually maintain a conflicting second API description for those outputs.
 
