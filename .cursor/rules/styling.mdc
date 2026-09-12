@@ -1,0 +1,15 @@
+---
+description: Styling and theming rules for doctui components
+globs: "packages/**/*.{vue,css,scss,ts}"
+alwaysApply: false
+---
+# Styling and theming
+
+- Core has no Tailwind or UnoCSS dependency.
+- Public theme variables use the `--dui-` prefix.
+- Prefer semantic CSS variables such as control background, text, border and focus colors over hard-coded palette values.
+- Component styles consume theme tokens; they do not own global theme policy.
+- Dark/light modes must be expressed through token values.
+- Keep selectors shallow and avoid global leakage.
+- Do not encode behavior in class names.
+- Interactive states should be observable through attributes where useful: `data-disabled`, `data-active`, `data-loading`, etc.
