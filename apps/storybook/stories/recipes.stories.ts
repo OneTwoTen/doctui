@@ -63,12 +63,12 @@ export const Default: Story = {
               },
               () =>
                 h(Stack, { gap: "sm" }, () => [
-                  h(Text, { weight: 600 }, () => "Phase 2 foundation"),
+                  h(Text, { weight: 600 }, () => "Component foundation"),
                   h(
                     Text,
                     { muted: true, size: "sm" },
                     () =>
-                      "Layout, typography and button APIs now share the theme contract.",
+                      "Layout, typography and action APIs share the same theme contract.",
                   ),
                 ]),
             ),
