@@ -4,6 +4,8 @@ This file is the primary instruction set for coding agents working in this repos
 
 The phased implementation plan lives in [`docs/ROADMAP.md`](./docs/ROADMAP.md). When choosing what to build next, follow the roadmap unless the task explicitly changes project direction.
 
+Infrastructure constraints live in [`docs/INFRASTRUCTURE.md`](./docs/INFRASTRUCTURE.md).
+
 ## Product direction
 
 `doctui` is a Vue 3 UI library with a Mantine-like developer experience, but it is not a Mantine port and must not become a React-shaped API wrapped in Vue syntax.
@@ -19,6 +21,7 @@ Core principles:
 7. Avoid unnecessary runtime dependencies.
 8. Mantine docs/`llms.txt` can be used as behavior and API inspiration, not as a source to blindly copy.
 9. Documentation, LLM artifacts and MCP should converge on one validated public API metadata source rather than independent handwritten copies.
+10. doctui is GitHub-first and zero-VPS by default: the normal project lifecycle must not require a project-owned server or always-on backend.
 
 ## Repository architecture
 
@@ -152,6 +155,18 @@ Avoid adding:
 - styling frameworks as core runtime dependencies,
 - large utility packages for one helper.
 
+## Infrastructure policy
+
+Normal development, CI, documentation, release and consumption workflows must not depend on a project-owned VPS.
+
+- Use GitHub Actions for CI, builds, release automation and static documentation generation.
+- Use GitHub Pages for production VitePress docs, Storybook, metadata and LLM documentation.
+- Use GitHub-hosted runners for normal CI.
+- Use GitHub Releases/Actions artifacts for release and CI outputs where appropriate.
+- Do not add SSH deployment, a Docker host, Kubernetes, a production database, Redis or a required self-hosted runner to the standard architecture without an explicit project-level decision.
+- Prefer static/build-time solutions over hosted runtime services.
+- Keep the project reproducible from a clean public clone with no private infrastructure dependency.
+
 ## MCP policy
 
 The MCP package belongs after the public metadata/docs model is sufficiently stable.
@@ -161,6 +176,7 @@ The MCP package belongs after the public metadata/docs model is sufficiently sta
 - Prefer a small stable tool surface such as component search, API lookup, examples and use-case discovery.
 - Keep MCP independent from the Vue runtime where practical.
 - MCP must never recommend APIs that are not exported by the matching doctui version.
+- `@doctui/mcp-server` should run locally for consumers under Bun/Node and must not require a doctui-owned always-on remote MCP service.
 
 ## Working procedure
 
@@ -168,9 +184,10 @@ Before coding:
 
 1. Read this file and any scoped `AGENTS.md` beneath the target directory.
 2. Read the relevant phase in `docs/ROADMAP.md` when the task advances project implementation.
-3. Inspect adjacent components and shared types.
-4. Check whether a primitive/composable already solves part of the task.
-5. Confirm the public API before implementing details.
+3. Read `docs/INFRASTRUCTURE.md` when changing CI, release, hosting, docs deployment or MCP delivery.
+4. Inspect adjacent components and shared types.
+5. Check whether a primitive/composable already solves part of the task.
+6. Confirm the public API before implementing details.
 
 Before finishing:
 
