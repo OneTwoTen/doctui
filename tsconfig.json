@@ -1,8 +1,4 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./packages/core" },
-    { "path": "./apps/storybook" },
-    { "path": "./apps/docs" }
-  ]
+  "extends": "./tsconfig.base.json",
+  "files": []
 }
