@@ -17,12 +17,16 @@ const customTheme = createTheme({
   radius: { md: "1rem" },
   colors: {
     light: {
-      primaryFilled: "#7c3aed",
-      primaryLight: "#ede9fe",
+      primary: {
+        filled: "#7c3aed",
+        light: "#ede9fe",
+      },
     },
     dark: {
-      primaryFilled: "#a78bfa",
-      primaryLight: "#2e1065",
+      primary: {
+        filled: "#a78bfa",
+        light: "#2e1065",
+      },
     },
   },
 });
@@ -74,7 +78,7 @@ function renderPreview(colorScheme: DoctuiColorScheme, theme = createTheme()) {
                             background: "var(--dui-color-primary-filled)",
                             border: 0,
                             borderRadius: "var(--dui-radius-md)",
-                            color: "white",
+                            color: "var(--dui-color-primary-filled-text)",
                             cursor: "pointer",
                             font: "inherit",
                             padding:

@@ -8,7 +8,9 @@ export { DEFAULT_THEME } from "./default-theme";
 export type {
   Color,
   DoctuiColorScheme,
+  DoctuiColorTokens,
   DoctuiSemanticColors,
+  DoctuiSemanticColorsOverride,
   DoctuiTheme,
   DoctuiThemeOverride,
   DoctuiZIndexScale,

@@ -12,18 +12,23 @@ const customTheme = createTheme({
   radius: { md: "0.875rem" },
   colors: {
     dark: {
-      primaryFilled: "#7c3aed",
+      primary: {
+        filled: "#7c3aed",
+      },
     },
   },
 });
 
 describe("theme foundation", () => {
-  it("merges nested theme scales without dropping defaults", () => {
+  it("merges nested theme scales and semantic color tokens without dropping defaults", () => {
     const theme = mergeTheme(DEFAULT_THEME, customTheme);
 
     expect(theme.spacing.md).toBe("2rem");
     expect(theme.spacing.sm).toBe(DEFAULT_THEME.spacing.sm);
-    expect(theme.colors.dark.primaryFilled).toBe("#7c3aed");
+    expect(theme.colors.dark.primary.filled).toBe("#7c3aed");
+    expect(theme.colors.dark.primary.light).toBe(
+      DEFAULT_THEME.colors.dark.primary.light,
+    );
     expect(theme.colors.dark.text).toBe(DEFAULT_THEME.colors.dark.text);
     expect(DEFAULT_THEME.spacing.md).toBe("1rem");
   });
@@ -35,8 +40,21 @@ describe("theme foundation", () => {
     expect(variables["--dui-spacing-md"]).toBe("2rem");
     expect(variables["--dui-radius-md"]).toBe("0.875rem");
     expect(variables["--dui-color-primary-filled"]).toBe("#7c3aed");
+    expect(variables["--dui-color-success-filled"]).toBe(
+      DEFAULT_THEME.colors.dark.success.filled,
+    );
     expect(variables["--dui-color-text"]).toBe(DEFAULT_THEME.colors.dark.text);
     expect(variables["--dui-z-index-modal"]).toBe("500");
+    expect(variables["--dui-breakpoint-md"]).toBeUndefined();
+  });
+
+  it("keeps resolved themes readonly at runtime", () => {
+    const theme = mergeTheme(DEFAULT_THEME, customTheme);
+
+    expect(Object.isFrozen(DEFAULT_THEME)).toBe(true);
+    expect(Object.isFrozen(DEFAULT_THEME.spacing)).toBe(true);
+    expect(Object.isFrozen(theme)).toBe(true);
+    expect(Object.isFrozen(theme.colors.dark.primary)).toBe(true);
   });
 
   it("scopes theme variables and color scheme on the provider", () => {
@@ -55,6 +73,23 @@ describe("theme foundation", () => {
     expect(
       wrapper.element.style.getPropertyValue("--dui-color-primary-filled"),
     ).toBe("#7c3aed");
+  });
+
+  it("allows consumer CSS variables to override provider defaults", () => {
+    const wrapper = mount(DoctuiProvider, {
+      attrs: {
+        style:
+          "--dui-spacing-md: 3rem; --dui-color-primary-filled: #111827;",
+      },
+      slots: { default: "content" },
+    });
+
+    expect(wrapper.element.style.getPropertyValue("--dui-spacing-md")).toBe(
+      "3rem",
+    );
+    expect(
+      wrapper.element.style.getPropertyValue("--dui-color-primary-filled"),
+    ).toBe("#111827");
   });
 
   it("inherits a parent provider theme before applying nested overrides", () => {
