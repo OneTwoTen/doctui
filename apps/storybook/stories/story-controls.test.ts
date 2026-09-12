@@ -12,12 +12,15 @@ const componentStories = [
 ] as const;
 
 describe("Storybook component controls contract", () => {
-  it.each(componentStories)("%s exposes functional Controls", async (filename) => {
-    const source = await readFile(new URL(filename, import.meta.url), "utf8");
+  it.each(componentStories)(
+    "%s exposes functional Controls",
+    async (filename) => {
+      const source = await readFile(new URL(filename, import.meta.url), "utf8");
 
-    expect(source).toMatch(/component:\s*[A-Z][A-Za-z0-9]*/);
-    expect(source).toContain("args:");
-    expect(source).toContain("argTypes:");
-    expect(source).toMatch(/render:\s*\(args\)/);
-  });
+      expect(source).toMatch(/component:\s*[A-Z][A-Za-z0-9]*/);
+      expect(source).toContain("args:");
+      expect(source).toContain("argTypes:");
+      expect(source).toMatch(/render:\s*\(args\)/);
+    },
+  );
 });
