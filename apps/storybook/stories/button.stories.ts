@@ -1,10 +1,15 @@
 import { Button, Group, Stack, Title } from "@doctui/core";
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import { expect, fn } from "storybook/test";
 import { h } from "vue";
 import { preview } from "./story-helpers";
 
 const meta = {
   title: "Actions/Button",
+  component: Button,
+  args: {
+    onClick: fn(),
+  },
 } satisfies Meta;
 
 export default meta;
@@ -37,4 +42,12 @@ export const States: Story = {
         h(Button, { size: "xl", radius: "xl" }, () => "Large"),
       ]),
     ),
+};
+
+export const Interactive: Story = {
+  render: (args) => preview(() => h(Button, args, () => "Click me")),
+  play: async ({ canvas, userEvent, args }) => {
+    await userEvent.click(canvas.getByRole("button", { name: "Click me" }));
+    await expect(args.onClick).toHaveBeenCalledTimes(1);
+  },
 };

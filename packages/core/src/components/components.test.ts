@@ -1,6 +1,15 @@
 import { mount } from "@vue/test-utils";
 import { describe, expect, it, vi } from "vitest";
-import { Box, Button, Flex, Group, Stack, Text, Title } from "../index";
+import {
+  Box,
+  Button,
+  Flex,
+  Group,
+  Stack,
+  Text,
+  TextInput,
+  Title,
+} from "../index";
 
 describe("Phase 2 component contracts", () => {
   it("renders Box as the requested element and maps spacing to theme tokens", () => {
@@ -91,5 +100,52 @@ describe("Phase 2 component contracts", () => {
 
     await wrapper.trigger("click");
     expect(onClick).not.toHaveBeenCalled();
+  });
+});
+
+describe("Phase 3 input contracts", () => {
+  it("associates TextInput with its label and description", () => {
+    const wrapper = mount(TextInput, {
+      props: {
+        id: "email",
+        label: "Email",
+        description: "We will never share it.",
+      },
+    });
+
+    const input = wrapper.get("input");
+    expect(wrapper.get("label").attributes("for")).toBe("email");
+    expect(input.attributes("id")).toBe("email");
+    expect(input.attributes("aria-describedby")).toBe("email-description");
+  });
+
+  it("exposes errors accessibly and supports v-model", async () => {
+    const wrapper = mount(TextInput, {
+      props: { id: "input", modelValue: "before", error: "Required" },
+    });
+
+    const input = wrapper.get("input");
+    expect(input.attributes("aria-invalid")).toBe("true");
+    expect(input.attributes("aria-describedby")).toBe("input-error");
+    expect(wrapper.get("[role='alert']").text()).toBe("Required");
+
+    await input.setValue("after");
+    expect(wrapper.emitted("update:modelValue")?.[0]).toEqual(["after"]);
+  });
+
+  it("renders sections and prevents interaction when disabled or read-only", () => {
+    const wrapper = mount(TextInput, {
+      props: {
+        disabled: true,
+        readonly: true,
+        leftSection: "@",
+        rightSection: ".com",
+      },
+    });
+
+    expect(wrapper.get("[data-dui-input-left-section]").text()).toBe("@");
+    expect(wrapper.get("[data-dui-input-right-section]").text()).toBe(".com");
+    expect(wrapper.get("input").attributes("disabled")).toBeDefined();
+    expect(wrapper.get("input").attributes("readonly")).toBeDefined();
   });
 });

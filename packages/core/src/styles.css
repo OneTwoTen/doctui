@@ -56,3 +56,60 @@
     transform: rotate(360deg);
   }
 }
+
+.dui-InputWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dui-spacing-xs);
+}
+.dui-InputWrapper-label {
+  color: var(--dui-color-text);
+  font-size: var(--dui-font-size-sm);
+  font-weight: 600;
+}
+.dui-InputWrapper-description {
+  color: var(--dui-color-text-muted);
+  font-size: var(--dui-font-size-sm);
+}
+.dui-InputWrapper-error {
+  color: var(--dui-color-danger-filled);
+  font-size: var(--dui-font-size-sm);
+}
+.dui-TextInput {
+  align-items: center;
+  background: var(--dui-color-surface);
+  border: 1px solid var(--dui-color-border);
+  display: flex;
+  min-height: 2.25rem;
+  overflow: hidden;
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease;
+}
+.dui-TextInput[data-focused="true"] {
+  border-color: var(--dui-color-primary-filled);
+  box-shadow: 0 0 0 2px var(--dui-color-focus-ring);
+}
+.dui-TextInput[data-error="true"] {
+  border-color: var(--dui-color-danger-filled);
+}
+.dui-TextInput-input {
+  background: transparent;
+  border: 0;
+  color: var(--dui-color-text);
+  flex: 1;
+  font: inherit;
+  min-width: 0;
+  outline: 0;
+  padding: var(--dui-spacing-xs) var(--dui-spacing-sm);
+}
+.dui-TextInput-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+.dui-TextInput-section {
+  align-items: center;
+  color: var(--dui-color-text-muted);
+  display: inline-flex;
+  padding: 0 var(--dui-spacing-sm);
+}

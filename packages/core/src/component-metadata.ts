@@ -138,6 +138,40 @@ export const DOCTUI_COMPONENT_METADATA: readonly ComponentMetadataEntry[] = [
       "Focus-visible styles use the theme focus ring token.",
     ],
   },
+  {
+    name: "InputWrapper",
+    category: "inputs",
+    description:
+      "Shared label, description, required and error structure for inputs.",
+    props: ["id", "label", "description", "error", "required"],
+    accessibility: [
+      "Associates labels and help/error text with the wrapped control.",
+    ],
+  },
+  {
+    name: "TextInput",
+    category: "inputs",
+    description: "Single-line text field with shared input wrapper semantics.",
+    props: [
+      "modelValue",
+      "id",
+      "label",
+      "description",
+      "error",
+      "required",
+      "size",
+      "radius",
+      "disabled",
+      "readonly",
+      "type",
+      "placeholder",
+      "leftSection",
+      "rightSection",
+    ],
+    accessibility: [
+      "Uses a native input and links its label and description/error text through accessible IDs.",
+    ],
+  },
 ];
 
 export function getComponentMetadata(name: string) {

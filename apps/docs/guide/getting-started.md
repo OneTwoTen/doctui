@@ -23,6 +23,8 @@ Run the component workbench:
 bun run storybook
 ```
 
+The Storybook workbench includes Controls and Actions in the addon panel. Stories that define `args` expose editable Controls; stories with a `play` function expose their step-by-step run in Interactions. For example, open `Actions/Button/Interactive` or `Inputs/TextInput/Interactive` and use the panel tabs after the story loads.
+
 Run the documentation site:
 
 ```sh
@@ -31,4 +33,4 @@ bun run docs:dev
 
 ## Workspace packages
 
-The first public package scaffold is `@doctui/core`. Phase 0 intentionally keeps its public export surface empty; the theme and token contracts arrive in Phase 1 before visual components are added.
+The first public package is `@doctui/core`, which exports the theme foundation and the initial layout, typography, action and input components.

@@ -1,9 +1,20 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.5.13/schema.json",
+  "files": {
+    "includes": [
+      "**",
+      "!**/node_modules",
+      "!**/dist",
+      "!**/storybook-static",
+      "!**/coverage",
+      "!**/.vitepress/cache"
+    ]
+  },
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
-    "indentWidth": 2
+    "indentWidth": 2,
+    "lineEnding": "lf"
   },
   "linter": {
     "enabled": true,
