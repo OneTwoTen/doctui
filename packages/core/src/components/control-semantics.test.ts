@@ -10,6 +10,11 @@ const DATA = [
   { value: "table", label: "Table" },
 ] as const;
 
+const ALL_DISABLED_DATA = [
+  { value: "list", label: "List", disabled: true },
+  { value: "grid", label: "Grid", disabled: true },
+] as const;
+
 describe("SegmentedControl keyboard semantics", () => {
   it("keeps exactly one enabled keyboard entry point without a valid selection", async () => {
     const wrapper = mount(SegmentedControl, {
@@ -122,6 +127,61 @@ describe("SegmentedControl keyboard semantics", () => {
       expect(button.attributes("tabindex")).toBe("-1");
       expect(button.attributes("aria-disabled")).toBe("true");
     }
+  });
+
+  it("keeps an enabled group without a tab stop when every option is disabled", () => {
+    const wrapper = mount(SegmentedControl, {
+      props: { ariaLabel: "View", data: ALL_DISABLED_DATA },
+    });
+
+    expect(
+      wrapper
+        .findAll("button")
+        .filter((button) => button.attributes("tabindex") === "0"),
+    ).toHaveLength(0);
+    for (const button of wrapper.findAll("button")) {
+      expect(button.attributes("disabled")).toBeDefined();
+      expect(button.attributes("tabindex")).toBe("-1");
+    }
+  });
+
+  it("focuses the same value after the controlled data is reordered", async () => {
+    const model = ref<string | number>("grid");
+    const data = ref<readonly { value: string; label: string }[]>([
+      { value: "grid", label: "Grid" },
+      { value: "table", label: "Table" },
+    ]);
+    const wrapper = mount(SegmentedControl, {
+      props: {
+        ariaLabel: "View",
+        data: data.value,
+        modelValue: model.value,
+        "onUpdate:modelValue": async (value: string | number) => {
+          model.value = value;
+          data.value = [
+            { value: "table", label: "Table" },
+            { value: "grid", label: "Grid" },
+          ];
+          await wrapper.setProps({
+            data: data.value,
+            modelValue: model.value,
+          });
+        },
+      },
+      attachTo: document.body,
+    });
+
+    let buttons = wrapper.findAll("button");
+    buttons[0].element.focus();
+    await buttons[0].trigger("keydown", { key: "ArrowRight" });
+    await nextTick();
+
+    buttons = wrapper.findAll("button");
+    expect(model.value).toBe("table");
+    expect(document.activeElement).toBe(buttons[0].element);
+    expect(buttons[0].text()).toBe("Table");
+
+    wrapper.unmount();
   });
 });
 

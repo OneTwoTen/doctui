@@ -85,7 +85,11 @@ export const SegmentedControl = defineComponent({
 
       select(option);
       await nextTick();
-      focusIndex(index, container);
+      const currentIndex = props.data.findIndex(
+        (candidate, candidateIndex) =>
+          candidate.value === option.value && isEnabled(candidateIndex),
+      );
+      focusIndex(currentIndex, container);
     };
 
     return () => {
