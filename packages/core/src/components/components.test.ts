@@ -11,8 +11,12 @@ describe("Phase 2 component contracts", () => {
 
     expect(wrapper.element.tagName).toBe("SECTION");
     expect(wrapper.text()).toBe("content");
-    expect(wrapper.attributes("style")).toContain("padding: var(--dui-spacing-lg)");
-    expect(wrapper.attributes("style")).toContain("margin: var(--dui-spacing-sm)");
+    expect(wrapper.attributes("style")).toContain(
+      "padding: var(--dui-spacing-lg)",
+    );
+    expect(wrapper.attributes("style")).toContain(
+      "margin: var(--dui-spacing-sm)",
+    );
   });
 
   it("provides Flex, Stack and Group layout defaults without hiding CSS semantics", () => {
@@ -25,7 +29,9 @@ describe("Phase 2 component contracts", () => {
     expect(flex.attributes("style")).toContain("display: flex");
     expect(flex.attributes("style")).toContain("gap: var(--dui-spacing-sm)");
     expect(flex.attributes("style")).toContain("align-items: center");
-    expect(flex.attributes("style")).toContain("justify-content: space-between");
+    expect(flex.attributes("style")).toContain(
+      "justify-content: space-between",
+    );
     expect(stack.attributes("style")).toContain("flex-direction: column");
     expect(group.attributes("style")).toContain("flex-wrap: wrap");
   });
@@ -41,7 +47,9 @@ describe("Phase 2 component contracts", () => {
     });
 
     expect(text.element.tagName).toBe("SPAN");
-    expect(text.attributes("style")).toContain("font-size: var(--dui-font-size-sm)");
+    expect(text.attributes("style")).toContain(
+      "font-size: var(--dui-font-size-sm)",
+    );
     expect(text.attributes("data-muted")).toBe("true");
     expect(title.element.tagName).toBe("H3");
   });

@@ -31,10 +31,8 @@ export const Layout: Story = {
     preview(() =>
       h(Stack, { gap: "lg" }, () => [
         h(Title, { order: 3 }, () => "Layout primitives"),
-        h(
-          Flex,
-          { gap: "sm", wrap: "wrap" },
-          () => ["Box", "Flex", "Stack", "Group"].map((label) =>
+        h(Flex, { gap: "sm", wrap: "wrap" }, () =>
+          ["Box", "Flex", "Stack", "Group"].map((label) =>
             h(
               Box,
               {
@@ -64,8 +62,16 @@ export const Typography: Story = {
         h(Title, { order: 1 }, () => "Heading one"),
         h(Title, { order: 2 }, () => "Heading two"),
         h(Title, { order: 3 }, () => "Heading three"),
-        h(Text, { size: "md" }, () => "Body text follows theme typography tokens."),
-        h(Text, { size: "sm", muted: true }, () => "Muted supporting text stays semantic."),
+        h(
+          Text,
+          { size: "md" },
+          () => "Body text follows theme typography tokens.",
+        ),
+        h(
+          Text,
+          { size: "sm", muted: true },
+          () => "Muted supporting text stays semantic.",
+        ),
       ]),
     ),
 };
@@ -117,15 +123,26 @@ export const AdvancedComposition: Story = {
         },
         () =>
           h(Stack, { gap: "lg" }, () => [
-            h(Flex, { justify: "space-between", align: "center", gap: "md" }, () => [
-              h(Stack, { gap: "xs" }, () => [
-                h(Title, { order: 2 }, () => "Release checklist"),
-                h(Text, { muted: true, size: "sm" }, () =>
-                  "A realistic composition made only from exported doctui components.",
+            h(
+              Flex,
+              { justify: "space-between", align: "center", gap: "md" },
+              () => [
+                h(Stack, { gap: "xs" }, () => [
+                  h(Title, { order: 2 }, () => "Release checklist"),
+                  h(
+                    Text,
+                    { muted: true, size: "sm" },
+                    () =>
+                      "A realistic composition made only from exported doctui components.",
+                  ),
+                ]),
+                h(
+                  Button,
+                  { variant: "light", size: "sm" },
+                  () => "Preview",
                 ),
-              ]),
-              h(Button, { variant: "light", size: "sm" }, () => "Preview"),
-            ]),
+              ],
+            ),
             h(
               Box,
               {
@@ -138,13 +155,20 @@ export const AdvancedComposition: Story = {
               () =>
                 h(Stack, { gap: "sm" }, () => [
                   h(Text, { weight: 600 }, () => "Phase 2 foundation"),
-                  h(Text, { muted: true, size: "sm" }, () =>
-                    "Layout, typography and button APIs now share the theme contract.",
+                  h(
+                    Text,
+                    { muted: true, size: "sm" },
+                    () =>
+                      "Layout, typography and button APIs now share the theme contract.",
                   ),
                 ]),
             ),
             h(Group, { gap: "sm", justify: "flex-end" }, () => [
-              h(Button, { variant: "subtle", color: "neutral" }, () => "Cancel"),
+              h(
+                Button,
+                { variant: "subtle", color: "neutral" },
+                () => "Cancel",
+              ),
               h(Button, { color: "success" }, () => "Mark complete"),
             ]),
           ]),

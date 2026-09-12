@@ -1,7 +1,7 @@
 import {
+  type ButtonHTMLAttributes,
   defineComponent,
   h,
-  type ButtonHTMLAttributes,
   type PropType,
 } from "vue";
 import type { Color, Radius, Size, Variant } from "../theme/types";
@@ -38,9 +38,13 @@ function buttonTokens(color: Color, variant: Variant): Record<string, string> {
   }
 
   const background =
-    variant === "outline" ? "transparent" : `var(--dui-color-${color}-${variant})`;
+    variant === "outline"
+      ? "transparent"
+      : `var(--dui-color-${color}-${variant})`;
   const border =
-    variant === "outline" ? `var(--dui-color-${color}-outline)` : "transparent";
+    variant === "outline"
+      ? `var(--dui-color-${color}-outline)`
+      : "transparent";
 
   return {
     "--dui-button-background": background,
@@ -72,7 +76,8 @@ export const Button = defineComponent({
   setup(props, { attrs, emit, slots }) {
     return () => {
       const isDisabled = props.disabled || props.loading;
-      const paddingX = props.size === "xs" ? "sm" : props.size === "xl" ? "xl" : "md";
+      const paddingX =
+        props.size === "xs" ? "sm" : props.size === "xl" ? "xl" : "md";
 
       return h(
         "button",

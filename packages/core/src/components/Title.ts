@@ -24,7 +24,8 @@ export const Title = defineComponent({
     order: {
       type: Number as PropType<TitleOrder>,
       default: 2,
-      validator: (value: number) => Number.isInteger(value) && value >= 1 && value <= 6,
+      validator: (value: number) =>
+        Number.isInteger(value) && value >= 1 && value <= 6,
     },
   },
   setup(props, { attrs, slots }) {

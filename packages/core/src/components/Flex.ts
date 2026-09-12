@@ -3,7 +3,12 @@ import type { Size } from "../theme/types";
 import { spacingToken } from "./shared";
 
 export type FlexDirection = "row" | "row-reverse" | "column" | "column-reverse";
-export type FlexAlign = "stretch" | "flex-start" | "center" | "flex-end" | "baseline";
+export type FlexAlign =
+  | "stretch"
+  | "flex-start"
+  | "center"
+  | "flex-end"
+  | "baseline";
 export type FlexJustify =
   | "flex-start"
   | "center"

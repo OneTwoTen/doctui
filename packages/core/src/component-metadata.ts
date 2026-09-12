@@ -22,7 +22,8 @@ export const DOCTUI_COMPONENT_METADATA: readonly ComponentMetadataEntry[] = [
   {
     name: "Stack",
     category: "layout",
-    description: "Vertical flex layout for consistent spacing between children.",
+    description:
+      "Vertical flex layout for consistent spacing between children.",
     props: ["as", "gap", "align", "justify"],
   },
   {
@@ -34,7 +35,8 @@ export const DOCTUI_COMPONENT_METADATA: readonly ComponentMetadataEntry[] = [
   {
     name: "Text",
     category: "typography",
-    description: "Semantic text primitive using doctui typography and color tokens.",
+    description:
+      "Semantic text primitive using doctui typography and color tokens.",
     props: ["as", "size", "muted", "weight"],
   },
   {
@@ -42,13 +44,25 @@ export const DOCTUI_COMPONENT_METADATA: readonly ComponentMetadataEntry[] = [
     category: "typography",
     description: "Semantic h1-h6 heading primitive.",
     props: ["order"],
-    accessibility: ["Heading level is represented by the rendered native h1-h6 element."],
+    accessibility: [
+      "Heading level is represented by the rendered native h1-h6 element.",
+    ],
   },
   {
     name: "Button",
     category: "action",
-    description: "Native button control with doctui color, variant and size tokens.",
-    props: ["color", "variant", "size", "radius", "loading", "disabled", "fullWidth", "type"],
+    description:
+      "Native button control with doctui color, variant and size tokens.",
+    props: [
+      "color",
+      "variant",
+      "size",
+      "radius",
+      "loading",
+      "disabled",
+      "fullWidth",
+      "type",
+    ],
     accessibility: [
       "Uses a native button element.",
       "Loading state disables interaction and exposes aria-busy.",
