@@ -93,7 +93,7 @@ replaceEntry(
       "Read-only fields remain focusable while disabled fields use native disabled semantics.",
     ],
     examples: [
-      '<Textarea v-model="bio" label="Bio" size="lg" :styles="{ root: { maxWidth: \'32rem\' } }" />',
+      '<Textarea v-model="bio" label="Bio" size="lg" :styles="fieldStyles" />',
     ],
   },`,
 );
@@ -285,7 +285,7 @@ replaceEntry(
     ],
     examples: [
       '<TextInput v-model="email" label="Email" autocomplete="email" size="lg" />',
-      '<TextInput v-model="query" :class-names="{ input: \'search-input\' }" :styles="{ root: { maxWidth: \'24rem\' } }" />',
+      '<TextInput v-model="query" :class-names="fieldClasses" :styles="fieldStyles" />',
     ],
   },`,
 );
