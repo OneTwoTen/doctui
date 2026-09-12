@@ -2,9 +2,9 @@
   "number": "18",
   "title": "fix(core): harden control keyboard semantics",
   "branch": "codex/issue-9-control-keyboard-semantics",
-  "sha": "f73c292ec0dc65c9041dc54c4de0a11d9bc9e779",
+  "sha": "32a305636d2eb048240794b3878edf2d9ef91280",
   "repository": "OneTwoTen/doctui",
   "prUrl": "https://github.com/OneTwoTen/doctui/pull/18",
-  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/34692656467",
-  "generatedAt": "2026-09-12T12:04:24.995Z"
+  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/34692845445",
+  "generatedAt": "2026-09-12T12:08:30.169Z"
 }
