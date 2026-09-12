@@ -6,6 +6,8 @@ The phased implementation plan lives in [`docs/ROADMAP.md`](./docs/ROADMAP.md). 
 
 Infrastructure constraints live in [`docs/INFRASTRUCTURE.md`](./docs/INFRASTRUCTURE.md).
 
+Technology and dependency decisions live in [`docs/TECH_STACK.md`](./docs/TECH_STACK.md). Treat that document as canonical when selecting versions, build tools, test tools, package management, docs tooling or release dependencies.
+
 ## Product direction
 
 `doctui` is a Vue 3 UI library with a Mantine-like developer experience, but it is not a Mantine port and must not become a React-shaped API wrapped in Vue syntax.
@@ -22,6 +24,7 @@ Core principles:
 8. Mantine docs/`llms.txt` can be used as behavior and API inspiration, not as a source to blindly copy.
 9. Documentation, LLM artifacts and MCP should converge on one validated public API metadata source rather than independent handwritten copies.
 10. doctui is GitHub-first and zero-VPS by default: the normal project lifecycle must not require a project-owned server or always-on backend.
+11. Do not replace the canonical tech stack casually; new infrastructure/tooling must solve a demonstrated requirement.
 
 ## Repository architecture
 
@@ -184,10 +187,11 @@ Before coding:
 
 1. Read this file and any scoped `AGENTS.md` beneath the target directory.
 2. Read the relevant phase in `docs/ROADMAP.md` when the task advances project implementation.
-3. Read `docs/INFRASTRUCTURE.md` when changing CI, release, hosting, docs deployment or MCP delivery.
-4. Inspect adjacent components and shared types.
-5. Check whether a primitive/composable already solves part of the task.
-6. Confirm the public API before implementing details.
+3. Read `docs/TECH_STACK.md` before changing tooling, versions, dependencies, test infrastructure, docs tooling or release tooling.
+4. Read `docs/INFRASTRUCTURE.md` when changing CI, release, hosting, docs deployment or MCP delivery.
+5. Inspect adjacent components and shared types.
+6. Check whether a primitive/composable already solves part of the task.
+7. Confirm the public API before implementing details.
 
 Before finishing:
 
