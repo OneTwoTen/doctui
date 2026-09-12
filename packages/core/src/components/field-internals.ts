@@ -14,10 +14,12 @@ interface FieldStateProps extends FieldRelationshipProps {
   readonly readonly?: boolean | undefined;
 }
 
+type InputWrapperData = InputWrapperProps & Record<string, unknown>;
+
 export function getInputWrapperProps(
   props: FieldRelationshipProps,
   includeLabel = true,
-): InputWrapperProps {
+): InputWrapperData {
   return {
     ...(props.id === undefined ? {} : { id: props.id }),
     ...(includeLabel && props.label !== undefined
