@@ -49,4 +49,19 @@ describe("component taxonomy", () => {
       );
     }
   });
+
+  it("keeps Storybook category order aligned with the registry", async () => {
+    const source = await readFile(
+      "apps/storybook/.storybook/preview.ts",
+      "utf8",
+    );
+    let previousIndex = -1;
+
+    for (const { label } of DOCTUI_COMPONENT_CATEGORIES) {
+      const currentIndex = source.indexOf(`"${label}"`);
+
+      expect(currentIndex).toBeGreaterThan(previousIndex);
+      previousIndex = currentIndex;
+    }
+  });
 });
