@@ -14,7 +14,7 @@ Generated component and package reference for doctui 0.0.0.
 ## Components
 
 - ActionIcon (@doctui/core): Compact icon-only native button with an accessible name.
-- Autocomplete (@doctui/core): Searchable single-value input backed by the shared combobox engine.
+- Autocomplete (@doctui/core): Searchable single-value selection control backed by the shared Combobox engine.
 - Badge (@doctui/core): Compact status label using semantic color and variant tokens.
 - Box (@doctui/core): Low-level polymorphic container with token-based spacing.
 - Button (@doctui/core): Native button control with doctui color, variant and size tokens.
@@ -22,7 +22,7 @@ Generated component and package reference for doctui 0.0.0.
 - Center (@doctui/core): Flex helper that centers content on both axes.
 - Checkbox (@doctui/core): Native checkbox semantics with doctui-controlled visual geometry and shared field messaging.
 - Code (@doctui/core): Monospace inline or block code presentation.
-- Combobox (@doctui/core): Shared searchable selection primitive with listbox semantics.
+- Combobox (@doctui/core): Focus-managed listbox engine used by doctui selection controls.
 - Container (@doctui/core): Centered responsive container constrained by theme breakpoints.
 - DateInput (@doctui/dates): Native date input with doctui field labeling and clear behavior.
 - DatePicker (@doctui/dates): Date input with an optional calendar selection panel.
@@ -38,7 +38,7 @@ Generated component and package reference for doctui 0.0.0.
 - Menu (@doctui/core): Keyboard-navigable menu built from native menu item buttons.
 - Modal (@doctui/core): Accessible dialog with portal, focus trap, Escape dismissal and focus restoration.
 - MonthPicker (@doctui/dates): Month selection control that emits YYYY-MM values.
-- MultiSelect (@doctui/core): Searchable multi-value selection control backed by the shared combobox engine.
+- MultiSelect (@doctui/core): Searchable multi-value selection control backed by the shared Combobox engine.
 - Notifications (@doctui/notifications): Accessible renderer for notifications managed by a store.
 - NumberInput (@doctui/core): Native numeric input with numeric v-model values and range constraints.
 - Overlay (@doctui/core): Portal-backed backdrop with controlled visibility and dismissal.
@@ -47,7 +47,7 @@ Generated component and package reference for doctui 0.0.0.
 - Popover (@doctui/core): Dismissable contextual panel anchored to a target slot.
 - Radio (@doctui/core): Native radio option with doctui-controlled visual geometry for a shared scalar v-model.
 - SegmentedControl (@doctui/core): Single-selection control with radio semantics and arrow navigation.
-- Select (@doctui/core): Single-value selection control backed by the shared combobox engine.
+- Select (@doctui/core): Single-value selection control backed by the shared Combobox focus model.
 - Skeleton (@doctui/core): Loading placeholder that can reveal its content when ready.
 - Space (@doctui/core): Semantic layout spacer using the theme spacing scale.
 - Stack (@doctui/core): Vertical flex layout for consistent spacing between children.
@@ -77,11 +77,14 @@ Accessibility: Requires ariaLabel because icon-only controls need an accessible 
 
 Package: `@doctui/core`
 
-Searchable single-value input backed by the shared combobox engine.
+Searchable single-value selection control backed by the shared Combobox engine.
 
-Props: `modelValue`, `data`, `label`, `description`, `error`, `required`, `disabled`, `placeholder`, `clearable`, `ariaLabel`, `nothingFound`, `size`, `radius`.
+Props: `modelValue`, `data`, `id`, `label`, `description`, `error`, `required`, `disabled`, `placeholder`, `clearable`, `ariaLabel`, `nothingFound`, `size`, `radius`.
 
-Accessibility: Uses a searchable combobox and filters options without duplicating navigation logic.
+Accessibility: Filtering preserves a valid active descendant by option value and falls back to the first enabled visible option when needed.
+Accessibility: Empty results remove aria-activedescendant and announce the nothingFound content as status text.
+Accessibility: Clear is forwarded consistently with Select and MultiSelect.
+Example: <Autocomplete id="framework-search" v-model="framework" :data="frameworks" label="Framework" nothing-found="No matches" />
 
 ### Badge
 
@@ -157,11 +160,15 @@ Props: `block`, `size`.
 
 Package: `@doctui/core`
 
-Shared searchable selection primitive with listbox semantics.
+Focus-managed listbox engine used by doctui selection controls.
 
-Props: `modelValue`, `data`, `multiple`, `searchable`, `clearable`, `label`, `description`, `error`, `required`, `disabled`, `placeholder`, `ariaLabel`, `nothingFound`, `size`, `radius`.
+Props: `modelValue`, `data`, `id`, `multiple`, `searchable`, `clearable`, `label`, `description`, `error`, `required`, `disabled`, `placeholder`, `ariaLabel`, `nothingFound`, `size`, `radius`.
 
-Accessibility: Uses combobox/listbox roles and supports Arrow, Home, End, Enter and Escape keyboard behavior.
+Accessibility: Keeps DOM focus on the native combobox input and exposes the active enabled option through aria-activedescendant.
+Accessibility: Arrow keys, Home and End skip disabled options; filtering never leaves aria-activedescendant pointing at a missing option.
+Accessibility: Visible labels use the shared field relationship; ariaLabel is supported when no visible label is rendered, with a safe fallback accessible name.
+Example: <Combobox id="framework" v-model="framework" :data="frameworks" label="Framework" clearable />
+Example: <Combobox v-model="framework" :data="frameworks" searchable aria-label="Search framework" nothing-found="No matches" />
 
 ### Container
 
@@ -312,11 +319,14 @@ Props: `modelValue`, `year`, `locale`.
 
 Package: `@doctui/core`
 
-Searchable multi-value selection control backed by the shared combobox engine.
+Searchable multi-value selection control backed by the shared Combobox engine.
 
-Props: `modelValue`, `data`, `label`, `description`, `error`, `required`, `disabled`, `placeholder`, `clearable`, `ariaLabel`, `nothingFound`, `size`, `radius`.
+Props: `modelValue`, `data`, `id`, `label`, `description`, `error`, `required`, `disabled`, `placeholder`, `clearable`, `ariaLabel`, `nothingFound`, `size`, `radius`.
 
-Accessibility: Uses a multiselect listbox and supports keyboard selection and removal.
+Accessibility: Uses aria-multiselectable listbox semantics while keeping DOM focus on the native combobox input.
+Accessibility: Backspace removes the last selected value when the search query is empty, and controlled updates immediately refresh aria-selected state.
+Accessibility: Clear emits an empty array plus the shared clear event.
+Example: <MultiSelect id="compare" v-model="frameworks" :data="options" label="Compare with" clearable />
 
 ### Notifications
 
@@ -407,11 +417,14 @@ Accessibility: Uses radiogroup/radio roles; Arrow, Home, End, Enter and Space ar
 
 Package: `@doctui/core`
 
-Single-value selection control backed by the shared combobox engine.
+Single-value selection control backed by the shared Combobox focus model.
 
-Props: `modelValue`, `data`, `label`, `description`, `error`, `required`, `disabled`, `placeholder`, `clearable`, `ariaLabel`, `nothingFound`, `size`, `radius`.
+Props: `modelValue`, `data`, `id`, `label`, `description`, `error`, `required`, `disabled`, `placeholder`, `clearable`, `ariaLabel`, `nothingFound`, `size`, `radius`.
 
-Accessibility: Uses the shared combobox keyboard and listbox semantics.
+Accessibility: Uses the Combobox aria-activedescendant focus model and skips disabled options during keyboard navigation.
+Accessibility: Supports a stable public id plus visible-label or ariaLabel accessible naming.
+Accessibility: Clear emits both the existing v-model update and the shared clear event.
+Example: <Select id="assignee" v-model="assignee" :data="people" label="Assignee" clearable @clear="trackCleared" />
 
 ### Skeleton
 
