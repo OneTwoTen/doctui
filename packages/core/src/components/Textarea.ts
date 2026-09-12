@@ -2,11 +2,12 @@ import { defineComponent, h, mergeProps, type PropType, ref } from "vue";
 import type { Radius, Size } from "../theme/types";
 import {
   composeDescribedBy,
+  getFieldRootStateAttrs,
   getInputWrapperProps,
   splitFieldAttrs,
 } from "./field-internals";
 import { InputWrapper } from "./InputWrapper";
-import { fontSizeToken, radiusToken } from "./shared";
+import { radiusToken } from "./shared";
 
 export interface TextareaProps {
   modelValue?: string;
@@ -52,52 +53,59 @@ export const Textarea = defineComponent({
     return () => {
       const { rootAttrs, controlAttrs } = splitFieldAttrs(attrs);
 
-      return h(InputWrapper, getInputWrapperProps(props), {
-        default: ({ id, describedBy }: { id: string; describedBy?: string }) =>
-          h(
-            "textarea",
-            mergeProps(controlAttrs, rootAttrs, {
-              id,
-              value: props.modelValue,
-              disabled: props.disabled,
-              readonly: props.readonly,
-              required: props.required,
-              placeholder: props.placeholder,
-              rows: props.rows,
-              "aria-invalid": props.error
-                ? "true"
-                : controlAttrs["aria-invalid"],
-              "aria-describedby": composeDescribedBy(
-                describedBy,
-                controlAttrs["aria-describedby"],
-              ),
-              "data-dui-component": "Textarea",
-              "data-focused": focused.value ? "true" : undefined,
-              "data-disabled": props.disabled ? "true" : undefined,
-              "data-readonly": props.readonly ? "true" : undefined,
-              "data-error": props.error ? "true" : undefined,
-              "data-required": props.required ? "true" : undefined,
-              "data-size": props.size,
-              class: "dui-Textarea",
-              style: {
-                borderRadius: radiusToken(props.radius),
-                fontSize: fontSizeToken(props.size),
-                resize: props.resize,
-              },
-              onInput: (event: Event) =>
-                emit(
-                  "update:modelValue",
-                  (event.target as HTMLTextAreaElement).value,
+      return h(
+        InputWrapper,
+        mergeProps(
+          getInputWrapperProps(props),
+          rootAttrs,
+          getFieldRootStateAttrs(props, "Textarea"),
+        ),
+        {
+          default: ({ id, describedBy }: { id: string; describedBy?: string }) =>
+            h(
+              "textarea",
+              mergeProps(controlAttrs, {
+                id,
+                value: props.modelValue,
+                disabled: props.disabled,
+                readonly: props.readonly,
+                required: props.required,
+                placeholder: props.placeholder,
+                rows: props.rows,
+                "aria-invalid": props.error
+                  ? "true"
+                  : controlAttrs["aria-invalid"],
+                "aria-describedby": composeDescribedBy(
+                  describedBy,
+                  controlAttrs["aria-describedby"],
                 ),
-              onFocus: () => {
-                focused.value = true;
-              },
-              onBlur: () => {
-                focused.value = false;
-              },
-            }),
-          ),
-      });
+                "data-dui-component": "Textarea",
+                "data-focused": focused.value ? "true" : undefined,
+                "data-disabled": props.disabled ? "true" : undefined,
+                "data-readonly": props.readonly ? "true" : undefined,
+                "data-error": props.error ? "true" : undefined,
+                "data-required": props.required ? "true" : undefined,
+                "data-size": props.size,
+                class: "dui-Textarea",
+                style: {
+                  borderRadius: radiusToken(props.radius),
+                  resize: props.resize,
+                },
+                onInput: (event: Event) =>
+                  emit(
+                    "update:modelValue",
+                    (event.target as HTMLTextAreaElement).value,
+                  ),
+                onFocus: () => {
+                  focused.value = true;
+                },
+                onBlur: () => {
+                  focused.value = false;
+                },
+              }),
+            ),
+        },
+      );
     };
   },
 });

@@ -1,0 +1,322 @@
+.dui-InputWrapper {
+  --dui-field-control-height: 2.625rem;
+  --dui-field-font-size: var(--dui-font-size-md);
+  --dui-field-padding-inline: 0.875rem;
+  --dui-field-choice-size: 1.5rem;
+  --dui-field-switch-width: 2.875rem;
+  --dui-field-switch-thumb-size: 1.125rem;
+  --dui-field-disabled-background: var(--dui-color-surface-raised);
+  --dui-field-disabled-color: var(--dui-color-text-muted);
+}
+
+.dui-InputWrapper[data-size="xs"] {
+  --dui-field-control-height: 1.875rem;
+  --dui-field-font-size: var(--dui-font-size-xs);
+  --dui-field-padding-inline: 0.625rem;
+  --dui-field-choice-size: 1rem;
+  --dui-field-switch-width: 2rem;
+  --dui-field-switch-thumb-size: 0.75rem;
+}
+
+.dui-InputWrapper[data-size="sm"] {
+  --dui-field-control-height: 2.25rem;
+  --dui-field-font-size: var(--dui-font-size-sm);
+  --dui-field-padding-inline: 0.75rem;
+  --dui-field-choice-size: 1.25rem;
+  --dui-field-switch-width: 2.375rem;
+  --dui-field-switch-thumb-size: 0.875rem;
+}
+
+.dui-InputWrapper[data-size="lg"] {
+  --dui-field-control-height: 3.125rem;
+  --dui-field-font-size: var(--dui-font-size-lg);
+  --dui-field-padding-inline: 1rem;
+  --dui-field-choice-size: 1.875rem;
+  --dui-field-switch-width: 3.5rem;
+  --dui-field-switch-thumb-size: 1.375rem;
+}
+
+.dui-InputWrapper[data-size="xl"] {
+  --dui-field-control-height: 3.75rem;
+  --dui-field-font-size: var(--dui-font-size-xl);
+  --dui-field-padding-inline: 1.25rem;
+  --dui-field-choice-size: 2.25rem;
+  --dui-field-switch-width: 4.5rem;
+  --dui-field-switch-thumb-size: 1.75rem;
+}
+
+.dui-InputWrapper[data-disabled="true"] > .dui-InputWrapper-label,
+.dui-InputWrapper[data-disabled="true"] > .dui-InputWrapper-description {
+  color: var(--dui-field-disabled-color);
+}
+
+.dui-TextInput,
+.dui-Textarea,
+.dui-NumberInput {
+  font-size: var(--dui-field-font-size);
+}
+
+.dui-TextInput {
+  min-height: var(--dui-field-control-height);
+}
+
+.dui-TextInput-input {
+  min-height: calc(var(--dui-field-control-height) - 2px);
+  padding-block: 0;
+  padding-inline: var(--dui-field-padding-inline);
+}
+
+.dui-TextInput-input::placeholder,
+.dui-Textarea::placeholder,
+.dui-NumberInput::placeholder {
+  color: var(--dui-color-text-muted);
+  opacity: 1;
+}
+
+.dui-TextInput-section {
+  box-sizing: border-box;
+  flex: 0 0 calc(var(--dui-field-control-height) - 2px);
+  justify-content: center;
+  min-height: calc(var(--dui-field-control-height) - 2px);
+  padding: 0;
+}
+
+.dui-TextInput-clear {
+  flex: 0 0 calc(var(--dui-field-control-height) - 2px);
+  height: calc(var(--dui-field-control-height) - 2px);
+  margin-inline-end: 0;
+  padding: 0;
+}
+
+.dui-TextInput[data-disabled="true"] {
+  background: var(--dui-field-disabled-background);
+  color: var(--dui-field-disabled-color);
+  cursor: not-allowed;
+}
+
+.dui-TextInput-input:disabled {
+  color: inherit;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.dui-TextInput-input[readonly],
+.dui-Textarea[readonly],
+.dui-NumberInput[readonly] {
+  caret-color: transparent;
+}
+
+.dui-TextInput[data-error="true"] .dui-TextInput-section {
+  color: var(--dui-color-danger-filled);
+}
+
+.dui-TextInput[data-focused="true"][data-error="true"] {
+  border-color: var(--dui-color-danger-filled);
+}
+
+.dui-Textarea,
+.dui-NumberInput {
+  min-height: var(--dui-field-control-height);
+  padding-block: 0;
+  padding-inline: var(--dui-field-padding-inline);
+}
+
+.dui-Textarea {
+  padding-block: max(var(--dui-spacing-xs), 0.35rem);
+}
+
+.dui-Textarea[data-error="true"],
+.dui-NumberInput[data-error="true"] {
+  border-color: var(--dui-color-danger-filled);
+}
+
+.dui-Textarea:focus[data-error="true"],
+.dui-NumberInput:focus[data-error="true"] {
+  border-color: var(--dui-color-danger-filled);
+}
+
+.dui-Textarea:disabled,
+.dui-NumberInput:disabled {
+  background: var(--dui-field-disabled-background);
+  color: var(--dui-field-disabled-color);
+  opacity: 1;
+}
+
+.dui-NumberInput::-webkit-inner-spin-button,
+.dui-NumberInput::-webkit-outer-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+.dui-NumberInput[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.dui-Checkbox,
+.dui-Radio,
+.dui-Switch {
+  align-items: center;
+  font-size: var(--dui-field-font-size);
+  gap: var(--dui-spacing-xs);
+  position: relative;
+}
+
+.dui-Checkbox[data-disabled="true"],
+.dui-Radio[data-disabled="true"],
+.dui-Switch[data-disabled="true"] {
+  color: var(--dui-field-disabled-color);
+  cursor: not-allowed;
+}
+
+.dui-Checkbox-input,
+.dui-Radio-input,
+.dui-Switch-input {
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.dui-Checkbox-control,
+.dui-Radio-control {
+  align-items: center;
+  background: var(--dui-color-surface);
+  border: 1px solid var(--dui-color-border);
+  box-sizing: border-box;
+  display: inline-flex;
+  flex: 0 0 var(--dui-field-choice-size);
+  height: var(--dui-field-choice-size);
+  justify-content: center;
+  position: relative;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    box-shadow 120ms ease;
+  width: var(--dui-field-choice-size);
+}
+
+.dui-Checkbox-control {
+  border-radius: var(--dui-radius-sm);
+}
+
+.dui-Checkbox-control::after {
+  border: solid var(--dui-color-primary-filled-text);
+  border-width: 0 0.12em 0.12em 0;
+  content: "";
+  height: 45%;
+  opacity: 0;
+  transform: rotate(45deg) scale(0.7);
+  transition:
+    opacity 120ms ease,
+    transform 120ms ease;
+  width: 24%;
+}
+
+.dui-Checkbox-input:checked + .dui-Checkbox-control {
+  background: var(--dui-color-primary-filled);
+  border-color: var(--dui-color-primary-filled);
+}
+
+.dui-Checkbox-input:checked + .dui-Checkbox-control::after {
+  opacity: 1;
+  transform: rotate(45deg) scale(1);
+}
+
+.dui-Radio-control {
+  border-radius: 9999px;
+}
+
+.dui-Radio-control::after {
+  background: var(--dui-color-primary-filled);
+  border-radius: 9999px;
+  content: "";
+  height: 50%;
+  opacity: 0;
+  transform: scale(0.5);
+  transition:
+    opacity 120ms ease,
+    transform 120ms ease;
+  width: 50%;
+}
+
+.dui-Radio-input:checked + .dui-Radio-control {
+  border-color: var(--dui-color-primary-filled);
+}
+
+.dui-Radio-input:checked + .dui-Radio-control::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.dui-Checkbox-input:focus-visible + .dui-Checkbox-control,
+.dui-Radio-input:focus-visible + .dui-Radio-control,
+.dui-Switch-input:focus-visible + .dui-Switch-track {
+  outline: 2px solid var(--dui-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.dui-Checkbox[data-error="true"] .dui-Checkbox-control,
+.dui-Radio[data-error="true"] .dui-Radio-control,
+.dui-Switch[data-error="true"] .dui-Switch-track {
+  border-color: var(--dui-color-danger-filled);
+}
+
+.dui-Checkbox-input:disabled + .dui-Checkbox-control,
+.dui-Radio-input:disabled + .dui-Radio-control {
+  background: var(--dui-field-disabled-background);
+  border-color: var(--dui-color-border);
+}
+
+.dui-Checkbox-label,
+.dui-Radio-label,
+.dui-Switch-label {
+  min-width: 0;
+}
+
+.dui-Switch-track {
+  background: var(--dui-color-border);
+  border: 1px solid var(--dui-color-border);
+  border-radius: 9999px;
+  box-sizing: border-box;
+  display: inline-flex;
+  flex: 0 0 var(--dui-field-switch-width);
+  height: var(--dui-field-choice-size);
+  position: relative;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    box-shadow 120ms ease;
+  width: var(--dui-field-switch-width);
+}
+
+.dui-Switch-thumb {
+  background: var(--dui-color-primary-filled-text);
+  border-radius: 9999px;
+  height: var(--dui-field-switch-thumb-size);
+  inset-block-start: 50%;
+  inset-inline-start: 2px;
+  position: absolute;
+  transform: translateY(-50%);
+  transition: inset-inline-start 150ms ease;
+  width: var(--dui-field-switch-thumb-size);
+}
+
+.dui-Switch-input:checked + .dui-Switch-track {
+  background: var(--dui-color-primary-filled);
+  border-color: var(--dui-color-primary-filled);
+}
+
+.dui-Switch-input:checked + .dui-Switch-track .dui-Switch-thumb {
+  inset-inline-start: calc(
+    var(--dui-field-switch-width) - var(--dui-field-switch-thumb-size) - 3px
+  );
+}
+
+.dui-Switch-input:disabled + .dui-Switch-track {
+  background: var(--dui-field-disabled-background);
+  border-color: var(--dui-color-border);
+}

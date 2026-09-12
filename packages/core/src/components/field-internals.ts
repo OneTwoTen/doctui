@@ -8,6 +8,12 @@ interface FieldRelationshipProps {
   readonly required?: boolean | undefined;
 }
 
+interface FieldStateProps extends FieldRelationshipProps {
+  readonly size?: string | undefined;
+  readonly disabled?: boolean | undefined;
+  readonly readonly?: boolean | undefined;
+}
+
 export function getInputWrapperProps(
   props: FieldRelationshipProps,
   includeLabel = true,
@@ -22,6 +28,20 @@ export function getInputWrapperProps(
       : { description: props.description }),
     ...(props.error === undefined ? {} : { error: props.error }),
     required: props.required ?? false,
+  };
+}
+
+export function getFieldRootStateAttrs(
+  props: FieldStateProps,
+  component: string,
+) {
+  return {
+    "data-dui-field": component,
+    "data-size": props.size,
+    "data-disabled": props.disabled ? "true" : undefined,
+    "data-readonly": props.readonly ? "true" : undefined,
+    "data-error": props.error ? "true" : undefined,
+    "data-required": props.required ? "true" : undefined,
   };
 }
 

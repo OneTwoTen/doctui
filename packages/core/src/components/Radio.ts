@@ -2,11 +2,11 @@ import { defineComponent, h, mergeProps, type PropType } from "vue";
 import type { Size } from "../theme/types";
 import {
   composeDescribedBy,
+  getFieldRootStateAttrs,
   getInputWrapperProps,
   splitFieldAttrs,
 } from "./field-internals";
 import { InputWrapper } from "./InputWrapper";
-import { fontSizeToken } from "./shared";
 
 export interface RadioProps {
   modelValue?: string | number;
@@ -45,60 +45,70 @@ export const Radio = defineComponent({
       const { rootAttrs, controlAttrs } = splitFieldAttrs(attrs);
       const checked = props.modelValue === props.value;
 
-      return h(InputWrapper, getInputWrapperProps(props, false), {
-        default: ({ id, describedBy }: { id: string; describedBy?: string }) =>
-          h(
-            "label",
-            mergeProps(rootAttrs, {
-              class: "dui-Radio",
-              for: id,
-              "data-dui-component": "Radio",
-              "data-checked": checked ? "true" : undefined,
-              "data-disabled": props.disabled ? "true" : undefined,
-              "data-error": props.error ? "true" : undefined,
-              "data-required": props.required ? "true" : undefined,
-              "data-size": props.size,
-              style: { fontSize: fontSizeToken(props.size) },
-            }),
-            [
-              h(
-                "input",
-                mergeProps(controlAttrs, {
-                  id,
-                  type: "radio",
-                  name: props.name,
-                  value: props.value,
-                  checked,
-                  disabled: props.disabled,
-                  required: props.required,
-                  "aria-invalid": props.error
-                    ? "true"
-                    : controlAttrs["aria-invalid"],
-                  "aria-describedby": composeDescribedBy(
-                    describedBy,
-                    controlAttrs["aria-describedby"],
-                  ),
-                  class: "dui-Radio-input",
-                  style: {
-                    fontSize: "inherit",
-                    inlineSize: "1em",
-                    blockSize: "1em",
-                  },
-                  onChange: () => emit("update:modelValue", props.value),
+      return h(
+        InputWrapper,
+        mergeProps(
+          getInputWrapperProps(props, false),
+          rootAttrs,
+          getFieldRootStateAttrs(props, "Radio"),
+        ),
+        {
+          default: ({ id, describedBy }: { id: string; describedBy?: string }) =>
+            h(
+              "label",
+              {
+                class: "dui-Radio",
+                for: id,
+                "data-dui-component": "Radio",
+                "data-checked": checked ? "true" : undefined,
+                "data-disabled": props.disabled ? "true" : undefined,
+                "data-error": props.error ? "true" : undefined,
+                "data-required": props.required ? "true" : undefined,
+                "data-size": props.size,
+              },
+              [
+                h(
+                  "input",
+                  mergeProps(controlAttrs, {
+                    id,
+                    type: "radio",
+                    name: props.name,
+                    value: props.value,
+                    checked,
+                    disabled: props.disabled,
+                    required: props.required,
+                    "aria-invalid": props.error
+                      ? "true"
+                      : controlAttrs["aria-invalid"],
+                    "aria-describedby": composeDescribedBy(
+                      describedBy,
+                      controlAttrs["aria-describedby"],
+                    ),
+                    class: "dui-Radio-input",
+                    onChange: () => emit("update:modelValue", props.value),
+                  }),
+                ),
+                h("span", {
+                  class: "dui-Radio-control",
+                  "aria-hidden": "true",
                 }),
-              ),
-              slots.default?.() ??
-                (props.label
-                  ? [
-                      props.label,
-                      props.required
-                        ? h("span", { "aria-hidden": "true" }, " *")
-                        : null,
-                    ]
-                  : undefined),
-            ],
-          ),
-      });
+                h(
+                  "span",
+                  { class: "dui-Radio-label" },
+                  slots.default?.() ??
+                    (props.label
+                      ? [
+                          props.label,
+                          props.required
+                            ? h("span", { "aria-hidden": "true" }, " *")
+                            : null,
+                        ]
+                      : undefined),
+                ),
+              ],
+            ),
+        },
+      );
     };
   },
 });
