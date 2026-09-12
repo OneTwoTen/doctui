@@ -1,0 +1,88 @@
+import type { DoctuiTheme } from "./types";
+
+export const DEFAULT_THEME: DoctuiTheme = {
+  fontFamily:
+    "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+  fontFamilyMonospace:
+    "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", monospace",
+  spacing: {
+    xs: "0.5rem",
+    sm: "0.75rem",
+    md: "1rem",
+    lg: "1.5rem",
+    xl: "2rem",
+  },
+  radius: {
+    none: "0",
+    xs: "0.125rem",
+    sm: "0.25rem",
+    md: "0.5rem",
+    lg: "0.75rem",
+    xl: "1rem",
+    full: "9999px",
+  },
+  fontSizes: {
+    xs: "0.75rem",
+    sm: "0.875rem",
+    md: "1rem",
+    lg: "1.125rem",
+    xl: "1.25rem",
+  },
+  lineHeights: {
+    xs: "1.25",
+    sm: "1.375",
+    md: "1.5",
+    lg: "1.5",
+    xl: "1.5",
+  },
+  shadows: {
+    xs: "0 1px 2px rgb(15 23 42 / 0.06)",
+    sm: "0 1px 3px rgb(15 23 42 / 0.1), 0 1px 2px rgb(15 23 42 / 0.06)",
+    md: "0 4px 6px -1px rgb(15 23 42 / 0.1), 0 2px 4px -2px rgb(15 23 42 / 0.1)",
+    lg: "0 10px 15px -3px rgb(15 23 42 / 0.1), 0 4px 6px -4px rgb(15 23 42 / 0.1)",
+    xl: "0 20px 25px -5px rgb(15 23 42 / 0.1), 0 8px 10px -6px rgb(15 23 42 / 0.1)",
+  },
+  breakpoints: {
+    xs: "30rem",
+    sm: "40rem",
+    md: "48rem",
+    lg: "64rem",
+    xl: "80rem",
+  },
+  zIndex: {
+    dropdown: 300,
+    overlay: 400,
+    modal: 500,
+    popover: 600,
+    toast: 700,
+    tooltip: 800,
+  },
+  colors: {
+    light: {
+      body: "#ffffff",
+      surface: "#f8fafc",
+      surfaceRaised: "#ffffff",
+      text: "#0f172a",
+      textMuted: "#64748b",
+      border: "#e2e8f0",
+      primaryFilled: "#2563eb",
+      primaryFilledHover: "#1d4ed8",
+      primaryLight: "#dbeafe",
+      focusRing: "#3b82f6",
+      dangerFilled: "#dc2626",
+    },
+    dark: {
+      body: "#0f172a",
+      surface: "#111827",
+      surfaceRaised: "#1e293b",
+      text: "#f8fafc",
+      textMuted: "#94a3b8",
+      border: "#334155",
+      primaryFilled: "#3b82f6",
+      primaryFilledHover: "#60a5fa",
+      primaryLight: "#172554",
+      focusRing: "#60a5fa",
+      dangerFilled: "#f87171",
+    },
+  },
+};

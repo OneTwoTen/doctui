@@ -16,7 +16,7 @@ export const CorePackage: Story = {
         h(
           "div",
           { style: "font: 14px/1.5 system-ui; padding: 24px" },
-          `@doctui/core resolved successfully (${Object.keys(core).length} public exports in Phase 0).`,
+          `@doctui/core resolved successfully (${Object.keys(core).length} public exports).`,
         );
     },
   }),
