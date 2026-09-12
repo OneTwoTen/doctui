@@ -1,0 +1,13 @@
+---
+description: Test expectations for doctui component and composable changes
+globs: "packages/**/*.{test,spec}.{ts,tsx},packages/**/*.vue"
+alwaysApply: false
+---
+# Testing
+
+- Test behavior and public contracts, not private implementation details.
+- Interactive components require keyboard/focus tests for their critical path.
+- Cover disabled, loading, invalid and controlled-value states when applicable.
+- Regression fixes should include a failing-before/fixed-after test when practical.
+- Avoid snapshots for behavior that can be asserted semantically.
+- Storybook is not a replacement for unit/behavior tests.
