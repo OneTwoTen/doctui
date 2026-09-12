@@ -45,7 +45,7 @@ export const PasswordInput = defineComponent({
   },
   setup(props, { attrs, emit, slots }) {
     return () => {
-      const textInputProps = {
+      const textInputProps: Record<string, unknown> = {
         ...attrs,
         modelValue: props.modelValue,
         type: "password",
