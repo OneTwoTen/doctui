@@ -42,9 +42,7 @@ function buttonTokens(color: Color, variant: Variant): Record<string, string> {
       ? "transparent"
       : `var(--dui-color-${color}-${variant})`;
   const border =
-    variant === "outline"
-      ? `var(--dui-color-${color}-outline)`
-      : "transparent";
+    variant === "outline" ? `var(--dui-color-${color}-outline)` : "transparent";
 
   return {
     "--dui-button-background": background,
