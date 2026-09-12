@@ -1,4 +1,4 @@
-name: Deploy docs to GitHub Pages
+name: Deploy docs and Storybook to GitHub Pages
 
 on:
   push:
@@ -17,7 +17,7 @@ concurrency:
 
 jobs:
   build:
-    name: Build docs
+    name: Build docs and Storybook
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -41,8 +41,18 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Build docs
-        run: bun run build:docs
+      - name: Build docs and Storybook
+        run: bun run build
+
+      - name: Validate static outputs
+        run: |
+          test -f apps/docs/.vitepress/dist/index.html
+          test -f apps/storybook/storybook-static/index.html
+
+      - name: Mount Storybook under docs artifact
+        run: |
+          mkdir -p apps/docs/.vitepress/dist/storybook
+          cp -R apps/storybook/storybook-static/. apps/docs/.vitepress/dist/storybook/
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
@@ -50,7 +60,7 @@ jobs:
           path: apps/docs/.vitepress/dist
 
   deploy:
-    name: Deploy docs
+    name: Deploy docs and Storybook
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
