@@ -4,9 +4,9 @@ import { mount } from "@vue/test-utils";
 import { describe, expect, it } from "vitest";
 import { Checkbox, Radio, SegmentedControl, Switch } from "../index";
 
-const readControlStyles = () =>
+const readStyles = (file: string) =>
   readFile(
-    resolve(process.cwd(), "packages/core/src/components/control-styles.css"),
+    resolve(process.cwd(), `packages/core/src/components/${file}`),
     "utf8",
   );
 
@@ -43,9 +43,10 @@ describe("control visual contract", () => {
     }
   });
 
-  it("styles custom checkbox, radio and switch visuals while preserving native inputs", async () => {
-    const css = await readControlStyles();
+  it("keeps boolean custom visuals in the shared field styling contract", async () => {
+    const css = await readStyles("field-styles.css");
 
+    expect(css).toMatch(/\.dui-InputWrapper\[data-size="xl"\]/);
     expect(css).toMatch(/\.dui-Checkbox-input[\s\S]*position:\s*absolute/);
     expect(css).toMatch(
       /\.dui-Checkbox-input:focus-visible\s*\+\s*\.dui-Checkbox-control/,
@@ -64,17 +65,25 @@ describe("control visual contract", () => {
     );
   });
 
-  it("styles disabled/error states and all SegmentedControl interaction states", async () => {
-    const css = await readControlStyles();
+  it("adds hover polish and reduced-motion handling for boolean controls", async () => {
+    const css = await readStyles("control-styles.css");
 
-    expect(css).toMatch(/\.dui-Checkbox\[data-disabled="true"\]/);
-    expect(css).toMatch(/\.dui-Radio\[data-error="true"\]/);
-    expect(css).toMatch(/\.dui-Switch\[data-disabled="true"\]/);
+    expect(css).toMatch(/\.dui-Checkbox:hover:not\(\[data-disabled="true"\]\)/);
+    expect(css).toMatch(/\.dui-Radio:hover:not\(\[data-disabled="true"\]\)/);
+    expect(css).toMatch(/\.dui-Switch:hover:not\(\[data-disabled="true"\]\)/);
+    expect(css).toMatch(/@media \(prefers-reduced-motion: reduce\)/);
+  });
+
+  it("styles every SegmentedControl size and interaction state", async () => {
+    const css = await readStyles("control-styles.css");
+
+    expect(css).toMatch(/\.dui-SegmentedControl\[data-size="xs"\]/);
     expect(css).toMatch(/\.dui-SegmentedControl\[data-size="xl"\]/);
     expect(css).toMatch(
       /\.dui-SegmentedControl-option\[data-active="true"\]/,
     );
     expect(css).toMatch(/\.dui-SegmentedControl-option:hover:not\(:disabled\)/);
+    expect(css).toMatch(/\.dui-SegmentedControl-option:focus-visible/);
     expect(css).toMatch(/\.dui-SegmentedControl\[data-disabled="true"\]/);
   });
 });
