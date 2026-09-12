@@ -1,9 +1,10 @@
 import { Stack, TextInput, Title } from "@doctui/core";
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import { expect } from "storybook/test";
 import { h, ref } from "vue";
 import { preview } from "./story-helpers";
 
-const meta = { title: "Inputs/TextInput" } satisfies Meta;
+const meta = { title: "Inputs/TextInput", component: TextInput } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
 
@@ -49,5 +50,15 @@ export const Controlled: Story = {
         rightSection: "⌕",
       }),
     );
+  },
+};
+
+export const Interactive: Story = {
+  args: { label: "Name", modelValue: "" },
+  render: (args) => preview(() => h(TextInput, args)),
+  play: async ({ canvas, userEvent }) => {
+    const input = canvas.getByRole("textbox", { name: "Name" });
+    await userEvent.type(input, "Ada");
+    await expect(input).toHaveValue("Ada");
   },
 };

@@ -6,6 +6,9 @@ const preview: Preview = {
     controls: {
       expanded: true,
     },
+    actions: {
+      argTypesRegex: "^on.*",
+    },
     options: {
       storySort: {
         order: [
