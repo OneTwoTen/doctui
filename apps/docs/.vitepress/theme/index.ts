@@ -1,4 +1,120 @@
 import "@doctui/core/styles.css";
+import "@doctui/dates/styles.css";
+import "@doctui/notifications/styles.css";
+import {
+  ActionIcon,
+  Autocomplete,
+  Badge,
+  Box,
+  Button,
+  Center,
+  Checkbox,
+  Code,
+  Combobox,
+  Container,
+  Divider,
+  DoctuiProvider,
+  Drawer,
+  Flex,
+  Grid,
+  Group,
+  InputWrapper,
+  Kbd,
+  Loader,
+  Menu,
+  Modal,
+  MultiSelect,
+  NumberInput,
+  Overlay,
+  Paper,
+  PasswordInput,
+  Popover,
+  Radio,
+  SegmentedControl,
+  Select,
+  Skeleton,
+  Space,
+  Stack,
+  Switch,
+  TagsInput,
+  Text,
+  Textarea,
+  TextInput,
+  Title,
+  Tooltip,
+  UnstyledButton,
+} from "@doctui/core";
+import {
+  Calendar,
+  DateInput,
+  DatePicker,
+  DateTimePicker,
+  MonthPicker,
+  YearPicker,
+} from "@doctui/dates";
+import { Notifications } from "@doctui/notifications";
 import DefaultTheme from "vitepress/theme";
+import type { Component } from "vue";
 
-export default DefaultTheme;
+const docsComponents: Record<string, Component> = {
+  ActionIcon,
+  Autocomplete,
+  Badge,
+  Box,
+  Button,
+  Calendar,
+  Center,
+  Checkbox,
+  Code,
+  Combobox,
+  Container,
+  DateInput,
+  DatePicker,
+  DateTimePicker,
+  Divider,
+  DoctuiProvider,
+  Drawer,
+  Flex,
+  Grid,
+  Group,
+  InputWrapper,
+  Kbd,
+  Loader,
+  Menu,
+  Modal,
+  MonthPicker,
+  MultiSelect,
+  Notifications,
+  NumberInput,
+  Overlay,
+  Paper,
+  PasswordInput,
+  Popover,
+  Radio,
+  SegmentedControl,
+  Select,
+  Skeleton,
+  Space,
+  Stack,
+  Switch,
+  TagsInput,
+  Text,
+  Textarea,
+  TextInput,
+  Title,
+  Tooltip,
+  UnstyledButton,
+  YearPicker,
+};
+
+export default {
+  ...DefaultTheme,
+  enhanceApp(
+    context: Parameters<NonNullable<typeof DefaultTheme.enhanceApp>>[0],
+  ) {
+    DefaultTheme.enhanceApp?.(context);
+    for (const [name, component] of Object.entries(docsComponents)) {
+      context.app.component(name, component);
+    }
+  },
+};
