@@ -2,9 +2,9 @@
   "number": "21",
   "title": "fix(core): complete combobox focus-managed listbox behavior",
   "branch": "codex/issue-10-combobox",
-  "sha": "cb27c81aae79c6baa68ead4c132d1a31803b20d1",
+  "sha": "cbe3d41c53e76c97a89ab33e985608219515944e",
   "repository": "OneTwoTen/doctui",
   "prUrl": "https://github.com/OneTwoTen/doctui/pull/21",
-  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/34704834447",
-  "generatedAt": "2026-09-12T16:19:08.104Z"
+  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/34704874335",
+  "generatedAt": "2026-09-12T16:20:01.252Z"
 }
