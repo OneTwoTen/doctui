@@ -69,6 +69,7 @@ export interface ComponentMetadataEntry {
   readonly description: string;
   readonly props: readonly string[];
   readonly accessibility?: readonly string[];
+  readonly examples?: readonly string[];
 }
 
 export function getComponentCategory(category: ComponentCategoryId) {
@@ -439,9 +440,21 @@ export const DOCTUI_COMPONENT_METADATA: readonly ComponentMetadataEntry[] = [
     category: "inputs",
     description:
       "Shared label, description, required and error structure for inputs.",
-    props: ["id", "label", "description", "error", "required"],
+    props: [
+      "id",
+      "label",
+      "description",
+      "error",
+      "required",
+      "classNames",
+      "styles",
+    ],
     accessibility: [
-      "Associates labels and help/error text with the wrapped control.",
+      "Generates an SSR-safe control ID when one is not provided and associates the visible label with that ID.",
+      "Keeps description and error messages in the DOM together and exposes both IDs to the scoped control slot.",
+    ],
+    examples: [
+      '<InputWrapper label="Email"><template #default="{ id, describedBy }"><input :id="id" :aria-describedby="describedBy" /></template></InputWrapper>',
     ],
   },
   {
@@ -462,9 +475,15 @@ export const DOCTUI_COMPONENT_METADATA: readonly ComponentMetadataEntry[] = [
       "placeholder",
       "rows",
       "resize",
+      "classNames",
+      "styles",
     ],
     accessibility: [
-      "Uses a native textarea and links its label and description/error text.",
+      "Uses a native textarea and links its label, description and error text through accessible IDs.",
+      "Read-only fields remain focusable while disabled fields use native disabled semantics.",
+    ],
+    examples: [
+      '<Textarea v-model="bio" label="Bio" size="lg" :styles="fieldStyles" />',
     ],
   },
   {
@@ -487,9 +506,15 @@ export const DOCTUI_COMPONENT_METADATA: readonly ComponentMetadataEntry[] = [
       "min",
       "max",
       "step",
+      "classNames",
+      "styles",
     ],
     accessibility: [
       "Uses a native number input with standard keyboard and validation semantics.",
+      "Description, error and consumer-provided aria-describedby IDs are composed instead of replacing one another.",
+    ],
+    examples: [
+      '<NumberInput v-model="quantity" label="Quantity" :min="1" :max="10" size="sm" />',
     ],
   },
   {
@@ -509,16 +534,22 @@ export const DOCTUI_COMPONENT_METADATA: readonly ComponentMetadataEntry[] = [
       "readonly",
       "placeholder",
       "clearable",
+      "classNames",
+      "styles",
     ],
     accessibility: [
-      "Uses a native password input and shared label/help/error associations.",
+      "Uses a native password input and the shared label/help/error relationship contract.",
+      "Native form attributes and listeners are forwarded to the password input while class/style customize the outer field root.",
+    ],
+    examples: [
+      '<PasswordInput v-model="password" label="Password" autocomplete="current-password" />',
     ],
   },
   {
     name: "Checkbox",
     category: "inputs",
     description:
-      "Native checkbox with boolean v-model and shared field messaging.",
+      "Native checkbox semantics with doctui-controlled visual geometry and shared field messaging.",
     props: [
       "modelValue",
       "id",
@@ -527,13 +558,23 @@ export const DOCTUI_COMPONENT_METADATA: readonly ComponentMetadataEntry[] = [
       "error",
       "required",
       "disabled",
+      "size",
+      "classNames",
+      "styles",
     ],
-    accessibility: ["Uses a native checkbox inside a labelable control."],
+    accessibility: [
+      "Keeps a native checkbox as the semantic, focus and keyboard source while rendering a custom visual indicator.",
+      "Disabled and required behavior uses native form semantics.",
+    ],
+    examples: [
+      '<Checkbox v-model="accepted" label="Accept terms" size="lg" required />',
+    ],
   },
   {
     name: "Radio",
     category: "inputs",
-    description: "Native radio option for a shared scalar v-model.",
+    description:
+      "Native radio option with doctui-controlled visual geometry for a shared scalar v-model.",
     props: [
       "modelValue",
       "value",
@@ -544,15 +585,23 @@ export const DOCTUI_COMPONENT_METADATA: readonly ComponentMetadataEntry[] = [
       "error",
       "required",
       "disabled",
+      "size",
+      "classNames",
+      "styles",
     ],
     accessibility: [
-      "Uses native radio semantics; provide the same name for a group.",
+      "Uses native radio semantics and keyboard behavior; provide the same name for options in one group.",
+      "The custom visual indicator does not replace the native input in the accessibility tree.",
+    ],
+    examples: [
+      '<Radio v-model="plan" name="plan" value="pro" label="Pro" size="md" />',
     ],
   },
   {
     name: "Switch",
     category: "inputs",
-    description: "Boolean toggle using a checkbox with switch semantics.",
+    description:
+      "Boolean toggle that keeps native checkbox behavior behind a doctui track and thumb visual.",
     props: [
       "modelValue",
       "id",
@@ -561,9 +610,16 @@ export const DOCTUI_COMPONENT_METADATA: readonly ComponentMetadataEntry[] = [
       "error",
       "required",
       "disabled",
+      "size",
+      "classNames",
+      "styles",
     ],
     accessibility: [
-      "Uses role=switch with aria-checked and native keyboard behavior.",
+      "Uses a native checkbox with role=switch and aria-checked while preserving native keyboard and disabled behavior.",
+      "Focus-visible styling is rendered on the visual track without hiding the native focus source from assistive technology.",
+    ],
+    examples: [
+      '<Switch v-model="notifications" label="Notifications" size="lg" />',
     ],
   },
   {
@@ -596,9 +652,16 @@ export const DOCTUI_COMPONENT_METADATA: readonly ComponentMetadataEntry[] = [
       "leftSection",
       "rightSection",
       "clearable",
+      "classNames",
+      "styles",
     ],
     accessibility: [
-      "Uses a native input and links its label and description/error text through accessible IDs.",
+      "Uses a native input and links its label, description and error text through accessible IDs.",
+      "Consumer aria-describedby IDs are composed with doctui-generated message IDs, and error state forces aria-invalid=true.",
+    ],
+    examples: [
+      '<TextInput v-model="email" label="Email" autocomplete="email" size="lg" />',
+      '<TextInput v-model="query" :class-names="fieldClasses" :styles="fieldStyles" />',
     ],
   },
 ];

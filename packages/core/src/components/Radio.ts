@@ -1,5 +1,12 @@
-import { defineComponent, h, type PropType, useId } from "vue";
+import { defineComponent, h, mergeProps, type PropType } from "vue";
 import type { Size } from "../theme/types";
+import {
+  composeDescribedBy,
+  getFieldRootStateAttrs,
+  getInputWrapperProps,
+  splitFieldAttrs,
+} from "./field-internals";
+import type { FieldClassNames, FieldStyles } from "./field-types";
 import { InputWrapper } from "./InputWrapper";
 
 export interface RadioProps {
@@ -13,6 +20,8 @@ export interface RadioProps {
   required?: boolean;
   disabled?: boolean;
   size?: Size;
+  classNames?: FieldClassNames;
+  styles?: FieldStyles;
 }
 
 export const Radio = defineComponent({
@@ -33,53 +42,91 @@ export const Radio = defineComponent({
     required: Boolean,
     disabled: Boolean,
     size: { type: String as PropType<Size>, default: "md" },
+    classNames: Object as PropType<FieldClassNames>,
+    styles: Object as PropType<FieldStyles>,
   },
   setup(props, { attrs, emit, slots }) {
-    const id = props.id ?? `dui-radio-${useId()}`;
-    return () =>
-      h(
-        InputWrapper,
-        {
-          id,
+    return () => {
+      const { rootAttrs, controlAttrs } = splitFieldAttrs(attrs);
+      const checked = props.modelValue === props.value;
 
-          ...(props.description === undefined
-            ? {}
-            : { description: props.description }),
-          ...(props.error === undefined ? {} : { error: props.error }),
-          required: props.required,
-        },
+      return h(
+        InputWrapper,
+        mergeProps(
+          getInputWrapperProps(props, false),
+          { classNames: props.classNames, styles: props.styles },
+          rootAttrs,
+          getFieldRootStateAttrs(props, "Radio"),
+        ),
         {
-          default: ({ describedBy }: { describedBy?: string }) =>
+          default: ({
+            id,
+            describedBy,
+          }: {
+            id: string;
+            describedBy?: string;
+          }) =>
             h(
               "label",
               {
-                class: ["dui-Radio", attrs.class],
+                class: ["dui-Radio", props.classNames?.body],
+                style: props.styles?.body,
+                for: id,
                 "data-dui-component": "Radio",
-                "data-size": props.size,
+                "data-checked": checked ? "true" : undefined,
                 "data-disabled": props.disabled ? "true" : undefined,
+                "data-error": props.error ? "true" : undefined,
+                "data-required": props.required ? "true" : undefined,
+                "data-size": props.size,
               },
               [
-                h("input", {
-                  ...attrs,
-                  id,
-                  type: "radio",
-                  name: props.name,
-                  value: props.value,
-                  checked: props.modelValue === props.value,
-                  disabled: props.disabled,
-                  required: props.required,
-                  "aria-invalid": props.error ? "true" : undefined,
-                  "aria-describedby": describedBy,
-                  class: "dui-Radio-input",
-                  onChange: () => emit("update:modelValue", props.value),
+                h(
+                  "input",
+                  mergeProps(controlAttrs, {
+                    id,
+                    type: "radio",
+                    name: props.name,
+                    value: props.value,
+                    checked,
+                    disabled: props.disabled,
+                    required: props.required,
+                    "aria-invalid": props.error
+                      ? "true"
+                      : controlAttrs["aria-invalid"],
+                    "aria-describedby": composeDescribedBy(
+                      describedBy,
+                      controlAttrs["aria-describedby"],
+                    ),
+                    class: ["dui-Radio-input", props.classNames?.input],
+                    style: props.styles?.input,
+                    onChange: () => emit("update:modelValue", props.value),
+                  }),
+                ),
+                h("span", {
+                  class: ["dui-Radio-control", props.classNames?.indicator],
+                  style: props.styles?.indicator,
+                  "aria-hidden": "true",
                 }),
-                slots.default?.() ??
-                  (props.label
-                    ? [props.label, props.required ? " *" : null]
-                    : undefined),
+                h(
+                  "span",
+                  {
+                    class: ["dui-Radio-label", props.classNames?.labelText],
+                    style: props.styles?.labelText,
+                  },
+                  slots.default?.() ??
+                    (props.label
+                      ? [
+                          props.label,
+                          props.required
+                            ? h("span", { "aria-hidden": "true" }, " *")
+                            : null,
+                        ]
+                      : undefined),
+                ),
               ],
             ),
         },
       );
+    };
   },
 });

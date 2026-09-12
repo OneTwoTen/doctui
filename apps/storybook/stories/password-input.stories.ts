@@ -1,4 +1,4 @@
-import { Stack, TextInput } from "@doctui/core";
+import { PasswordInput, Stack } from "@doctui/core";
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import { h, ref } from "vue";
 import { preview } from "./story-helpers";
@@ -6,13 +6,12 @@ import { preview } from "./story-helpers";
 const sizeOptions = ["xs", "sm", "md", "lg", "xl"] as const;
 
 const meta = {
-  title: "Inputs/TextInput",
-  component: TextInput,
+  title: "Inputs/PasswordInput",
+  component: PasswordInput,
   args: {
-    label: "Email",
-    description: "Used for account notifications.",
-    modelValue: "ada@example.com",
-    placeholder: "name@example.com",
+    label: "Password",
+    modelValue: "secret-value",
+    placeholder: "Enter password",
     size: "md",
     required: false,
     disabled: false,
@@ -33,7 +32,7 @@ const meta = {
     classNames: { control: "object" },
     styles: { control: "object" },
   },
-} satisfies Meta<typeof TextInput>;
+} satisfies Meta<typeof PasswordInput>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 
@@ -41,11 +40,11 @@ export const Basic: Story = {
   render: (args) =>
     preview(() => {
       const value = ref(args.modelValue ?? "");
-      return h(TextInput, {
+      return h(PasswordInput, {
         ...args,
         modelValue: value.value,
-        name: "email",
-        autocomplete: "email",
+        autocomplete: "current-password",
+        style: { maxWidth: "30rem" },
         "onUpdate:modelValue": (next: string) => (value.value = next),
       });
     }),
@@ -56,12 +55,12 @@ export const Sizes: Story = {
     preview(() =>
       h(Stack, { gap: "sm", style: { maxWidth: "30rem" } }, () =>
         sizeOptions.map((size) =>
-          h(TextInput, {
+          h(PasswordInput, {
             ...args,
             key: size,
             label: `Size ${size}`,
             size,
-            modelValue: "Geometry scales with size",
+            modelValue: "password",
           }),
         ),
       ),
@@ -72,52 +71,25 @@ export const States: Story = {
   render: (args) =>
     preview(() =>
       h(Stack, { gap: "md", style: { maxWidth: "30rem" } }, () => [
-        h(TextInput, { ...args, label: "Default", modelValue: "Editable" }),
-        h(TextInput, {
+        h(PasswordInput, {
           ...args,
           label: "Error",
-          description: "Description remains connected.",
-          error: "This value is invalid.",
-          modelValue: "Invalid",
+          description: "Use at least 12 characters.",
+          error: "Password is too short.",
+          modelValue: "short",
         }),
-        h(TextInput, {
+        h(PasswordInput, {
           ...args,
           label: "Disabled",
-          modelValue: "Disabled",
+          modelValue: "secret",
           disabled: true,
         }),
-        h(TextInput, {
+        h(PasswordInput, {
           ...args,
           label: "Read only",
-          modelValue: "Focusable",
+          modelValue: "secret",
           readonly: true,
         }),
       ]),
-    ),
-};
-
-export const Customization: Story = {
-  render: (args) =>
-    preview(() =>
-      h(TextInput, {
-        ...args,
-        label: "Part styling",
-        description:
-          "class/style target the outer root; classNames/styles target parts.",
-        modelValue: "Custom field",
-        style: {
-          maxWidth: "30rem",
-          "--dui-field-control-height": "3.25rem",
-        },
-        classNames: {
-          label: "storybook-custom-label",
-          wrapper: "storybook-custom-wrapper",
-          input: "storybook-custom-input",
-        },
-        styles: {
-          wrapper: { borderWidth: "2px" },
-          input: { letterSpacing: "0.02em" },
-        },
-      }),
     ),
 };

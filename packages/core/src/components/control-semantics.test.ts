@@ -147,7 +147,7 @@ describe("native boolean and radio controls", () => {
 
     expect(checkbox.get("input").attributes("type")).toBe("checkbox");
     expect(checkbox.get("input").attributes("name")).toBe("terms");
-    expect(checkbox.get("label").attributes("for")).toBeUndefined();
+    expect(checkbox.get("label").attributes("for")).toBe("terms");
 
     expect(radio.get("input").attributes("type")).toBe("radio");
     expect(radio.get("input").attributes("name")).toBe("plan");

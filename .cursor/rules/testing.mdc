@@ -8,6 +8,11 @@ alwaysApply: false
 - Test behavior and public contracts, not private implementation details.
 - Interactive components require keyboard/focus tests for their critical path.
 - Cover disabled, loading, invalid and controlled-value states when applicable.
-- Regression fixes should include a failing-before/fixed-after test when practical.
+- Regression fixes and new observable behavior should begin with a failing-before/fixed-after test when practical; verify the failure reason before implementation.
 - Avoid snapshots for behavior that can be asserted semantically.
 - Storybook is not a replacement for unit/behavior tests.
+- When a component forwards attrs across multiple DOM targets, test the ownership contract explicitly: outer `class`/`style` versus native attributes/listeners.
+- When `size` is public, assert observable size state and the CSS-variable/geometry contract rather than only checking that the prop is accepted.
+- Custom-control visuals must retain native semantics in tests: type/name/value/checked/disabled/required, keyboard focus and event/model updates should still come from the native control.
+- For field relationships, test custom/generated IDs, label targeting, description + error together, consumer `aria-describedby` composition and focus behavior.
+- Public `classNames`/`styles` part APIs need regression tests for representative root and internal parts so styling targets do not drift silently.

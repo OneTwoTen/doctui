@@ -61,6 +61,9 @@ const full = [
     ...("accessibility" in component
       ? component.accessibility.map((note) => `Accessibility: ${note}`)
       : []),
+    ...("examples" in component
+      ? component.examples.map((example) => `Example: ${example}`)
+      : []),
     "",
   ]),
 ];

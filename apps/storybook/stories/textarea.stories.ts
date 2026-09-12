@@ -1,4 +1,4 @@
-import { Stack, TextInput } from "@doctui/core";
+import { Stack, Textarea } from "@doctui/core";
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import { h, ref } from "vue";
 import { preview } from "./story-helpers";
@@ -6,18 +6,18 @@ import { preview } from "./story-helpers";
 const sizeOptions = ["xs", "sm", "md", "lg", "xl"] as const;
 
 const meta = {
-  title: "Inputs/TextInput",
-  component: TextInput,
+  title: "Inputs/Textarea",
+  component: Textarea,
   args: {
-    label: "Email",
-    description: "Used for account notifications.",
-    modelValue: "ada@example.com",
-    placeholder: "name@example.com",
+    label: "Notes",
+    description: "Long-form supporting context.",
+    modelValue: "Editable multi-line content",
+    placeholder: "Add context",
+    rows: 4,
     size: "md",
     required: false,
     disabled: false,
     readonly: false,
-    clearable: true,
   },
   argTypes: {
     modelValue: { control: "text" },
@@ -25,15 +25,15 @@ const meta = {
     description: { control: "text" },
     error: { control: "text" },
     placeholder: { control: "text" },
+    rows: { control: { type: "number", min: 1 } },
     size: { control: "select", options: sizeOptions },
     required: { control: "boolean" },
     disabled: { control: "boolean" },
     readonly: { control: "boolean" },
-    clearable: { control: "boolean" },
     classNames: { control: "object" },
     styles: { control: "object" },
   },
-} satisfies Meta<typeof TextInput>;
+} satisfies Meta<typeof Textarea>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 
@@ -41,11 +41,10 @@ export const Basic: Story = {
   render: (args) =>
     preview(() => {
       const value = ref(args.modelValue ?? "");
-      return h(TextInput, {
+      return h(Textarea, {
         ...args,
         modelValue: value.value,
-        name: "email",
-        autocomplete: "email",
+        style: { maxWidth: "30rem" },
         "onUpdate:modelValue": (next: string) => (value.value = next),
       });
     }),
@@ -56,12 +55,13 @@ export const Sizes: Story = {
     preview(() =>
       h(Stack, { gap: "sm", style: { maxWidth: "30rem" } }, () =>
         sizeOptions.map((size) =>
-          h(TextInput, {
+          h(Textarea, {
             ...args,
             key: size,
             label: `Size ${size}`,
             size,
-            modelValue: "Geometry scales with size",
+            rows: 2,
+            modelValue: "Padding and text geometry scale together.",
           }),
         ),
       ),
@@ -72,52 +72,25 @@ export const States: Story = {
   render: (args) =>
     preview(() =>
       h(Stack, { gap: "md", style: { maxWidth: "30rem" } }, () => [
-        h(TextInput, { ...args, label: "Default", modelValue: "Editable" }),
-        h(TextInput, {
+        h(Textarea, {
           ...args,
           label: "Error",
-          description: "Description remains connected.",
-          error: "This value is invalid.",
-          modelValue: "Invalid",
+          description: "Supporting text remains available.",
+          error: "Please shorten this note.",
+          modelValue: "Invalid content",
         }),
-        h(TextInput, {
+        h(Textarea, {
           ...args,
           label: "Disabled",
           modelValue: "Disabled",
           disabled: true,
         }),
-        h(TextInput, {
+        h(Textarea, {
           ...args,
           label: "Read only",
-          modelValue: "Focusable",
+          modelValue: "Focusable and copyable",
           readonly: true,
         }),
       ]),
-    ),
-};
-
-export const Customization: Story = {
-  render: (args) =>
-    preview(() =>
-      h(TextInput, {
-        ...args,
-        label: "Part styling",
-        description:
-          "class/style target the outer root; classNames/styles target parts.",
-        modelValue: "Custom field",
-        style: {
-          maxWidth: "30rem",
-          "--dui-field-control-height": "3.25rem",
-        },
-        classNames: {
-          label: "storybook-custom-label",
-          wrapper: "storybook-custom-wrapper",
-          input: "storybook-custom-input",
-        },
-        styles: {
-          wrapper: { borderWidth: "2px" },
-          input: { letterSpacing: "0.02em" },
-        },
-      }),
     ),
 };

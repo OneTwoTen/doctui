@@ -1,7 +1,14 @@
-import { defineComponent, h, type PropType, ref, useId } from "vue";
+import { defineComponent, h, mergeProps, type PropType, ref } from "vue";
 import type { Radius, Size } from "../theme/types";
+import {
+  composeDescribedBy,
+  getFieldRootStateAttrs,
+  getInputWrapperProps,
+  splitFieldAttrs,
+} from "./field-internals";
+import type { FieldClassNames, FieldStyles } from "./field-types";
 import { InputWrapper } from "./InputWrapper";
-import { fontSizeToken, radiusToken } from "./shared";
+import { radiusToken } from "./shared";
 
 export interface TextareaProps {
   modelValue?: string;
@@ -17,6 +24,8 @@ export interface TextareaProps {
   placeholder?: string;
   rows?: number;
   resize?: "none" | "vertical" | "horizontal" | "both";
+  classNames?: FieldClassNames;
+  styles?: FieldStyles;
 }
 
 export const Textarea = defineComponent({
@@ -40,60 +49,78 @@ export const Textarea = defineComponent({
       type: String as PropType<TextareaProps["resize"]>,
       default: "vertical",
     },
+    classNames: Object as PropType<FieldClassNames>,
+    styles: Object as PropType<FieldStyles>,
   },
   setup(props, { attrs, emit }) {
-    const generatedId = useId();
-    const id = props.id ?? `dui-textarea-${generatedId}`;
     const focused = ref(false);
-    return () =>
-      h(
+
+    return () => {
+      const { rootAttrs, controlAttrs } = splitFieldAttrs(attrs);
+
+      return h(
         InputWrapper,
+        mergeProps(
+          getInputWrapperProps(props),
+          { classNames: props.classNames, styles: props.styles },
+          rootAttrs,
+          getFieldRootStateAttrs(props, "Textarea"),
+        ),
         {
-          id,
-          ...(props.label === undefined ? {} : { label: props.label }),
-          ...(props.description === undefined
-            ? {}
-            : { description: props.description }),
-          ...(props.error === undefined ? {} : { error: props.error }),
-          required: props.required,
-        },
-        {
-          default: ({ describedBy }: { describedBy?: string }) =>
-            h("textarea", {
-              ...attrs,
-              id,
-              value: props.modelValue,
-              disabled: props.disabled,
-              readonly: props.readonly,
-              required: props.required,
-              placeholder: props.placeholder,
-              rows: props.rows,
-              "aria-invalid": props.error ? "true" : undefined,
-              "aria-describedby": describedBy,
-              "data-dui-component": "Textarea",
-              "data-focused": focused.value ? "true" : undefined,
-              class: ["dui-Textarea", attrs.class],
-              style: [
-                attrs.style,
-                {
-                  borderRadius: radiusToken(props.radius),
-                  fontSize: fontSizeToken(props.size),
-                  resize: props.resize,
-                },
-              ],
-              onInput: (event: Event) =>
-                emit(
-                  "update:modelValue",
-                  (event.target as HTMLTextAreaElement).value,
+          default: ({
+            id,
+            describedBy,
+          }: {
+            id: string;
+            describedBy?: string;
+          }) =>
+            h(
+              "textarea",
+              mergeProps(controlAttrs, {
+                id,
+                value: props.modelValue,
+                disabled: props.disabled,
+                readonly: props.readonly,
+                required: props.required,
+                placeholder: props.placeholder,
+                rows: props.rows,
+                "aria-invalid": props.error
+                  ? "true"
+                  : controlAttrs["aria-invalid"],
+                "aria-describedby": composeDescribedBy(
+                  describedBy,
+                  controlAttrs["aria-describedby"],
                 ),
-              onFocus: () => {
-                focused.value = true;
-              },
-              onBlur: () => {
-                focused.value = false;
-              },
-            }),
+                "data-dui-component": "Textarea",
+                "data-focused": focused.value ? "true" : undefined,
+                "data-disabled": props.disabled ? "true" : undefined,
+                "data-readonly": props.readonly ? "true" : undefined,
+                "data-error": props.error ? "true" : undefined,
+                "data-required": props.required ? "true" : undefined,
+                "data-size": props.size,
+                class: ["dui-Textarea", props.classNames?.input],
+                style: [
+                  {
+                    borderRadius: radiusToken(props.radius),
+                    resize: props.resize,
+                  },
+                  props.styles?.input,
+                ],
+                onInput: (event: Event) =>
+                  emit(
+                    "update:modelValue",
+                    (event.target as HTMLTextAreaElement).value,
+                  ),
+                onFocus: () => {
+                  focused.value = true;
+                },
+                onBlur: () => {
+                  focused.value = false;
+                },
+              }),
+            ),
         },
       );
+    };
   },
 });

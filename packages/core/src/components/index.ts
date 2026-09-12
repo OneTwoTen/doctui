@@ -10,6 +10,7 @@ export * from "./Combobox";
 export * from "./Container";
 export * from "./Divider";
 export * from "./Flex";
+export * from "./field-types";
 export * from "./Grid";
 export * from "./Group";
 export * from "./InputWrapper";
