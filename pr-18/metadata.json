@@ -1,0 +1,10 @@
+{
+  "number": "18",
+  "title": "fix(core): harden control keyboard semantics",
+  "branch": "codex/issue-9-control-keyboard-semantics",
+  "sha": "cb5948d2060d06e20ed8ec1166a12b90f4024a9f",
+  "repository": "OneTwoTen/doctui",
+  "prUrl": "https://github.com/OneTwoTen/doctui/pull/18",
+  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/34685592400",
+  "generatedAt": "2026-09-12T09:20:55.948Z"
+}
