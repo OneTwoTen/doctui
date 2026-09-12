@@ -3,19 +3,47 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import { h, ref } from "vue";
 import { preview } from "./story-helpers";
 
-const meta = { title: "Inputs/TextInput" } satisfies Meta;
+const sizeOptions = ["xs", "sm", "md", "lg", "xl"] as const;
+
+const meta = {
+  title: "Inputs/TextInput",
+  component: TextInput,
+  args: {
+    label: "Email",
+    description: "Used for account notifications.",
+    modelValue: "ada@example.com",
+    placeholder: "name@example.com",
+    size: "md",
+    required: false,
+    disabled: false,
+    readonly: false,
+    clearable: true,
+  },
+  argTypes: {
+    modelValue: { control: "text" },
+    label: { control: "text" },
+    description: { control: "text" },
+    error: { control: "text" },
+    placeholder: { control: "text" },
+    size: { control: "select", options: sizeOptions },
+    required: { control: "boolean" },
+    disabled: { control: "boolean" },
+    readonly: { control: "boolean" },
+    clearable: { control: "boolean" },
+    classNames: { control: "object" },
+    styles: { control: "object" },
+  },
+} satisfies Meta<typeof TextInput>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Basic: Story = {
-  render: () =>
+  render: (args) =>
     preview(() => {
-      const value = ref("ada@example.com");
+      const value = ref(args.modelValue ?? "");
       return h(TextInput, {
-        label: "Email",
-        description: "Used for account notifications.",
+        ...args,
         modelValue: value.value,
-        clearable: true,
         name: "email",
         autocomplete: "email",
         "onUpdate:modelValue": (next: string) => (value.value = next),
@@ -24,11 +52,12 @@ export const Basic: Story = {
 };
 
 export const Sizes: Story = {
-  render: () =>
+  render: (args) =>
     preview(() =>
       h(Stack, { gap: "sm", style: { maxWidth: "30rem" } }, () =>
-        (["xs", "sm", "md", "lg", "xl"] as const).map((size) =>
+        sizeOptions.map((size) =>
           h(TextInput, {
+            ...args,
             key: size,
             label: `Size ${size}`,
             size,
@@ -40,22 +69,25 @@ export const Sizes: Story = {
 };
 
 export const States: Story = {
-  render: () =>
+  render: (args) =>
     preview(() =>
       h(Stack, { gap: "md", style: { maxWidth: "30rem" } }, () => [
-        h(TextInput, { label: "Default", modelValue: "Editable" }),
+        h(TextInput, { ...args, label: "Default", modelValue: "Editable" }),
         h(TextInput, {
+          ...args,
           label: "Error",
           description: "Description remains connected.",
           error: "This value is invalid.",
           modelValue: "Invalid",
         }),
         h(TextInput, {
+          ...args,
           label: "Disabled",
           modelValue: "Disabled",
           disabled: true,
         }),
         h(TextInput, {
+          ...args,
           label: "Read only",
           modelValue: "Focusable",
           readonly: true,
@@ -65,9 +97,10 @@ export const States: Story = {
 };
 
 export const Customization: Story = {
-  render: () =>
+  render: (args) =>
     preview(() =>
       h(TextInput, {
+        ...args,
         label: "Part styling",
         description:
           "class/style target the outer root; classNames/styles target parts.",
