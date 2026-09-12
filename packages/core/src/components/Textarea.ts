@@ -1,5 +1,10 @@
-import { defineComponent, h, type PropType, ref, useId } from "vue";
+import { defineComponent, h, mergeProps, type PropType, ref } from "vue";
 import type { Radius, Size } from "../theme/types";
+import {
+  composeDescribedBy,
+  getInputWrapperProps,
+  splitFieldAttrs,
+} from "./field-internals";
 import { InputWrapper } from "./InputWrapper";
 import { fontSizeToken, radiusToken } from "./shared";
 
@@ -42,25 +47,16 @@ export const Textarea = defineComponent({
     },
   },
   setup(props, { attrs, emit }) {
-    const generatedId = useId();
-    const id = props.id ?? `dui-textarea-${generatedId}`;
     const focused = ref(false);
-    return () =>
-      h(
-        InputWrapper,
-        {
-          id,
-          ...(props.label === undefined ? {} : { label: props.label }),
-          ...(props.description === undefined
-            ? {}
-            : { description: props.description }),
-          ...(props.error === undefined ? {} : { error: props.error }),
-          required: props.required,
-        },
-        {
-          default: ({ describedBy }: { describedBy?: string }) =>
-            h("textarea", {
-              ...attrs,
+
+    return () => {
+      const { rootAttrs, controlAttrs } = splitFieldAttrs(attrs);
+
+      return h(InputWrapper, getInputWrapperProps(props), {
+        default: ({ id, describedBy }: { id: string; describedBy?: string }) =>
+          h(
+            "textarea",
+            mergeProps(controlAttrs, rootAttrs, {
               id,
               value: props.modelValue,
               disabled: props.disabled,
@@ -68,19 +64,26 @@ export const Textarea = defineComponent({
               required: props.required,
               placeholder: props.placeholder,
               rows: props.rows,
-              "aria-invalid": props.error ? "true" : undefined,
-              "aria-describedby": describedBy,
+              "aria-invalid": props.error
+                ? "true"
+                : controlAttrs["aria-invalid"],
+              "aria-describedby": composeDescribedBy(
+                describedBy,
+                controlAttrs["aria-describedby"],
+              ),
               "data-dui-component": "Textarea",
               "data-focused": focused.value ? "true" : undefined,
-              class: ["dui-Textarea", attrs.class],
-              style: [
-                attrs.style,
-                {
-                  borderRadius: radiusToken(props.radius),
-                  fontSize: fontSizeToken(props.size),
-                  resize: props.resize,
-                },
-              ],
+              "data-disabled": props.disabled ? "true" : undefined,
+              "data-readonly": props.readonly ? "true" : undefined,
+              "data-error": props.error ? "true" : undefined,
+              "data-required": props.required ? "true" : undefined,
+              "data-size": props.size,
+              class: "dui-Textarea",
+              style: {
+                borderRadius: radiusToken(props.radius),
+                fontSize: fontSizeToken(props.size),
+                resize: props.resize,
+              },
               onInput: (event: Event) =>
                 emit(
                   "update:modelValue",
@@ -93,7 +96,8 @@ export const Textarea = defineComponent({
                 focused.value = false;
               },
             }),
-        },
-      );
+          ),
+      });
+    };
   },
 });

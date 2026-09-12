@@ -1,5 +1,10 @@
-import { defineComponent, h, type PropType, ref, useId } from "vue";
+import { defineComponent, h, mergeProps, type PropType, ref } from "vue";
 import type { Radius, Size } from "../theme/types";
+import {
+  composeDescribedBy,
+  getInputWrapperProps,
+  splitFieldAttrs,
+} from "./field-internals";
 import { InputWrapper } from "./InputWrapper";
 import { fontSizeToken, radiusToken } from "./shared";
 
@@ -41,25 +46,16 @@ export const NumberInput = defineComponent({
     step: { type: Number, default: 1 },
   },
   setup(props, { attrs, emit }) {
-    const generatedId = useId();
-    const id = props.id ?? `dui-number-input-${generatedId}`;
     const focused = ref(false);
-    return () =>
-      h(
-        InputWrapper,
-        {
-          id,
-          ...(props.label === undefined ? {} : { label: props.label }),
-          ...(props.description === undefined
-            ? {}
-            : { description: props.description }),
-          ...(props.error === undefined ? {} : { error: props.error }),
-          required: props.required,
-        },
-        {
-          default: ({ describedBy }: { describedBy?: string }) =>
-            h("input", {
-              ...attrs,
+
+    return () => {
+      const { rootAttrs, controlAttrs } = splitFieldAttrs(attrs);
+
+      return h(InputWrapper, getInputWrapperProps(props), {
+        default: ({ id, describedBy }: { id: string; describedBy?: string }) =>
+          h(
+            "input",
+            mergeProps(controlAttrs, rootAttrs, {
               id,
               type: "number",
               value: props.modelValue ?? "",
@@ -70,18 +66,25 @@ export const NumberInput = defineComponent({
               readonly: props.readonly,
               required: props.required,
               placeholder: props.placeholder,
-              "aria-invalid": props.error ? "true" : undefined,
-              "aria-describedby": describedBy,
+              "aria-invalid": props.error
+                ? "true"
+                : controlAttrs["aria-invalid"],
+              "aria-describedby": composeDescribedBy(
+                describedBy,
+                controlAttrs["aria-describedby"],
+              ),
               "data-dui-component": "NumberInput",
               "data-focused": focused.value ? "true" : undefined,
-              class: ["dui-NumberInput", attrs.class],
-              style: [
-                attrs.style,
-                {
-                  borderRadius: radiusToken(props.radius),
-                  fontSize: fontSizeToken(props.size),
-                },
-              ],
+              "data-disabled": props.disabled ? "true" : undefined,
+              "data-readonly": props.readonly ? "true" : undefined,
+              "data-error": props.error ? "true" : undefined,
+              "data-required": props.required ? "true" : undefined,
+              "data-size": props.size,
+              class: "dui-NumberInput",
+              style: {
+                borderRadius: radiusToken(props.radius),
+                fontSize: fontSizeToken(props.size),
+              },
               onInput: (event: Event) => {
                 const value = (event.target as HTMLInputElement).value;
                 emit("update:modelValue", value === "" ? null : Number(value));
@@ -93,7 +96,8 @@ export const NumberInput = defineComponent({
                 focused.value = false;
               },
             }),
-        },
-      );
+          ),
+      });
+    };
   },
 });

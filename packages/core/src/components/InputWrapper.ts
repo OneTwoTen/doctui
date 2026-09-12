@@ -1,4 +1,4 @@
-import { computed, defineComponent, h, useId } from "vue";
+import { computed, defineComponent, h, mergeProps, useId } from "vue";
 
 export interface InputWrapperProps {
   id?: string;
@@ -21,21 +21,23 @@ export const InputWrapper = defineComponent({
   setup(props, { attrs, slots }) {
     const generatedId = useId();
     const inputId = computed(() => props.id ?? `dui-input-${generatedId}`);
+
     return () => {
-      const descriptionId = `${inputId.value}-description`;
-      const errorId = `${inputId.value}-error`;
-      const describedBy = props.error
-        ? errorId
-        : props.description
-          ? descriptionId
-          : undefined;
+      const descriptionId = props.description
+        ? `${inputId.value}-description`
+        : undefined;
+      const errorId = props.error ? `${inputId.value}-error` : undefined;
+      const describedBy = [descriptionId, errorId].filter(Boolean).join(" ") ||
+        undefined;
+
       return h(
         "div",
-        {
-          ...attrs,
-          class: ["dui-InputWrapper", attrs.class],
+        mergeProps(attrs, {
+          class: "dui-InputWrapper",
           "data-dui-component": "InputWrapper",
-        },
+          "data-required": props.required ? "true" : undefined,
+          "data-error": props.error ? "true" : undefined,
+        }),
         [
           props.label
             ? h(
@@ -57,17 +59,24 @@ export const InputWrapper = defineComponent({
             },
             slots.default?.({ id: inputId.value, describedBy }),
           ),
-          props.description && !props.error
+          props.description
             ? h(
                 "div",
-                { id: descriptionId, class: "dui-InputWrapper-description" },
+                {
+                  id: descriptionId,
+                  class: "dui-InputWrapper-description",
+                },
                 props.description,
               )
             : null,
           props.error
             ? h(
                 "div",
-                { id: errorId, class: "dui-InputWrapper-error", role: "alert" },
+                {
+                  id: errorId,
+                  class: "dui-InputWrapper-error",
+                  role: "alert",
+                },
                 props.error,
               )
             : null,

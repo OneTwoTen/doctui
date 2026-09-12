@@ -1,6 +1,12 @@
-import { defineComponent, h, type PropType, useId } from "vue";
+import { defineComponent, h, mergeProps, type PropType } from "vue";
 import type { Size } from "../theme/types";
+import {
+  composeDescribedBy,
+  getInputWrapperProps,
+  splitFieldAttrs,
+} from "./field-internals";
 import { InputWrapper } from "./InputWrapper";
+import { fontSizeToken } from "./shared";
 
 export interface SwitchProps {
   modelValue?: boolean;
@@ -28,31 +34,28 @@ export const Switch = defineComponent({
     size: { type: String as PropType<Size>, default: "md" },
   },
   setup(props, { attrs, emit, slots }) {
-    const id = props.id ?? `dui-switch-${useId()}`;
-    return () =>
-      h(
-        InputWrapper,
-        {
-          id,
+    return () => {
+      const { rootAttrs, controlAttrs } = splitFieldAttrs(attrs);
 
-          ...(props.description === undefined
-            ? {}
-            : { description: props.description }),
-          ...(props.error === undefined ? {} : { error: props.error }),
-          required: props.required,
-        },
-        {
-          default: ({ describedBy }: { describedBy?: string }) =>
-            h(
-              "label",
-              {
-                class: ["dui-Switch", attrs.class],
-                "data-dui-component": "Switch",
-                "data-disabled": props.disabled ? "true" : undefined,
-              },
-              [
-                h("input", {
-                  ...attrs,
+      return h(InputWrapper, getInputWrapperProps(props, false), {
+        default: ({ id, describedBy }: { id: string; describedBy?: string }) =>
+          h(
+            "label",
+            mergeProps(rootAttrs, {
+              class: "dui-Switch",
+              for: id,
+              "data-dui-component": "Switch",
+              "data-checked": props.modelValue ? "true" : undefined,
+              "data-disabled": props.disabled ? "true" : undefined,
+              "data-error": props.error ? "true" : undefined,
+              "data-required": props.required ? "true" : undefined,
+              "data-size": props.size,
+              style: { fontSize: fontSizeToken(props.size) },
+            }),
+            [
+              h(
+                "input",
+                mergeProps(controlAttrs, {
                   id,
                   type: "checkbox",
                   role: "switch",
@@ -60,22 +63,38 @@ export const Switch = defineComponent({
                   disabled: props.disabled,
                   required: props.required,
                   "aria-checked": String(props.modelValue),
-                  "aria-invalid": props.error ? "true" : undefined,
-                  "aria-describedby": describedBy,
+                  "aria-invalid": props.error
+                    ? "true"
+                    : controlAttrs["aria-invalid"],
+                  "aria-describedby": composeDescribedBy(
+                    describedBy,
+                    controlAttrs["aria-describedby"],
+                  ),
                   class: "dui-Switch-input",
+                  style: {
+                    fontSize: "inherit",
+                    inlineSize: "2em",
+                    blockSize: "1.1em",
+                  },
                   onChange: (event: Event) =>
                     emit(
                       "update:modelValue",
                       (event.target as HTMLInputElement).checked,
                     ),
                 }),
-                slots.default?.() ??
-                  (props.label
-                    ? [props.label, props.required ? " *" : null]
-                    : undefined),
-              ],
-            ),
-        },
-      );
+              ),
+              slots.default?.() ??
+                (props.label
+                  ? [
+                      props.label,
+                      props.required
+                        ? h("span", { "aria-hidden": "true" }, " *")
+                        : null,
+                    ]
+                  : undefined),
+            ],
+          ),
+      });
+    };
   },
 });
