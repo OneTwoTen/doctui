@@ -67,7 +67,7 @@ describe("Combobox focus-managed listbox contract", () => {
     });
 
     const input = wrapper.get("input");
-    await input.trigger("focus");
+    (input.element as HTMLInputElement).focus();
     await nextTick();
 
     const initialId = input.attributes("aria-activedescendant");
