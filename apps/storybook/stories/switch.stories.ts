@@ -3,16 +3,39 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import { h, ref } from "vue";
 import { preview } from "./story-helpers";
 
-const meta = { title: "Inputs/Switch" } satisfies Meta;
+const sizeOptions = ["xs", "sm", "md", "lg", "xl"] as const;
+
+const meta = {
+  title: "Inputs/Switch",
+  component: Switch,
+  args: {
+    label: "Email notifications",
+    modelValue: true,
+    size: "md",
+    required: false,
+    disabled: false,
+  },
+  argTypes: {
+    modelValue: { control: "boolean" },
+    label: { control: "text" },
+    description: { control: "text" },
+    error: { control: "text" },
+    size: { control: "select", options: sizeOptions },
+    required: { control: "boolean" },
+    disabled: { control: "boolean" },
+    classNames: { control: "object" },
+    styles: { control: "object" },
+  },
+} satisfies Meta<typeof Switch>;
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Basic: Story = {
-  render: () =>
+  render: (args) =>
     preview(() => {
-      const enabled = ref(true);
+      const enabled = ref(Boolean(args.modelValue));
       return h(Switch, {
-        label: "Email notifications",
+        ...args,
         modelValue: enabled.value,
         "onUpdate:modelValue": (value: boolean) => (enabled.value = value),
       });
@@ -20,11 +43,12 @@ export const Basic: Story = {
 };
 
 export const Sizes: Story = {
-  render: () =>
+  render: (args) =>
     preview(() =>
       h(Group, { gap: "lg", align: "center" }, () =>
-        (["xs", "sm", "md", "lg", "xl"] as const).map((size) =>
+        sizeOptions.map((size) =>
           h(Switch, {
+            ...args,
             key: size,
             label: size.toUpperCase(),
             size,
@@ -36,26 +60,38 @@ export const Sizes: Story = {
 };
 
 export const States: Story = {
-  render: () =>
+  render: (args) =>
     preview(() =>
       h(Stack, { gap: "md" }, () => [
-        h(Switch, { label: "Off", modelValue: false }),
-        h(Switch, { label: "On", modelValue: true }),
-        h(Switch, { label: "Required", modelValue: false, required: true }),
+        h(Switch, { ...args, label: "Off", modelValue: false }),
+        h(Switch, { ...args, label: "On", modelValue: true }),
         h(Switch, {
+          ...args,
+          label: "Required",
+          modelValue: false,
+          required: true,
+        }),
+        h(Switch, {
+          ...args,
           label: "Error",
           modelValue: false,
           error: "Enable this setting to continue.",
         }),
-        h(Switch, { label: "Disabled", modelValue: true, disabled: true }),
+        h(Switch, {
+          ...args,
+          label: "Disabled",
+          modelValue: true,
+          disabled: true,
+        }),
       ]),
     ),
 };
 
 export const Customization: Story = {
-  render: () =>
+  render: (args) =>
     preview(() =>
       h(Switch, {
+        ...args,
         label: "Custom track and thumb",
         modelValue: true,
         styles: {
