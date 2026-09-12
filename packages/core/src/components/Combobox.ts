@@ -92,7 +92,7 @@ export const Combobox = defineComponent({
     const open = ref(false);
     const query = ref("");
     const activeValue = ref<string | number>();
-    const optionElements = new Map<number, HTMLElement>();
+    const listbox = ref<HTMLElement>();
 
     const selectedValues = computed(() =>
       props.multiple
@@ -277,7 +277,11 @@ export const Combobox = defineComponent({
     watch(activeIndex, (index) => {
       if (!open.value || index < 0) return;
       void nextTick(() => {
-        optionElements.get(index)?.scrollIntoView({ block: "nearest" });
+        listbox.value
+          ?.querySelector<HTMLElement>(
+            `[data-dui-combobox-option-index="${index}"]`,
+          )
+          ?.scrollIntoView({ block: "nearest" });
       });
     });
 
@@ -384,6 +388,7 @@ export const Combobox = defineComponent({
                   ? h(
                       "ul",
                       {
+                        ref: listbox,
                         id: listId,
                         role: "listbox",
                         "aria-multiselectable": props.multiple
@@ -396,15 +401,9 @@ export const Combobox = defineComponent({
                             h(
                               "li",
                               {
-                                ref: (element: Element | null) => {
-                                  if (element instanceof HTMLElement) {
-                                    optionElements.set(index, element);
-                                  } else {
-                                    optionElements.delete(index);
-                                  }
-                                },
                                 id: `${listId}-${index}`,
                                 role: "option",
+                                "data-dui-combobox-option-index": String(index),
                                 "aria-selected": String(
                                   selectedValues.value.includes(option.value),
                                 ),
