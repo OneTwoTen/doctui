@@ -103,7 +103,8 @@ export const StateMatrix: Story = {
             h(Checkbox, {
               label: "Interactive",
               modelValue: checked.value,
-              "onUpdate:modelValue": (value: boolean) => (checked.value = value),
+              "onUpdate:modelValue": (value: boolean) =>
+                (checked.value = value),
             }),
             h(Checkbox, { label: "Unchecked", modelValue: false }),
             h(Checkbox, {

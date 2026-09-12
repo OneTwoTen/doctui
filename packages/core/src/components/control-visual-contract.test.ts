@@ -57,9 +57,7 @@ describe("control visual contract", () => {
     expect(css).toMatch(
       /\.dui-Radio-input:checked\s*\+\s*\.dui-Radio-control::after/,
     );
-    expect(css).toMatch(
-      /\.dui-Switch-input:checked\s*\+\s*\.dui-Switch-track/,
-    );
+    expect(css).toMatch(/\.dui-Switch-input:checked\s*\+\s*\.dui-Switch-track/);
     expect(css).toMatch(
       /\.dui-Switch-input:checked\s*\+\s*\.dui-Switch-track\s+\.dui-Switch-thumb/,
     );
@@ -79,9 +77,7 @@ describe("control visual contract", () => {
 
     expect(css).toMatch(/\.dui-SegmentedControl\[data-size="xs"\]/);
     expect(css).toMatch(/\.dui-SegmentedControl\[data-size="xl"\]/);
-    expect(css).toMatch(
-      /\.dui-SegmentedControl-option\[data-active="true"\]/,
-    );
+    expect(css).toMatch(/\.dui-SegmentedControl-option\[data-active="true"\]/);
     expect(css).toMatch(/\.dui-SegmentedControl-option:hover:not\(:disabled\)/);
     expect(css).toMatch(/\.dui-SegmentedControl-option:focus-visible/);
     expect(css).toMatch(/\.dui-SegmentedControl\[data-disabled="true"\]/);
