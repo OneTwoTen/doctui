@@ -1,7 +1,7 @@
 import {
   Button,
-  getComponentStorybookTitle,
   Group,
+  getComponentStorybookTitle,
   Stack,
   Title,
 } from "@doctui/core";
