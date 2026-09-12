@@ -45,6 +45,10 @@
   --dui-field-switch-thumb-size: 1.75rem;
 }
 
+.dui-InputWrapper-required {
+  color: var(--dui-color-danger-filled);
+}
+
 .dui-InputWrapper[data-disabled="true"] > .dui-InputWrapper-label,
 .dui-InputWrapper[data-disabled="true"] > .dui-InputWrapper-description {
   color: var(--dui-field-disabled-color);
