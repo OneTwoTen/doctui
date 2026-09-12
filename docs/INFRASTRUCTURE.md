@@ -26,7 +26,12 @@ External hosted infrastructure should be introduced only when GitHub-hosted/stat
 
 ## Production documentation topology
 
-The preferred production site is one GitHub Pages deployment.
+The production site uses one GitHub Pages deployment.
+
+Public entry points:
+
+- Documentation: <https://onetwoten.github.io/doctui/>
+- Storybook: <https://onetwoten.github.io/doctui/storybook/>
 
 ```text
 OneTwoTen/doctui
@@ -50,6 +55,8 @@ GitHub Pages
         ├── /doctui/llms-full.txt
         └── /doctui/metadata/
 ```
+
+The Pages workflow builds both VitePress and Storybook, then mounts the Storybook static output inside the VitePress artifact at `storybook/`. This keeps one deployment and prevents independent Pages workflows from replacing each other's artifacts.
 
 The exact URL may later move behind a custom domain, but the site must remain deployable as static files to GitHub Pages.
 
@@ -93,17 +100,17 @@ No SSH deployment step should be required.
 
 ## Docs and Storybook
 
-VitePress is the primary human-facing documentation experience.
+VitePress is the primary human-facing documentation experience and is published at <https://onetwoten.github.io/doctui/>.
 
-Storybook is the component-development and interactive-preview environment.
+Storybook is the component-development and interactive-preview environment and is published at <https://onetwoten.github.io/doctui/storybook/>.
 
-Storybook should be emitted as static files and mounted under the same GitHub Pages artifact, for example:
+Storybook is emitted as static files and mounted under the same GitHub Pages artifact:
 
 ```text
 /doctui/storybook/
 ```
 
-This avoids operating a second web server.
+This avoids operating a second web server or a second competing Pages deployment.
 
 ## LLM documentation
 
