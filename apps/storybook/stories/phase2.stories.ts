@@ -136,11 +136,7 @@ export const AdvancedComposition: Story = {
                       "A realistic composition made only from exported doctui components.",
                   ),
                 ]),
-                h(
-                  Button,
-                  { variant: "light", size: "sm" },
-                  () => "Preview",
-                ),
+                h(Button, { variant: "light", size: "sm" }, () => "Preview"),
               ],
             ),
             h(
