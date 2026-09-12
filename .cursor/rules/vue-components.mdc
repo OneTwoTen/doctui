@@ -9,8 +9,12 @@ alwaysApply: false
 - Primary two-way value uses `modelValue` and `update:modelValue`.
 - Prefer slots over props that pass renderable UI fragments.
 - Reuse shared `size`, `radius`, `color`, `variant` and polymorphic types when available.
-- Avoid exposing DOM/internal implementation state as public API.
+- Avoid exposing DOM/internal implementation state as public API unless it is an intentional styling or accessibility contract.
 - Keep state logic in composables when it is reusable by more than one component.
 - Emit meaningful user-facing events only.
 - Preserve native HTML semantics when a native element can express the behavior.
 - Use stable `data-*` state attributes when consumers need styling hooks.
+- Wrapped form controls must deliberately own attribute fallthrough: consumer `class`/`style` target the outer component/field root, while native form attributes and listeners target the real native control.
+- Use `inheritAttrs: false` when a component splits attrs across multiple DOM targets; never rely on accidental Vue fallthrough for a public contract.
+- For multi-part public components, prefer a typed shared part-style contract over one-off styling props or undocumented deep selectors.
+- Vue-first does not mean browser-default visuals are required: custom visuals are acceptable when the native semantic/focusable control remains the behavioral source of truth.
