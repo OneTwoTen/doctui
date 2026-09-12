@@ -1,0 +1,142 @@
+.dui-Calendar,
+.dui-DateInput,
+.dui-DatePicker {
+  color: var(--dui-color-text);
+  font-family: var(--dui-font-family);
+}
+
+.dui-Calendar {
+  width: 18rem;
+  padding: var(--dui-spacing-sm);
+  border: 1px solid var(--dui-color-border);
+  border-radius: var(--dui-radius-md);
+  background: var(--dui-color-surface);
+  box-shadow: var(--dui-shadow-sm);
+}
+
+.dui-Calendar__header,
+.dui-Calendar__weekdays,
+.dui-Calendar__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.dui-Calendar__header {
+  grid-template-columns: 2rem 1fr 2rem;
+  margin-bottom: var(--dui-spacing-sm);
+  text-align: center;
+}
+
+.dui-Calendar__nav,
+.dui-Calendar__day,
+.dui-DatePicker__option {
+  border: 0;
+  border-radius: var(--dui-radius-sm);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.dui-Calendar__nav:hover,
+.dui-Calendar__day:hover:not(:disabled),
+.dui-DatePicker__option:hover {
+  background: var(--dui-color-surface-muted);
+}
+
+.dui-Calendar__weekdays {
+  color: var(--dui-color-text-muted);
+  font-size: var(--dui-font-size-xs);
+  text-align: center;
+}
+
+.dui-Calendar__day {
+  min-height: 2rem;
+}
+
+.dui-Calendar__day[data-selected="true"],
+.dui-DatePicker__option[data-selected="true"] {
+  background: var(--dui-color-primary);
+  color: var(--dui-color-on-primary);
+}
+
+.dui-Calendar__empty {
+  min-height: 2rem;
+}
+
+.dui-DateInput__label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: var(--dui-font-size-sm);
+  font-weight: 600;
+}
+
+.dui-DateInput__control {
+  position: relative;
+}
+
+.dui-DateInput__input {
+  width: 100%;
+  min-height: 2.25rem;
+  padding: 0.5rem 0.625rem;
+  border: 1px solid var(--dui-color-border);
+  border-radius: var(--dui-radius-sm);
+  background: var(--dui-color-surface);
+  color: inherit;
+  font: inherit;
+}
+
+.dui-DateInput__clear,
+.dui-DatePicker__toggle {
+  border: 0;
+  background: transparent;
+  color: var(--dui-color-text-muted);
+  cursor: pointer;
+}
+
+.dui-DateInput__clear {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.35rem;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+}
+
+.dui-DateInput__error {
+  margin-top: 0.25rem;
+  color: var(--dui-color-danger);
+  font-size: var(--dui-font-size-xs);
+}
+
+.dui-DatePicker {
+  position: relative;
+}
+
+.dui-DatePicker__toggle {
+  position: absolute;
+  top: 1.8rem;
+  right: 0.35rem;
+  min-height: 1.75rem;
+}
+
+.dui-DatePicker > .dui-Calendar {
+  position: absolute;
+  z-index: 2;
+  top: 100%;
+  left: 0;
+  margin-top: 0.25rem;
+}
+
+.dui-DatePicker__options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.35rem;
+  max-width: 22rem;
+  padding: var(--dui-spacing-sm);
+}
+
+.dui-DatePicker__option {
+  min-height: 2rem;
+  padding: 0.35rem;
+}

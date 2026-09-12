@@ -1,0 +1,28 @@
+{
+  "name": "@doctui/hooks",
+  "version": "0.0.0",
+  "description": "Reusable Vue composables for doctui applications.",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "clean": "node -e \"require('node:fs').rmSync('dist',{ recursive: true, force: true })\"",
+    "build:js": "bun run --bun vite build",
+    "build:types": "tsc -p tsconfig.build.json",
+    "build": "bun run clean && bun run build:js && bun run build:types"
+  },
+  "peerDependencies": {
+    "vue": ">=3.5.0 <4"
+  }
+}

@@ -779,20 +779,21 @@ A public component is not complete without documentation and metadata.
 
 ## Current priority
 
-The immediate implementation order is:
+Phases 0–10 now have working implementations in this repository, including
+the core component foundations, feature packages, generated registry/LLM
+artifacts, local MCP server and release workflows. Post-1.0 candidates remain
+intentionally out of scope until the current public contracts have real
+consumer feedback.
+
+The current priority is hardening the implemented contracts:
 
 ```text
-Phase 0
+Accessibility and keyboard regression coverage
   ↓
-Phase 1
+Metadata/API drift validation
   ↓
-Phase 2
-  ↓
-Phase 3
-  ↓
-Phase 4
-  ↓
-Phase 5
+Release and documentation reproducibility
 ```
 
-Phases 7–9 should be designed early, especially metadata shape, but should not delay establishing correct component foundations.
+New components should follow the same sequence: shared primitive first,
+component contract second, then tests, stories, docs and metadata.

@@ -9,6 +9,9 @@
   },
   "dependencies": {
     "@doctui/core": "workspace:*",
+    "@doctui/form": "workspace:*",
+    "@doctui/notifications": "workspace:*",
+    "@doctui/dates": "workspace:*",
     "vue": "3.5.42"
   },
   "devDependencies": {

@@ -1,6 +1,7 @@
 # Getting started
 
-The repository is currently in **Phase 0 — Repository foundation**. Packages are not published to npm yet.
+The repository is an active prerelease monorepo. Packages are versioned with
+Changesets and will be published through the GitHub Actions release workflow.
 
 ## Public project sites
 
@@ -33,4 +34,6 @@ bun run docs:dev
 
 ## Workspace packages
 
-The first public package is `@doctui/core`, which exports the theme foundation and the initial layout, typography, action and input components.
+The workspace currently contains `@doctui/core`, `@doctui/hooks`,
+`@doctui/form`, `@doctui/notifications`, `@doctui/dates`, and the local
+`@doctui/mcp-server` package. Import only the packages your app needs.

@@ -1,0 +1,725 @@
+{
+  "schemaVersion": 1,
+  "version": "0.0.0",
+  "categories": [
+    {
+      "id": "layout",
+      "label": "Layout",
+      "description": "Primitives for structure, spacing, alignment, and responsive layout."
+    },
+    {
+      "id": "typography",
+      "label": "Typography",
+      "description": "Components for semantic text, headings, and readable content."
+    },
+    {
+      "id": "actions",
+      "label": "Actions",
+      "description": "Controls that trigger user actions, commands, and primary interactions."
+    },
+    {
+      "id": "inputs",
+      "label": "Inputs",
+      "description": "Form controls for collecting and editing user-provided values."
+    },
+    {
+      "id": "navigation",
+      "label": "Navigation",
+      "description": "Components that move users between views, sections, and destinations."
+    },
+    {
+      "id": "data-display",
+      "label": "Data display",
+      "description": "Components for presenting structured values, status, and information."
+    },
+    {
+      "id": "feedback",
+      "label": "Feedback",
+      "description": "Loading, progress, validation, empty-state, and status feedback."
+    },
+    {
+      "id": "overlays",
+      "label": "Overlays",
+      "description": "Layered UI such as dialogs, popovers, menus, and tooltips."
+    },
+    {
+      "id": "media",
+      "label": "Media",
+      "description": "Components for images, icons, avatars, and other visual media."
+    },
+    {
+      "id": "utilities",
+      "label": "Utilities",
+      "description": "Low-level helpers that support composition without defining a major UI domain."
+    }
+  ],
+  "components": [
+    {
+      "name": "ActionIcon",
+      "category": "actions",
+      "description": "Compact icon-only native button with an accessible name.",
+      "props": [
+        "ariaLabel",
+        "color",
+        "variant",
+        "size",
+        "radius",
+        "disabled",
+        "type"
+      ],
+      "accessibility": [
+        "Requires ariaLabel because icon-only controls need an accessible name."
+      ],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "Autocomplete",
+      "category": "inputs",
+      "description": "Searchable single-value input backed by the shared combobox engine.",
+      "props": [
+        "modelValue",
+        "data",
+        "label",
+        "description",
+        "error",
+        "required",
+        "disabled",
+        "placeholder",
+        "clearable",
+        "ariaLabel",
+        "nothingFound",
+        "size",
+        "radius"
+      ],
+      "accessibility": [
+        "Uses a searchable combobox and filters options without duplicating navigation logic."
+      ],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "Badge",
+      "category": "data-display",
+      "description": "Compact status label using semantic color and variant tokens.",
+      "props": ["color", "variant", "size", "radius"],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "Box",
+      "category": "layout",
+      "description": "Low-level polymorphic container with token-based spacing.",
+      "props": ["as", "padding", "margin"],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "Button",
+      "category": "actions",
+      "description": "Native button control with doctui color, variant and size tokens.",
+      "props": [
+        "color",
+        "variant",
+        "size",
+        "radius",
+        "loading",
+        "disabled",
+        "fullWidth",
+        "type"
+      ],
+      "accessibility": [
+        "Uses a native button element.",
+        "Loading state disables interaction and exposes aria-busy.",
+        "Focus-visible styles use the theme focus ring token."
+      ],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "Calendar",
+      "package": "@doctui/dates",
+      "category": "inputs",
+      "description": "Month calendar that emits ISO date selections.",
+      "props": [
+        "modelValue",
+        "month",
+        "minDate",
+        "maxDate",
+        "locale",
+        "firstDayOfWeek"
+      ],
+      "accessibility": [
+        "Uses labeled native buttons and exposes selected dates with aria-pressed."
+      ]
+    },
+    {
+      "name": "Center",
+      "category": "layout",
+      "description": "Flex helper that centers content on both axes.",
+      "props": ["as", "inline"],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "Checkbox",
+      "category": "inputs",
+      "description": "Native checkbox with boolean v-model and shared field messaging.",
+      "props": [
+        "modelValue",
+        "id",
+        "label",
+        "description",
+        "error",
+        "required",
+        "disabled"
+      ],
+      "accessibility": ["Uses a native checkbox inside a labelable control."],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "Code",
+      "category": "typography",
+      "description": "Monospace inline or block code presentation.",
+      "props": ["block", "size"],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "Combobox",
+      "category": "inputs",
+      "description": "Shared searchable selection primitive with listbox semantics.",
+      "props": [
+        "modelValue",
+        "data",
+        "multiple",
+        "searchable",
+        "clearable",
+        "label",
+        "description",
+        "error",
+        "required",
+        "disabled",
+        "placeholder",
+        "ariaLabel",
+        "nothingFound",
+        "size",
+        "radius"
+      ],
+      "accessibility": [
+        "Uses combobox/listbox roles and supports Arrow, Home, End, Enter and Escape keyboard behavior."
+      ],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "Container",
+      "category": "layout",
+      "description": "Centered responsive container constrained by theme breakpoints.",
+      "props": ["as", "size"],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "DateInput",
+      "package": "@doctui/dates",
+      "category": "inputs",
+      "description": "Native date input with doctui field labeling and clear behavior.",
+      "props": [
+        "modelValue",
+        "label",
+        "error",
+        "minDate",
+        "maxDate",
+        "disabled",
+        "clearable"
+      ],
+      "accessibility": [
+        "Uses a native date input associated with its visible label."
+      ]
+    },
+    {
+      "name": "DatePicker",
+      "package": "@doctui/dates",
+      "category": "inputs",
+      "description": "Date input with an optional calendar selection panel.",
+      "props": ["modelValue", "label", "minDate", "maxDate", "clearable"],
+      "accessibility": [
+        "The calendar toggle exposes expanded state and calendar buttons are keyboard accessible."
+      ]
+    },
+    {
+      "name": "DateTimePicker",
+      "package": "@doctui/dates",
+      "category": "inputs",
+      "description": "Native date-time input with Vue v-model support.",
+      "props": ["modelValue", "label", "disabled"]
+    },
+    {
+      "name": "Divider",
+      "category": "layout",
+      "description": "Separator for related content with optional label content.",
+      "props": ["orientation", "size", "color", "label"],
+      "accessibility": ["Uses role=separator and exposes its orientation."],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "Drawer",
+      "category": "overlays",
+      "description": "Accessible side panel with shared overlay and focus behavior.",
+      "props": [
+        "modelValue",
+        "title",
+        "ariaLabel",
+        "position",
+        "size",
+        "radius",
+        "closeOnEscape",
+        "closeOnClickOutside",
+        "withCloseButton"
+      ],
+      "accessibility": [
+        "Uses a modal dialog, focus trap, Escape dismissal and focus restoration."
+      ],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "Flex",
+      "category": "layout",
+      "description": "Flexbox layout primitive with theme-token gaps.",
+      "props": ["as", "gap", "direction", "align", "justify", "wrap"],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "Grid",
+      "category": "layout",
+      "description": "CSS grid layout primitive with token-backed gaps and columns.",
+      "props": ["as", "columns", "gap", "align", "justify"],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "Group",
+      "category": "layout",
+      "description": "Horizontal wrapping layout for related controls and content.",
+      "props": ["as", "gap", "align", "justify", "wrap"],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "InputWrapper",
+      "category": "inputs",
+      "description": "Shared label, description, required and error structure for inputs.",
+      "props": ["id", "label", "description", "error", "required"],
+      "accessibility": [
+        "Associates labels and help/error text with the wrapped control."
+      ],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "Kbd",
+      "category": "typography",
+      "description": "Semantic keyboard shortcut label.",
+      "props": ["size"],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "Loader",
+      "category": "feedback",
+      "description": "Animated progress indicator for an indeterminate operation.",
+      "props": ["type", "size", "color"],
+      "accessibility": [
+        "Uses role=status and provides a Loading accessible name."
+      ],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "Menu",
+      "category": "navigation",
+      "description": "Keyboard-navigable menu built from native menu item buttons.",
+      "props": ["modelValue", "data", "closeOnClickOutside"],
+      "accessibility": [
+        "Uses menu/menuitem roles and supports Arrow, Home, End and Escape."
+      ],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "Modal",
+      "category": "overlays",
+      "description": "Accessible dialog with portal, focus trap, Escape dismissal and focus restoration.",
+      "props": [
+        "modelValue",
+        "title",
+        "ariaLabel",
+        "size",
+        "radius",
+        "centered",
+        "closeOnEscape",
+        "closeOnClickOutside",
+        "withCloseButton"
+      ],
+      "accessibility": [
+        "Uses role=dialog and aria-modal, traps focus while open, and restores the previously focused element on close."
+      ],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "MonthPicker",
+      "package": "@doctui/dates",
+      "category": "inputs",
+      "description": "Month selection control that emits YYYY-MM values.",
+      "props": ["modelValue", "year", "locale"]
+    },
+    {
+      "name": "MultiSelect",
+      "category": "inputs",
+      "description": "Searchable multi-value selection control backed by the shared combobox engine.",
+      "props": [
+        "modelValue",
+        "data",
+        "label",
+        "description",
+        "error",
+        "required",
+        "disabled",
+        "placeholder",
+        "clearable",
+        "ariaLabel",
+        "nothingFound",
+        "size",
+        "radius"
+      ],
+      "accessibility": [
+        "Uses a multiselect listbox and supports keyboard selection and removal."
+      ],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "Notifications",
+      "package": "@doctui/notifications",
+      "category": "feedback",
+      "description": "Accessible renderer for notifications managed by a store.",
+      "props": ["store", "position"],
+      "accessibility": [
+        "Uses a polite live region, status items, and explicit dismiss buttons."
+      ]
+    },
+    {
+      "name": "NumberInput",
+      "category": "inputs",
+      "description": "Native numeric input with numeric v-model values and range constraints.",
+      "props": [
+        "modelValue",
+        "id",
+        "label",
+        "description",
+        "error",
+        "required",
+        "size",
+        "radius",
+        "disabled",
+        "readonly",
+        "placeholder",
+        "min",
+        "max",
+        "step"
+      ],
+      "accessibility": [
+        "Uses a native number input with standard keyboard and validation semantics."
+      ],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "Overlay",
+      "category": "overlays",
+      "description": "Portal-backed backdrop with controlled visibility and dismissal.",
+      "props": ["modelValue", "color", "opacity", "closeOnClick"],
+      "accessibility": [
+        "Backdrop is not a replacement for a modal dialog; provide an accessible surface inside it."
+      ],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "Paper",
+      "category": "data-display",
+      "description": "Surface container with optional border, radius and shadow.",
+      "props": ["shadow", "radius", "withBorder"],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "PasswordInput",
+      "category": "inputs",
+      "description": "Password field built on the shared TextInput contract.",
+      "props": [
+        "modelValue",
+        "id",
+        "label",
+        "description",
+        "error",
+        "required",
+        "size",
+        "radius",
+        "disabled",
+        "readonly",
+        "placeholder",
+        "clearable"
+      ],
+      "accessibility": [
+        "Uses a native password input and shared label/help/error associations."
+      ],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "Popover",
+      "category": "overlays",
+      "description": "Dismissable contextual panel anchored to a target slot.",
+      "props": [
+        "modelValue",
+        "position",
+        "closeOnEscape",
+        "closeOnClickOutside"
+      ],
+      "accessibility": [
+        "Provides dialog semantics and consistent outside/Escape dismissal."
+      ],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "Radio",
+      "category": "inputs",
+      "description": "Native radio option for a shared scalar v-model.",
+      "props": [
+        "modelValue",
+        "value",
+        "name",
+        "id",
+        "label",
+        "description",
+        "error",
+        "required",
+        "disabled"
+      ],
+      "accessibility": [
+        "Uses native radio semantics; provide the same name for a group."
+      ],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "SegmentedControl",
+      "category": "inputs",
+      "description": "Single-selection control with radio semantics and arrow navigation.",
+      "props": [
+        "modelValue",
+        "data",
+        "ariaLabel",
+        "size",
+        "radius",
+        "disabled"
+      ],
+      "accessibility": [
+        "Uses radiogroup/radio roles; Arrow, Home, End, Enter and Space are supported."
+      ],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "Select",
+      "category": "inputs",
+      "description": "Single-value selection control backed by the shared combobox engine.",
+      "props": [
+        "modelValue",
+        "data",
+        "label",
+        "description",
+        "error",
+        "required",
+        "disabled",
+        "placeholder",
+        "clearable",
+        "ariaLabel",
+        "nothingFound",
+        "size",
+        "radius"
+      ],
+      "accessibility": [
+        "Uses the shared combobox keyboard and listbox semantics."
+      ],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "Skeleton",
+      "category": "feedback",
+      "description": "Loading placeholder that can reveal its content when ready.",
+      "props": ["visible", "height", "width", "radius"],
+      "accessibility": [
+        "The placeholder is hidden from assistive technology while visible."
+      ],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "Space",
+      "category": "layout",
+      "description": "Semantic layout spacer using the theme spacing scale.",
+      "props": ["size", "orientation"],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "Stack",
+      "category": "layout",
+      "description": "Vertical flex layout for consistent spacing between children.",
+      "props": ["as", "gap", "align", "justify"],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "Switch",
+      "category": "inputs",
+      "description": "Boolean toggle using a checkbox with switch semantics.",
+      "props": [
+        "modelValue",
+        "id",
+        "label",
+        "description",
+        "error",
+        "required",
+        "disabled"
+      ],
+      "accessibility": [
+        "Uses role=switch with aria-checked and native keyboard behavior."
+      ],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "TagsInput",
+      "category": "inputs",
+      "description": "Free-form token input for adding, removing and clearing string values.",
+      "props": [
+        "modelValue",
+        "label",
+        "description",
+        "error",
+        "required",
+        "disabled",
+        "readonly",
+        "placeholder",
+        "ariaLabel",
+        "clearable",
+        "maxTags",
+        "separator",
+        "size",
+        "radius"
+      ],
+      "accessibility": [
+        "Uses a native input for entry and gives every removable tag an accessible remove button."
+      ],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "Text",
+      "category": "typography",
+      "description": "Semantic text primitive using doctui typography and color tokens.",
+      "props": ["as", "size", "muted", "weight"],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "Textarea",
+      "category": "inputs",
+      "description": "Multi-line text field with shared input wrapper semantics.",
+      "props": [
+        "modelValue",
+        "id",
+        "label",
+        "description",
+        "error",
+        "required",
+        "size",
+        "radius",
+        "disabled",
+        "readonly",
+        "placeholder",
+        "rows",
+        "resize"
+      ],
+      "accessibility": [
+        "Uses a native textarea and links its label and description/error text."
+      ],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "TextInput",
+      "category": "inputs",
+      "description": "Single-line text field with shared input wrapper semantics.",
+      "props": [
+        "modelValue",
+        "id",
+        "label",
+        "description",
+        "error",
+        "required",
+        "size",
+        "radius",
+        "disabled",
+        "readonly",
+        "type",
+        "placeholder",
+        "leftSection",
+        "rightSection",
+        "clearable"
+      ],
+      "accessibility": [
+        "Uses a native input and links its label and description/error text through accessible IDs."
+      ],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "Title",
+      "category": "typography",
+      "description": "Semantic h1-h6 heading primitive.",
+      "props": ["order"],
+      "accessibility": [
+        "Heading level is represented by the rendered native h1-h6 element."
+      ],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "Tooltip",
+      "category": "overlays",
+      "description": "Non-essential contextual text revealed on hover or focus.",
+      "props": ["label", "modelValue", "position"],
+      "accessibility": [
+        "Appears on focus as well as hover and is not intended for critical information."
+      ],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "UnstyledButton",
+      "category": "actions",
+      "description": "Native button reset for building custom action surfaces.",
+      "props": ["disabled", "type"],
+      "accessibility": [
+        "Preserves native button keyboard and disabled behavior."
+      ],
+      "package": "@doctui/core"
+    },
+    {
+      "name": "YearPicker",
+      "package": "@doctui/dates",
+      "category": "inputs",
+      "description": "Year selection control over a configurable range.",
+      "props": ["modelValue", "minYear", "maxYear"]
+    }
+  ],
+  "packages": [
+    {
+      "name": "@doctui/core",
+      "description": "Core Vue components, theme and primitives."
+    },
+    {
+      "name": "@doctui/hooks",
+      "description": "Reusable Vue composables for browser and app state."
+    },
+    {
+      "name": "@doctui/form",
+      "description": "Vue-first form state, validation and submit helpers."
+    },
+    {
+      "name": "@doctui/notifications",
+      "description": "Notification store and accessible renderer."
+    },
+    {
+      "name": "@doctui/dates",
+      "description": "Dependency-free date and calendar components."
+    },
+    {
+      "name": "@doctui/mcp-server",
+      "description": "Local MCP server for querying the generated registry."
+    }
+  ]
+}

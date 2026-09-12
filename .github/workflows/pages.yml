@@ -54,6 +54,13 @@ jobs:
           mkdir -p apps/docs/.vitepress/dist/storybook
           cp -R apps/storybook/storybook-static/. apps/docs/.vitepress/dist/storybook/
 
+      - name: Publish generated reference artifacts
+        run: |
+          cp llms.txt apps/docs/.vitepress/dist/llms.txt
+          cp llms-full.txt apps/docs/.vitepress/dist/llms-full.txt
+          mkdir -p apps/docs/.vitepress/dist/metadata
+          cp metadata/components.json apps/docs/.vitepress/dist/metadata/components.json
+
       - name: Mount stored PR previews
         run: |
           mkdir -p apps/docs/.vitepress/dist/previews

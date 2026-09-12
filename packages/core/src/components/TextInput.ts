@@ -18,12 +18,16 @@ export interface TextInputProps {
   placeholder?: string;
   leftSection?: string;
   rightSection?: string;
+  clearable?: boolean;
 }
 
 export const TextInput = defineComponent({
   name: "DuiTextInput",
   inheritAttrs: false,
-  emits: { "update:modelValue": (_value: string) => true },
+  emits: {
+    "update:modelValue": (_value: string) => true,
+    clear: () => true,
+  },
   props: {
     modelValue: { type: String, default: "" },
     id: String,
@@ -39,6 +43,7 @@ export const TextInput = defineComponent({
     placeholder: String,
     leftSection: String,
     rightSection: String,
+    clearable: Boolean,
   },
   setup(props, { attrs, emit, slots }) {
     const generatedId = useId();
@@ -111,6 +116,21 @@ export const TextInput = defineComponent({
                       class: "dui-TextInput-section",
                     },
                     props.rightSection ?? slots.rightSection?.(),
+                  )
+                : null,
+              props.clearable && props.modelValue
+                ? h(
+                    "button",
+                    {
+                      "aria-label": "Clear input",
+                      class: "dui-TextInput-clear",
+                      type: "button",
+                      onClick: () => {
+                        emit("update:modelValue", "");
+                        emit("clear");
+                      },
+                    },
+                    "×",
                   )
                 : null,
             ],

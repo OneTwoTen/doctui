@@ -1,0 +1,46 @@
+.dui-Notifications {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: min(24rem, calc(100vw - 2rem));
+  position: fixed;
+  z-index: 700;
+}
+.dui-Notifications--top-end {
+  right: 1rem;
+  top: 1rem;
+}
+.dui-Notifications--top-start {
+  left: 1rem;
+  top: 1rem;
+}
+.dui-Notifications--bottom-end {
+  bottom: 1rem;
+  right: 1rem;
+}
+.dui-Notifications--bottom-start {
+  bottom: 1rem;
+  left: 1rem;
+}
+.dui-Notification {
+  align-items: flex-start;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgb(15 23 42 / 0.12);
+  color: #0f172a;
+  display: grid;
+  gap: 0.25rem 0.75rem;
+  grid-template-columns: 1fr auto;
+  padding: 0.75rem 1rem;
+}
+.dui-Notification > span {
+  grid-column: 1;
+}
+.dui-Notification > button {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  grid-column: 2;
+  grid-row: 1 / span 2;
+}
