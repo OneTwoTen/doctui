@@ -27,8 +27,8 @@ export const InputWrapper = defineComponent({
         ? `${inputId.value}-description`
         : undefined;
       const errorId = props.error ? `${inputId.value}-error` : undefined;
-      const describedBy = [descriptionId, errorId].filter(Boolean).join(" ") ||
-        undefined;
+      const describedBy =
+        [descriptionId, errorId].filter(Boolean).join(" ") || undefined;
 
       return h(
         "div",

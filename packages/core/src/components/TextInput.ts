@@ -57,7 +57,13 @@ export const TextInput = defineComponent({
       const { rootAttrs, controlAttrs } = splitFieldAttrs(attrs);
 
       return h(InputWrapper, getInputWrapperProps(props), {
-        default: ({ id, describedBy }: { id: string; describedBy?: string }) => {
+        default: ({
+          id,
+          describedBy,
+        }: {
+          id: string;
+          describedBy?: string;
+        }) => {
           const ariaDescribedBy = composeDescribedBy(
             describedBy,
             controlAttrs["aria-describedby"],

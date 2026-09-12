@@ -98,8 +98,11 @@ export const StateMatrix: Story = {
     preview(() =>
       h(Stack, { gap: "lg", style: { maxWidth: "34rem" } }, () => [
         h(Title, { order: 3 }, () => "Field state matrix"),
-        h(Text, { muted: true, size: "sm" }, () =>
-          "Description and error text stay connected to the native control. Root class/style remain available for layout styling.",
+        h(
+          Text,
+          { muted: true, size: "sm" },
+          () =>
+            "Description and error text stay connected to the native control. Root class/style remain available for layout styling.",
         ),
         h(TextInput, {
           id: "storybook-email",
@@ -210,7 +213,8 @@ export const ComposedProfileForm: Story = {
             modelValue: age.value,
             min: 0,
             max: 130,
-            "onUpdate:modelValue": (value: number | null) => (age.value = value),
+            "onUpdate:modelValue": (value: number | null) =>
+              (age.value = value),
           }),
           h(Textarea, {
             label: "Bio",

@@ -14,7 +14,9 @@ export function getInputWrapperProps(
 ): InputWrapperProps {
   return {
     ...(props.id === undefined ? {} : { id: props.id }),
-    ...(includeLabel && props.label !== undefined ? { label: props.label } : {}),
+    ...(includeLabel && props.label !== undefined
+      ? { label: props.label }
+      : {}),
     ...(props.description === undefined
       ? {}
       : { description: props.description }),
