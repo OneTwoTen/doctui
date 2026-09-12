@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "include": [
+    "vitest.config.ts",
+    "packages/*/vite.config.ts",
+    "apps/*/.vitepress/**/*.ts",
+    "apps/*/.vitepress/**/*.mts",
+    "apps/*/.storybook/**/*.ts"
+  ]
+}
