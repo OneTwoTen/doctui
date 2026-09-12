@@ -5,6 +5,7 @@
   },
   "include": [
     "vitest.config.ts",
+    "types/**/*.d.ts",
     "packages/*/vite.config.ts",
     "apps/*/.vitepress/**/*.ts",
     "apps/*/.vitepress/**/*.mts",
