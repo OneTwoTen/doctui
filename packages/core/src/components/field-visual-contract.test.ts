@@ -1,3 +1,4 @@
+import { readFile } from "node:fs/promises";
 import { mount } from "@vue/test-utils";
 import { describe, expect, it } from "vitest";
 import { Checkbox, Radio, Switch, TextInput } from "../index";
@@ -33,6 +34,22 @@ describe("field visual contract", () => {
     expect(visualControl.classes()).not.toContain("consumer-field");
     expect(input.attributes("name")).toBe("email");
     expect(input.attributes("autocomplete")).toBe("email");
+  });
+
+  it("renders the required marker as a stable danger-colored style part", async () => {
+    const wrapper = mount(TextInput, {
+      props: {
+        label: "Email",
+        required: true,
+      },
+    });
+
+    expect(wrapper.get(".dui-InputWrapper-required").text()).toBe("*");
+
+    const css = await readFile(new URL("./field-styles.css", import.meta.url), "utf8");
+    expect(css).toMatch(
+      /\.dui-InputWrapper-required\s*\{[^}]*color:\s*var\(--dui-color-danger-filled\)/s,
+    );
   });
 
   it("renders explicit custom visual parts while preserving native boolean controls", () => {
