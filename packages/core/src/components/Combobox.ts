@@ -1,5 +1,20 @@
-import { computed, defineComponent, h, type PropType, ref, useId } from "vue";
+import {
+  computed,
+  defineComponent,
+  h,
+  mergeProps,
+  nextTick,
+  type PropType,
+  ref,
+  watch,
+} from "vue";
 import type { Radius, Size } from "../theme/types";
+import {
+  composeDescribedBy,
+  getFieldRootStateAttrs,
+  getInputWrapperProps,
+  splitFieldAttrs,
+} from "./field-internals";
 import { InputWrapper } from "./InputWrapper";
 import { fontSizeToken, radiusToken } from "./shared";
 
@@ -18,6 +33,7 @@ export type ComboboxValue =
 export interface ComboboxProps {
   modelValue?: ComboboxValue;
   data: readonly ComboboxOption[];
+  id?: string;
   multiple?: boolean;
   searchable?: boolean;
   clearable?: boolean;
@@ -33,6 +49,17 @@ export interface ComboboxProps {
   radius?: Radius;
 }
 
+function firstEnabledIndex(options: readonly ComboboxOption[]) {
+  return options.findIndex((option) => !option.disabled);
+}
+
+function lastEnabledIndex(options: readonly ComboboxOption[]) {
+  for (let index = options.length - 1; index >= 0; index -= 1) {
+    if (!options[index]?.disabled) return index;
+  }
+  return -1;
+}
+
 export const Combobox = defineComponent({
   name: "DuiCombobox",
   inheritAttrs: false,
@@ -46,6 +73,7 @@ export const Combobox = defineComponent({
       type: Array as PropType<readonly ComboboxOption[]>,
       required: true,
     },
+    id: String,
     multiple: Boolean,
     searchable: Boolean,
     clearable: Boolean,
@@ -61,13 +89,11 @@ export const Combobox = defineComponent({
     radius: { type: String as PropType<Radius>, default: "md" },
   },
   setup(props, { attrs, emit, slots }) {
-    const generatedId = useId();
-    const id = `dui-combobox-${generatedId}`;
-    const listId = `${id}-listbox`;
     const open = ref(false);
     const query = ref("");
-    const activeIndex = ref(-1);
-    const root = ref<HTMLElement>();
+    const activeValue = ref<string | number>();
+    const optionElements = new Map<number, HTMLElement>();
+
     const selectedValues = computed(() =>
       props.multiple
         ? Array.isArray(props.modelValue)
@@ -89,35 +115,97 @@ export const Combobox = defineComponent({
         option.label.toLocaleLowerCase().includes(normalized),
       );
     });
-    const inputValue = computed(() =>
-      props.searchable ? query.value : (selectedOption.value?.label ?? ""),
+    const activeIndex = computed(() =>
+      activeValue.value === undefined
+        ? -1
+        : filtered.value.findIndex(
+            (option) =>
+              !option.disabled && option.value === activeValue.value,
+          ),
     );
-    const openList = () => {
+    const inputValue = computed(() => {
+      if (!props.searchable) return selectedOption.value?.label ?? "";
+      if (props.multiple || open.value) return query.value;
+      return selectedOption.value?.label ?? query.value;
+    });
+    const accessibleLabel = computed(() => {
+      if (props.ariaLabel) return props.ariaLabel;
+      if (props.label) return undefined;
+      return props.multiple ? "Select options" : "Select option";
+    });
+
+    const setActiveIndex = (index: number) => {
+      const option = filtered.value[index];
+      activeValue.value = option && !option.disabled ? option.value : undefined;
+    };
+
+    const syncActiveOption = () => {
+      if (!open.value) return;
+      if (
+        activeValue.value !== undefined &&
+        filtered.value.some(
+          (option) =>
+            option.value === activeValue.value && !option.disabled,
+        )
+      ) {
+        return;
+      }
+      setActiveIndex(firstEnabledIndex(filtered.value));
+    };
+
+    const openList = (entry: "first" | "last" = "first") => {
       if (props.disabled) return;
       open.value = true;
-      if (activeIndex.value < 0)
-        activeIndex.value = filtered.value.findIndex(
-          (option) => !option.disabled,
-        );
+      if (activeIndex.value >= 0) return;
+
+      const selectedIndex = filtered.value.findIndex(
+        (option) =>
+          !option.disabled && selectedValues.value.includes(option.value),
+      );
+      if (selectedIndex >= 0) {
+        setActiveIndex(selectedIndex);
+        return;
+      }
+
+      setActiveIndex(
+        entry === "last"
+          ? lastEnabledIndex(filtered.value)
+          : firstEnabledIndex(filtered.value),
+      );
     };
+
     const closeList = () => {
       open.value = false;
-      activeIndex.value = -1;
+      activeValue.value = undefined;
       query.value = "";
     };
+
     const moveActive = (direction: 1 | -1) => {
-      if (!open.value) openList();
       const options = filtered.value;
-      if (!options.length) return;
+      if (!options.length) {
+        activeValue.value = undefined;
+        return;
+      }
+
       let index = activeIndex.value;
+      if (index < 0) {
+        setActiveIndex(
+          direction === 1
+            ? firstEnabledIndex(options)
+            : lastEnabledIndex(options),
+        );
+        return;
+      }
+
       for (let count = 0; count < options.length; count += 1) {
         index = (index + direction + options.length) % options.length;
         if (!options[index]?.disabled) {
-          activeIndex.value = index;
+          setActiveIndex(index);
           return;
         }
       }
     };
+
     const select = (option: ComboboxOption) => {
       if (props.disabled || option.disabled) return;
       if (props.multiple) {
@@ -128,38 +216,38 @@ export const Combobox = defineComponent({
         emit("update:modelValue", next);
         query.value = "";
         open.value = true;
+        activeValue.value = option.value;
       } else {
         emit("update:modelValue", option.value);
         closeList();
       }
     };
+
     const clear = () => {
       if (props.disabled) return;
       emit("update:modelValue", props.multiple ? [] : null);
       emit("clear");
       query.value = "";
+      activeValue.value = undefined;
     };
+
     const onKeydown = (event: KeyboardEvent) => {
+      if (props.disabled) return;
+
       if (event.key === "ArrowDown") {
         event.preventDefault();
-        if (!open.value) openList();
+        if (!open.value) openList("first");
         else moveActive(1);
       } else if (event.key === "ArrowUp") {
         event.preventDefault();
-        moveActive(-1);
+        if (!open.value) openList("last");
+        else moveActive(-1);
       } else if (event.key === "Home" && open.value) {
         event.preventDefault();
-        activeIndex.value = filtered.value.findIndex(
-          (option) => !option.disabled,
-        );
+        setActiveIndex(firstEnabledIndex(filtered.value));
       } else if (event.key === "End" && open.value) {
         event.preventDefault();
-        for (let index = filtered.value.length - 1; index >= 0; index -= 1) {
-          if (!filtered.value[index]?.disabled) {
-            activeIndex.value = index;
-            break;
-          }
-        }
+        setActiveIndex(lastEnabledIndex(filtered.value));
       } else if (
         event.key === "Enter" &&
         open.value &&
@@ -168,7 +256,7 @@ export const Combobox = defineComponent({
         event.preventDefault();
         const option = filtered.value[activeIndex.value];
         if (option) select(option);
-      } else if (event.key === "Escape") {
+      } else if (event.key === "Escape" && open.value) {
         event.preventDefault();
         closeList();
       } else if (
@@ -180,63 +268,96 @@ export const Combobox = defineComponent({
         emit("update:modelValue", selectedValues.value.slice(0, -1));
       }
     };
-    return () =>
-      h(
+
+    watch(filtered, syncActiveOption, { flush: "sync" });
+    watch(
+      () => props.disabled,
+      (disabled) => {
+        if (disabled) closeList();
+      },
+    );
+    watch(activeIndex, (index) => {
+      if (!open.value || index < 0) return;
+      void nextTick(() => {
+        optionElements.get(index)?.scrollIntoView({ block: "nearest" });
+      });
+    });
+
+    return () => {
+      const { rootAttrs, controlAttrs } = splitFieldAttrs(attrs);
+
+      return h(
         InputWrapper,
+        mergeProps(
+          getInputWrapperProps(props),
+          rootAttrs,
+          getFieldRootStateAttrs(props, "Combobox"),
+        ),
         {
-          id,
-          ...(props.label === undefined ? {} : { label: props.label }),
-          ...(props.description === undefined
-            ? {}
-            : { description: props.description }),
-          ...(props.error === undefined ? {} : { error: props.error }),
-          required: props.required,
-        },
-        {
-          default: ({ describedBy }: { describedBy?: string }) =>
-            h(
+          default: ({
+            id,
+            describedBy,
+          }: {
+            id: string;
+            describedBy?: string;
+          }) => {
+            const listId = `${id}-listbox`;
+            const ariaDescribedBy = composeDescribedBy(
+              describedBy,
+              controlAttrs["aria-describedby"],
+            );
+            const ariaInvalid = props.error
+              ? "true"
+              : controlAttrs["aria-invalid"];
+
+            return h(
               "div",
               {
-                ref: root,
-                class: ["dui-Combobox", attrs.class],
+                class: "dui-Combobox",
                 "data-dui-component": "Combobox",
                 "data-open": open.value ? "true" : undefined,
                 "data-multiple": props.multiple ? "true" : undefined,
+                "data-disabled": props.disabled ? "true" : undefined,
+                "data-error": props.error ? "true" : undefined,
+                "data-size": props.size,
               },
               [
-                h("input", {
-                  ...attrs,
-                  id,
-                  role: "combobox",
-                  value: inputValue.value,
-                  readonly: !props.searchable,
-                  disabled: props.disabled,
-                  required: props.required,
-                  placeholder: props.placeholder,
-                  autocomplete: "off",
-                  "aria-label": props.label ? undefined : props.ariaLabel,
-                  "aria-expanded": String(open.value),
-                  "aria-controls": open.value ? listId : undefined,
-                  "aria-activedescendant":
-                    activeIndex.value >= 0
-                      ? `${listId}-${activeIndex.value}`
-                      : undefined,
-                  "aria-invalid": props.error ? "true" : undefined,
-                  "aria-describedby": describedBy,
-                  "data-dui-combobox-input": "",
-                  class: "dui-Combobox-input",
-                  style: {
-                    borderRadius: radiusToken(props.radius),
-                    fontSize: fontSizeToken(props.size),
-                  },
-                  onFocus: openList,
-                  onClick: openList,
-                  onInput: (event: Event) => {
-                    query.value = (event.target as HTMLInputElement).value;
-                    openList();
-                  },
-                  onKeydown,
-                }),
+                h(
+                  "input",
+                  mergeProps(controlAttrs, {
+                    id,
+                    role: "combobox",
+                    value: inputValue.value,
+                    readonly: !props.searchable,
+                    disabled: props.disabled,
+                    required: props.required,
+                    placeholder: props.placeholder,
+                    autocomplete: "off",
+                    "aria-label": accessibleLabel.value,
+                    "aria-haspopup": "listbox",
+                    "aria-expanded": String(open.value),
+                    "aria-controls": open.value ? listId : undefined,
+                    "aria-activedescendant":
+                      open.value && activeIndex.value >= 0
+                        ? `${listId}-${activeIndex.value}`
+                        : undefined,
+                    "aria-invalid": ariaInvalid,
+                    "aria-describedby": ariaDescribedBy,
+                    "data-dui-combobox-input": "",
+                    class: "dui-Combobox-input",
+                    style: {
+                      borderRadius: radiusToken(props.radius),
+                      fontSize: fontSizeToken(props.size),
+                    },
+                    onFocus: () => openList("first"),
+                    onClick: () => openList("first"),
+                    onInput: (event: Event) => {
+                      query.value = (event.target as HTMLInputElement).value;
+                      openList("first");
+                    },
+                    onKeydown,
+                  }),
+                ),
                 props.clearable && selectedValues.value.length
                   ? h(
                       "button",
@@ -244,6 +365,7 @@ export const Combobox = defineComponent({
                         type: "button",
                         class: "dui-Combobox-clear",
                         "aria-label": "Clear selection",
+                        disabled: props.disabled,
                         onClick: clear,
                       },
                       "×",
@@ -276,6 +398,13 @@ export const Combobox = defineComponent({
                             h(
                               "li",
                               {
+                                ref: (element: Element | null) => {
+                                  if (element instanceof HTMLElement) {
+                                    optionElements.set(index, element);
+                                  } else {
+                                    optionElements.delete(index);
+                                  }
+                                },
                                 id: `${listId}-${index}`,
                                 role: "option",
                                 "aria-selected": String(
@@ -291,7 +420,7 @@ export const Combobox = defineComponent({
                                     : undefined,
                                 ],
                                 onMouseenter: () => {
-                                  activeIndex.value = index;
+                                  if (!option.disabled) setActiveIndex(index);
                                 },
                                 onMousedown: (event: MouseEvent) =>
                                   event.preventDefault(),
@@ -304,14 +433,20 @@ export const Combobox = defineComponent({
                           )
                         : h(
                             "li",
-                            { class: "dui-Combobox-empty" },
+                            {
+                              class: "dui-Combobox-empty",
+                              "data-dui-combobox-empty": "",
+                              role: "status",
+                            },
                             slots.empty?.() ?? props.nothingFound,
                           ),
                     )
                   : null,
               ],
-            ),
+            );
+          },
         },
       );
+    };
   },
 });
