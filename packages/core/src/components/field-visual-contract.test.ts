@@ -1,4 +1,5 @@
 import { readFile } from "node:fs/promises";
+import { resolve } from "node:path";
 import { mount } from "@vue/test-utils";
 import { describe, expect, it } from "vitest";
 import { Checkbox, Radio, Switch, TextInput } from "../index";
@@ -46,10 +47,11 @@ describe("field visual contract", () => {
 
     expect(wrapper.get(".dui-InputWrapper-required").text()).toBe("*");
 
-    const css = await readFile(
-      new URL("./field-styles.css", import.meta.url),
-      "utf8",
+    const cssPath = resolve(
+      process.cwd(),
+      "packages/core/src/components/field-styles.css",
     );
+    const css = await readFile(cssPath, "utf8");
     expect(css).toMatch(
       /\.dui-InputWrapper-required\s*\{[^}]*color:\s*var\(--dui-color-danger-filled\)/s,
     );
