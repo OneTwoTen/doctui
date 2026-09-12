@@ -33,6 +33,23 @@ scripts/
 
 Packages should be created when implementation work actually requires them; the layout above describes the target monorepo.
 
+## Technology stack
+
+The canonical stack and dependency decisions are documented in [`docs/TECH_STACK.md`](./docs/TECH_STACK.md).
+
+Initial baseline:
+
+```text
+Bun 1.4
+Vue 3.5 stable
+TypeScript 6
+Vite 8.1
+Vitest 5
+Storybook 10.6
+VitePress stable 1.x
+GitHub Actions + GitHub Pages
+```
+
 ## Infrastructure direction
 
 The default public infrastructure is intentionally zero-VPS:
