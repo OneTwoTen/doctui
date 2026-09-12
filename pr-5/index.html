@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <title>doctui PR #5 preview</title>
+    <style>
+      :root { font-family: Inter, ui-sans-serif, system-ui, sans-serif; color-scheme: light dark; }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: Canvas; color: CanvasText; }
+      main { width: min(960px, calc(100% - 32px)); margin: 64px auto; }
+      a { color: inherit; }
+      .eyebrow { margin: 0 0 8px; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; opacity: .62; }
+      h1 { margin: 0; font-size: clamp(32px, 6vw, 56px); line-height: 1.05; letter-spacing: -.04em; }
+      .lede { max-width: 720px; margin: 16px 0 0; font-size: 18px; line-height: 1.6; opacity: .72; }
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 32px; }
+      .card { display: block; padding: 20px; border: 1px solid color-mix(in srgb, CanvasText 16%, transparent); border-radius: 16px; text-decoration: none; background: color-mix(in srgb, Canvas 94%, CanvasText 6%); }
+      .card:hover { border-color: color-mix(in srgb, CanvasText 35%, transparent); transform: translateY(-1px); }
+      .card strong { display: block; margin-bottom: 8px; font-size: 18px; }
+      .card span { opacity: .66; line-height: 1.5; }
+      dl { display: grid; grid-template-columns: max-content 1fr; gap: 10px 18px; margin: 32px 0 0; padding: 20px; border: 1px solid color-mix(in srgb, CanvasText 14%, transparent); border-radius: 16px; }
+      dt { font-weight: 700; opacity: .7; }
+      dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+      code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .92em; }
+      .list { display: grid; gap: 12px; margin-top: 32px; }
+      .preview { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; padding: 18px 20px; border: 1px solid color-mix(in srgb, CanvasText 14%, transparent); border-radius: 16px; text-decoration: none; }
+      .preview:hover { border-color: color-mix(in srgb, CanvasText 35%, transparent); }
+      .preview-title { font-weight: 700; }
+      .preview-meta { margin-top: 5px; font-size: 14px; opacity: .65; }
+      .empty { margin-top: 32px; padding: 24px; border: 1px dashed color-mix(in srgb, CanvasText 24%, transparent); border-radius: 16px; opacity: .7; }
+      @media (max-width: 560px) { main { margin: 36px auto; } dl { grid-template-columns: 1fr; } dd + dt { margin-top: 8px; } .preview { grid-template-columns: 1fr; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">doctui · pull request preview</p>
+      <h1>PR #5</h1>
+      <p class="lede">feat: add Phase 2 layout typography and basic controls</p>
+
+      <div class="grid">
+        <a class="card" href="./docs/">
+          <strong>Review docs →</strong>
+          <span>Browse the VitePress documentation built from this PR.</span>
+        </a>
+        <a class="card" href="./storybook/">
+          <strong>Review Storybook →</strong>
+          <span>Inspect component states, examples, and compositions from this PR.</span>
+        </a>
+        <a class="card" href="https://github.com/OneTwoTen/doctui/pull/5">
+          <strong>Open pull request →</strong>
+          <span>Return to the GitHub discussion and changed files.</span>
+        </a>
+      </div>
+
+      <dl>
+        <dt>Branch</dt><dd><code>feat/phase-2-layout-controls</code></dd>
+        <dt>Commit</dt><dd><code>fc7e515</code></dd>
+        <dt>Repository</dt><dd>OneTwoTen/doctui</dd>
+        <dt>Generated</dt><dd>2026-09-12T03:15:17.258Z</dd>
+        <dt>Workflow</dt><dd><a href="https://github.com/OneTwoTen/doctui/actions/runs/34669849504">View GitHub Actions run</a></dd>
+      </dl></main>
+  </body>
+</html>
