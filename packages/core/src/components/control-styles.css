@@ -1,0 +1,117 @@
+.dui-Checkbox:hover:not([data-disabled="true"]) .dui-Checkbox-control,
+.dui-Radio:hover:not([data-disabled="true"]) .dui-Radio-control,
+.dui-Switch:hover:not([data-disabled="true"]) .dui-Switch-track {
+  border-color: var(--dui-color-primary-filled);
+}
+
+.dui-SegmentedControl {
+  --dui-segment-font-size: var(--dui-font-size-md);
+  --dui-segment-min-height: 2.25rem;
+  --dui-segment-padding-block: 0.35rem;
+  --dui-segment-padding-inline: 0.75rem;
+
+  align-items: center;
+  background: var(--dui-color-surface-muted);
+  border: 1px solid var(--dui-color-border);
+  box-sizing: border-box;
+  display: inline-flex;
+  gap: 0.125rem;
+  padding: 0.2rem;
+  transition:
+    border-color 120ms ease,
+    opacity 120ms ease;
+}
+
+.dui-SegmentedControl[data-size="xs"] {
+  --dui-segment-font-size: var(--dui-font-size-xs);
+  --dui-segment-min-height: 1.75rem;
+  --dui-segment-padding-block: 0.2rem;
+  --dui-segment-padding-inline: 0.45rem;
+}
+
+.dui-SegmentedControl[data-size="sm"] {
+  --dui-segment-font-size: var(--dui-font-size-sm);
+  --dui-segment-min-height: 2rem;
+  --dui-segment-padding-block: 0.25rem;
+  --dui-segment-padding-inline: 0.6rem;
+}
+
+.dui-SegmentedControl[data-size="lg"] {
+  --dui-segment-font-size: var(--dui-font-size-lg);
+  --dui-segment-min-height: 2.625rem;
+  --dui-segment-padding-block: 0.45rem;
+  --dui-segment-padding-inline: 0.9rem;
+}
+
+.dui-SegmentedControl[data-size="xl"] {
+  --dui-segment-font-size: var(--dui-font-size-xl);
+  --dui-segment-min-height: 3rem;
+  --dui-segment-padding-block: 0.55rem;
+  --dui-segment-padding-inline: 1rem;
+}
+
+.dui-SegmentedControl-option {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-radius: inherit;
+  color: var(--dui-color-text-muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--dui-segment-font-size);
+  font-weight: 500;
+  min-height: var(--dui-segment-min-height);
+  padding: var(--dui-segment-padding-block) var(--dui-segment-padding-inline);
+  transition:
+    background-color 120ms ease,
+    box-shadow 120ms ease,
+    color 120ms ease,
+    transform 80ms ease;
+  white-space: nowrap;
+}
+
+.dui-SegmentedControl-option:hover:not(:disabled) {
+  background: var(--dui-color-surface);
+  color: var(--dui-color-text);
+}
+
+.dui-SegmentedControl-option[data-active="true"] {
+  background: var(--dui-color-surface-raised);
+  box-shadow: var(--dui-shadow-sm);
+  color: var(--dui-color-text);
+  font-weight: 600;
+}
+
+.dui-SegmentedControl-option:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.dui-SegmentedControl-option:focus-visible {
+  outline: 2px solid var(--dui-color-focus-ring);
+  outline-offset: 1px;
+  position: relative;
+  z-index: 1;
+}
+
+.dui-SegmentedControl-option:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.dui-SegmentedControl[data-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dui-Checkbox-control,
+  .dui-Radio-control,
+  .dui-Checkbox-control::after,
+  .dui-Radio-control::after,
+  .dui-Switch-track,
+  .dui-Switch-thumb,
+  .dui-SegmentedControl,
+  .dui-SegmentedControl-option {
+    transition: none;
+  }
+}
