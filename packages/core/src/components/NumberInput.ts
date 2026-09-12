@@ -66,7 +66,13 @@ export const NumberInput = defineComponent({
           getFieldRootStateAttrs(props, "NumberInput"),
         ),
         {
-          default: ({ id, describedBy }: { id: string; describedBy?: string }) =>
+          default: ({
+            id,
+            describedBy,
+          }: {
+            id: string;
+            describedBy?: string;
+          }) =>
             h(
               "input",
               mergeProps(controlAttrs, {
@@ -101,7 +107,10 @@ export const NumberInput = defineComponent({
                 ],
                 onInput: (event: Event) => {
                   const value = (event.target as HTMLInputElement).value;
-                  emit("update:modelValue", value === "" ? null : Number(value));
+                  emit(
+                    "update:modelValue",
+                    value === "" ? null : Number(value),
+                  );
                 },
                 onFocus: () => {
                   focused.value = true;

@@ -67,7 +67,13 @@ export const Textarea = defineComponent({
           getFieldRootStateAttrs(props, "Textarea"),
         ),
         {
-          default: ({ id, describedBy }: { id: string; describedBy?: string }) =>
+          default: ({
+            id,
+            describedBy,
+          }: {
+            id: string;
+            describedBy?: string;
+          }) =>
             h(
               "textarea",
               mergeProps(controlAttrs, {

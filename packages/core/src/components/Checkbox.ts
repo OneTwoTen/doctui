@@ -51,7 +51,13 @@ export const Checkbox = defineComponent({
           getFieldRootStateAttrs(props, "Checkbox"),
         ),
         {
-          default: ({ id, describedBy }: { id: string; describedBy?: string }) =>
+          default: ({
+            id,
+            describedBy,
+          }: {
+            id: string;
+            describedBy?: string;
+          }) =>
             h(
               "label",
               {
@@ -91,13 +97,22 @@ export const Checkbox = defineComponent({
                   }),
                 ),
                 h("span", {
-                  class: ["dui-Checkbox-control", props.classNames?.indicator],
+                  class: [
+                    "dui-Checkbox-control",
+                    props.classNames?.indicator,
+                  ],
                   style: props.styles?.indicator,
                   "aria-hidden": "true",
                 }),
                 h(
                   "span",
-                  { class: ["dui-Checkbox-label", props.classNames?.labelText], style: props.styles?.labelText },
+                  {
+                    class: [
+                      "dui-Checkbox-label",
+                      props.classNames?.labelText,
+                    ],
+                    style: props.styles?.labelText,
+                  },
                   slots.default?.() ??
                     (props.label
                       ? [

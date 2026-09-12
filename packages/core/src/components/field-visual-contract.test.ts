@@ -26,7 +26,9 @@ describe("field visual contract", () => {
 
     expect(root.classes()).toContain("consumer-field");
     expect(root.attributes("style")).toContain("margin-top: 12px");
-    expect(root.attributes("style")).toContain("--dui-field-control-height: 4rem");
+    expect(root.attributes("style")).toContain(
+      "--dui-field-control-height: 4rem",
+    );
     expect(root.attributes("data-size")).toBe("xl");
     expect(visualControl.classes()).not.toContain("consumer-field");
     expect(input.attributes("name")).toBe("email");
@@ -74,12 +76,8 @@ describe("field visual contract", () => {
     expect(wrapper.get(".dui-InputWrapper").attributes("data-disabled")).toBe(
       "true",
     );
-    expect(wrapper.get(".dui-InputWrapper").attributes("data-size")).toBe(
-      "sm",
-    );
-    expect(wrapper.get(".dui-Switch").attributes("data-disabled")).toBe(
-      "true",
-    );
+    expect(wrapper.get(".dui-InputWrapper").attributes("data-size")).toBe("sm");
+    expect(wrapper.get(".dui-Switch").attributes("data-disabled")).toBe("true");
     expect(wrapper.get("input").attributes("disabled")).toBeDefined();
   });
 });

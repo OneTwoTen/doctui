@@ -118,7 +118,8 @@ export const TextInput = defineComponent({
                           props.classNames?.section,
                           props.classNames?.leftSection,
                         ],
-                        style: props.styles?.leftSection ?? props.styles?.section,
+                        style:
+                          props.styles?.leftSection ?? props.styles?.section,
                       },
                       props.leftSection ?? slots.leftSection?.(),
                     )

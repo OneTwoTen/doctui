@@ -51,7 +51,13 @@ export const Switch = defineComponent({
           getFieldRootStateAttrs(props, "Switch"),
         ),
         {
-          default: ({ id, describedBy }: { id: string; describedBy?: string }) =>
+          default: ({
+            id,
+            describedBy,
+          }: {
+            id: string;
+            describedBy?: string;
+          }) =>
             h(
               "label",
               {

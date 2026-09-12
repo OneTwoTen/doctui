@@ -216,16 +216,6 @@
   width: 24%;
 }
 
-.dui-Checkbox-input:checked + .dui-Checkbox-control {
-  background: var(--dui-color-primary-filled);
-  border-color: var(--dui-color-primary-filled);
-}
-
-.dui-Checkbox-input:checked + .dui-Checkbox-control::after {
-  opacity: 1;
-  transform: rotate(45deg) scale(1);
-}
-
 .dui-Radio-control {
   border-radius: 9999px;
 }
@@ -241,40 +231,6 @@
     opacity 120ms ease,
     transform 120ms ease;
   width: 50%;
-}
-
-.dui-Radio-input:checked + .dui-Radio-control {
-  border-color: var(--dui-color-primary-filled);
-}
-
-.dui-Radio-input:checked + .dui-Radio-control::after {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.dui-Checkbox-input:focus-visible + .dui-Checkbox-control,
-.dui-Radio-input:focus-visible + .dui-Radio-control,
-.dui-Switch-input:focus-visible + .dui-Switch-track {
-  outline: 2px solid var(--dui-color-focus-ring);
-  outline-offset: 2px;
-}
-
-.dui-Checkbox[data-error="true"] .dui-Checkbox-control,
-.dui-Radio[data-error="true"] .dui-Radio-control,
-.dui-Switch[data-error="true"] .dui-Switch-track {
-  border-color: var(--dui-color-danger-filled);
-}
-
-.dui-Checkbox-input:disabled + .dui-Checkbox-control,
-.dui-Radio-input:disabled + .dui-Radio-control {
-  background: var(--dui-field-disabled-background);
-  border-color: var(--dui-color-border);
-}
-
-.dui-Checkbox-label,
-.dui-Radio-label,
-.dui-Switch-label {
-  min-width: 0;
 }
 
 .dui-Switch-track {
@@ -305,6 +261,25 @@
   width: var(--dui-field-switch-thumb-size);
 }
 
+.dui-Checkbox-input:checked + .dui-Checkbox-control {
+  background: var(--dui-color-primary-filled);
+  border-color: var(--dui-color-primary-filled);
+}
+
+.dui-Checkbox-input:checked + .dui-Checkbox-control::after {
+  opacity: 1;
+  transform: rotate(45deg) scale(1);
+}
+
+.dui-Radio-input:checked + .dui-Radio-control {
+  border-color: var(--dui-color-primary-filled);
+}
+
+.dui-Radio-input:checked + .dui-Radio-control::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
 .dui-Switch-input:checked + .dui-Switch-track {
   background: var(--dui-color-primary-filled);
   border-color: var(--dui-color-primary-filled);
@@ -312,11 +287,38 @@
 
 .dui-Switch-input:checked + .dui-Switch-track .dui-Switch-thumb {
   inset-inline-start: calc(
-    var(--dui-field-switch-width) - var(--dui-field-switch-thumb-size) - 3px
+    var(--dui-field-switch-width) -
+    var(--dui-field-switch-thumb-size) -
+    3px
   );
+}
+
+.dui-Checkbox-input:focus-visible + .dui-Checkbox-control,
+.dui-Radio-input:focus-visible + .dui-Radio-control,
+.dui-Switch-input:focus-visible + .dui-Switch-track {
+  outline: 2px solid var(--dui-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.dui-Checkbox[data-error="true"] .dui-Checkbox-control,
+.dui-Radio[data-error="true"] .dui-Radio-control,
+.dui-Switch[data-error="true"] .dui-Switch-track {
+  border-color: var(--dui-color-danger-filled);
+}
+
+.dui-Checkbox-input:disabled + .dui-Checkbox-control,
+.dui-Radio-input:disabled + .dui-Radio-control {
+  background: var(--dui-field-disabled-background);
+  border-color: var(--dui-color-border);
 }
 
 .dui-Switch-input:disabled + .dui-Switch-track {
   background: var(--dui-field-disabled-background);
   border-color: var(--dui-color-border);
+}
+
+.dui-Checkbox-label,
+.dui-Radio-label,
+.dui-Switch-label {
+  min-width: 0;
 }
