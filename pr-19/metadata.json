@@ -2,9 +2,9 @@
   "number": "19",
   "title": "fix(core): normalize shared field contract",
   "branch": "codex/issue-8-field-contract",
-  "sha": "b60a32b8c89062de1d1bb58cf519bc90a98cb934",
+  "sha": "edf0b2ce0ce0fd68318412ec5cc4f1a101da606d",
   "repository": "OneTwoTen/doctui",
   "prUrl": "https://github.com/OneTwoTen/doctui/pull/19",
-  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/34689446051",
-  "generatedAt": "2026-09-12T10:49:44.377Z"
+  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/34689449150",
+  "generatedAt": "2026-09-12T10:50:37.180Z"
 }
