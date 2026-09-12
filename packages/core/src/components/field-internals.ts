@@ -1,11 +1,11 @@
 import type { InputWrapperProps } from "./InputWrapper";
 
 interface FieldRelationshipProps {
-  readonly id?: string;
-  readonly label?: string;
-  readonly description?: string;
-  readonly error?: string;
-  readonly required?: boolean;
+  readonly id?: string | undefined;
+  readonly label?: string | undefined;
+  readonly description?: string | undefined;
+  readonly error?: string | undefined;
+  readonly required?: boolean | undefined;
 }
 
 export function getInputWrapperProps(
