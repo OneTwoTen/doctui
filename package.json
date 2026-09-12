@@ -12,7 +12,7 @@
     "lint": "biome ci .",
     "format": "biome check --write .",
     "check": "biome check .",
-    "typecheck": "tsc -p tsconfig.tools.json --noEmit && node scripts/vue-tsc.mjs -p packages/core/tsconfig.json --noEmit && node scripts/vue-tsc.mjs -p apps/storybook/tsconfig.json --noEmit && node scripts/vue-tsc.mjs -p apps/docs/tsconfig.json --noEmit",
+    "typecheck": "tsc -p tsconfig.tools.json --noEmit && tsc -p packages/core/tsconfig.ts.json --noEmit && node scripts/vue-tsc.mjs -p packages/core/tsconfig.json --noEmit && node scripts/vue-tsc.mjs -p apps/storybook/tsconfig.json --noEmit && node scripts/vue-tsc.mjs -p apps/docs/tsconfig.json --noEmit",
     "test": "vitest run",
     "build:core": "bun run --filter @doctui/core build",
     "build:storybook": "bun run build:core && bun run --filter @doctui/storybook build",
