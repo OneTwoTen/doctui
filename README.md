@@ -11,6 +11,7 @@ A Vue 3 UI component system inspired by the developer experience of Mantine, imp
 - Storybook for interactive component development.
 - VitePress for guides and public documentation.
 - LLM-friendly documentation with generated `llms.txt` / `llms-full.txt`.
+- MCP support for structured AI access to components, APIs and docs.
 - Small, composable internal primitives instead of duplicated interaction logic.
 
 ## Intended workspace
@@ -25,8 +26,17 @@ packages/
   form/
   notifications/
   dates/
+  mcp/
 scripts/
 ```
+
+Packages should be created when implementation work actually requires them; the layout above describes the target monorepo.
+
+## Roadmap
+
+See [`docs/ROADMAP.md`](./docs/ROADMAP.md) for the phased implementation plan, milestones, quality gates and MCP/LLM documentation strategy.
+
+See [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) for architectural principles and implementation ordering.
 
 ## Reference policy
 
