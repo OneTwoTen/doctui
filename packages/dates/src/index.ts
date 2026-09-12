@@ -1,5 +1,5 @@
 import "./styles.css";
-import { defineComponent, h, type PropType, ref, watch } from "vue";
+import { defineComponent, h, type PropType, ref, useId, watch } from "vue";
 
 export type DateValue = string | null;
 
@@ -11,7 +11,12 @@ const parseDate = (value?: string | null) => {
   const month = Number(monthText);
   const day = Number(dayText);
   if (![year, month, day].every(Number.isFinite)) return null;
-  return new Date(year, month - 1, day);
+  const date = new Date(year, month - 1, day);
+  return date.getFullYear() === year &&
+    date.getMonth() === month - 1 &&
+    date.getDate() === day
+    ? date
+    : null;
 };
 const toDateValue = (date: Date) =>
   `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
@@ -22,7 +27,7 @@ const parseMonth = (value?: string | null) => {
   const [yearText, monthText] = value.split("-");
   const year = Number(yearText);
   const month = Number(monthText);
-  return Number.isFinite(year) && Number.isFinite(month)
+  return Number.isFinite(year) && month >= 1 && month <= 12
     ? new Date(year, month - 1, 1)
     : null;
 };
@@ -159,7 +164,7 @@ export const DateInput = defineComponent({
   },
   emits: ["update:modelValue", "blur", "clear"],
   setup(props, { emit }) {
-    const inputId = `dui-date-${Math.random().toString(36).slice(2)}`;
+    const inputId = `dui-date-${useId()}`;
     return () =>
       h("div", { class: "dui-DateInput" }, [
         props.label
@@ -276,7 +281,7 @@ export const DateTimePicker = defineComponent({
   },
   emits: ["update:modelValue", "blur"],
   setup(props, { emit }) {
-    const inputId = `dui-datetime-${Math.random().toString(36).slice(2)}`;
+    const inputId = `dui-datetime-${useId()}`;
     return () =>
       h("div", { class: "dui-DateInput" }, [
         props.label

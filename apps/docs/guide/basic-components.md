@@ -358,7 +358,7 @@ Use `Skeleton` while content is unavailable and set `visible="false"` to reveal 
 
 ```vue
 <Group>
-  <ActionIcon aria-label="Close">×</ActionIcon>
+  <ActionIcon ariaLabel="Close">×</ActionIcon>
   <UnstyledButton @click="open = true">Open details</UnstyledButton>
 </Group>
 ```

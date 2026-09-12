@@ -55,7 +55,7 @@ export const Modal = defineComponent({
                           "aria-labelledby": props.title ? titleId : undefined,
                           "aria-label": props.title
                             ? undefined
-                            : props.ariaLabel,
+                            : (props.ariaLabel ?? "Dialog"),
                           "data-dui-component": "Modal",
                           "data-size": props.size,
                           class: ["dui-Modal", attrs.class],
