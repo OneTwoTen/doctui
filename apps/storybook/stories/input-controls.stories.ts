@@ -119,7 +119,7 @@ export const KeyboardAndDisabledMatrix: Story = {
           h(SegmentedControl, {
             ariaLabel: "View without initial selection",
             data,
-            modelValue: view.value,
+            ...(view.value === undefined ? {} : { modelValue: view.value }),
             "onUpdate:modelValue": (value: string | number) =>
               (view.value = value),
           }),
@@ -243,7 +243,7 @@ export const AdvancedComposition: Story = {
               h(Radio, {
                 name: "workspace-visibility",
                 value,
-                label: value[0]?.toUpperCase() + value.slice(1),
+                label: value.charAt(0).toUpperCase() + value.slice(1),
                 modelValue: visibility.value,
                 "onUpdate:modelValue": (next: string | number) =>
                   (visibility.value = next),
