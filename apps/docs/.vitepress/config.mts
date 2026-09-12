@@ -1,17 +1,22 @@
 import { defineConfig } from "vitepress";
 
+const base = process.env.DOCTUI_DOCS_BASE ?? "/doctui/";
+const storybookUrl =
+  process.env.DOCTUI_STORYBOOK_URL ??
+  "https://onetwoten.github.io/doctui/storybook/";
+
 export default defineConfig({
   title: "doctui",
   description:
     "A Vue-native UI system with predictable APIs and strong accessibility.",
-  base: "/doctui/",
+  base,
   themeConfig: {
     nav: [
       { text: "Guide", link: "/guide/getting-started" },
       { text: "Components", link: "/guide/basic-components" },
       {
         text: "Storybook",
-        link: "https://onetwoten.github.io/doctui/storybook/",
+        link: storybookUrl,
       },
       {
         text: "Roadmap",

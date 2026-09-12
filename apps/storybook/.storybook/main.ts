@@ -7,6 +7,12 @@ const config: StorybookConfig = {
     name: "@storybook/vue3-vite",
     options: {},
   },
+  async viteFinal(viteConfig) {
+    return {
+      ...viteConfig,
+      base: process.env.DOCTUI_STORYBOOK_BASE ?? "/doctui/storybook/",
+    };
+  },
 };
 
 export default config;
