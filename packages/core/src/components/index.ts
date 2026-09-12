@@ -2,6 +2,8 @@ export * from "./Box";
 export * from "./Button";
 export * from "./Flex";
 export * from "./Group";
+export * from "./InputWrapper";
 export * from "./Stack";
 export * from "./Text";
+export * from "./TextInput";
 export * from "./Title";

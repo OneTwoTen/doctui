@@ -23,7 +23,7 @@
   },
   "scripts": {
     "clean": "node -e \"require('node:fs').rmSync('dist',{ recursive: true, force: true })\"",
-    "build:js": "vite build",
+    "build:js": "bun run --bun vite build",
     "build:types": "node ../../scripts/vue-tsc.mjs -p tsconfig.build.json",
     "build": "bun run clean && bun run build:js && bun run build:types"
   },

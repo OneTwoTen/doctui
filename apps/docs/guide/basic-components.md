@@ -86,6 +86,38 @@ Spacing values resolve to `--dui-spacing-*` tokens.
 
 Using a real heading element is intentional: visual hierarchy should not replace document semantics.
 
+## TextInput
+
+`TextInput` is a native single-line input with a shared label, description, error, required, disabled and read-only contract.
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { TextInput } from "@doctui/core";
+
+const email = ref("");
+</script>
+
+<template>
+  <TextInput
+    id="email"
+    v-model="email"
+    label="Email"
+    description="We will never share it."
+    type="email"
+    required
+  />
+</template>
+```
+
+Use `error` for validation feedback; it replaces the description and is announced through an alert region. `leftSection` and `rightSection` provide compact adornments, while named `leftSection` and `rightSection` slots support richer content.
+
+```vue
+<TextInput label="Website" left-section="https://" right-section=".com" />
+<TextInput label="Username" error="This name is already taken." />
+<TextInput label="Reference" readonly model-value="DOCTUI-001" />
+```
+
 ## Button
 
 `Button` remains a native `<button>`, defaults to `type="button"`, and supports shared doctui `color`, `variant`, `size`, and `radius` types.
