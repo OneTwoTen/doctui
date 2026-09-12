@@ -1,0 +1,17 @@
+---
+description: Accessibility, keyboard and focus requirements for interactive doctui components
+globs: "packages/core/**/*.{vue,ts}"
+alwaysApply: false
+---
+# Accessibility
+
+For every interactive component:
+
+- Start from correct native semantics where possible.
+- Follow the applicable WAI-ARIA interaction pattern for custom widgets.
+- Test keyboard navigation, Escape behavior and focus restoration when relevant.
+- Never hide a focusable element from accessibility APIs while it remains focusable.
+- Disabled controls must not trigger user actions.
+- Labels, descriptions and errors must be programmatically associated with their controls.
+- Focus-visible styling must remain usable in all supported themes.
+- Modals/drawers/popovers must have deliberate focus and dismissal behavior.
