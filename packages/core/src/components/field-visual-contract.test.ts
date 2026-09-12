@@ -46,7 +46,10 @@ describe("field visual contract", () => {
 
     expect(wrapper.get(".dui-InputWrapper-required").text()).toBe("*");
 
-    const css = await readFile(new URL("./field-styles.css", import.meta.url), "utf8");
+    const css = await readFile(
+      new URL("./field-styles.css", import.meta.url),
+      "utf8",
+    );
     expect(css).toMatch(
       /\.dui-InputWrapper-required\s*\{[^}]*color:\s*var\(--dui-color-danger-filled\)/s,
     );
