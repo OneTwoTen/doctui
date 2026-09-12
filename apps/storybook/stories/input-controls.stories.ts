@@ -123,8 +123,10 @@ export const KeyboardAndDisabledMatrix: Story = {
             "onUpdate:modelValue": (value: string | number) =>
               (view.value = value),
           }),
-          h(Text, { size: "sm", muted: true }, () =>
-            `Selected: ${String(view.value ?? "none")}`,
+          h(
+            Text,
+            { size: "sm", muted: true },
+            () => `Selected: ${String(view.value ?? "none")}`,
           ),
         ]),
         h(Stack, { gap: "xs" }, () => [
