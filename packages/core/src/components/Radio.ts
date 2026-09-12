@@ -55,6 +55,7 @@ export const Radio = defineComponent({
               {
                 class: ["dui-Radio", attrs.class],
                 "data-dui-component": "Radio",
+                "data-size": props.size,
                 "data-disabled": props.disabled ? "true" : undefined,
               },
               [
