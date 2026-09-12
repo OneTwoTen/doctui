@@ -5,34 +5,32 @@ This document is the canonical technology decision record for the doctui impleme
 The priorities are:
 
 1. Vue-native public APIs.
-2. Stable, modern tooling rather than prerelease-first development.
+2. Modern stable tooling.
 3. Minimal runtime dependencies.
 4. Static/GitHub-first infrastructure with no required VPS.
 5. One source of truth for component APIs, docs, LLM files and MCP.
 6. Reproducible builds on GitHub-hosted runners.
 
-Version numbers below describe the initial baseline. Patch/minor upgrades are expected through normal dependency maintenance as long as compatibility remains intact.
+Version numbers below describe the initial baseline. Patch/minor upgrades are expected through normal dependency maintenance when compatibility remains intact.
 
 ## Baseline versions
 
 - Bun: 1.4.x
 - Vue: 3.5.x stable; initial baseline 3.5.42
-- TypeScript: 6.0.x
+- TypeScript: 7.0.x stable; initial baseline 7.0.2
+- Biome: 2.5.x
 - Vite: 8.1.x
-- `@vitejs/plugin-vue`: 6.0.x
-- `vue-tsc`: 3.3.x
+- `@vitejs/plugin-vue`: 6.x
+- `vue-tsc`: current compatible 3.x line, used through an isolated compatibility bridge when required
 - Vitest: 5.x
 - `@vue/test-utils`: 2.5.x
 - Storybook: 10.6.x using `@storybook/vue3-vite`
-- VitePress: latest stable 1.x line; do not use VitePress 2 alpha for the production docs baseline
-- ESLint: 10.x
-- `eslint-plugin-vue`: 10.x
-- Prettier: 3.x
-- `vue-component-meta`: 3.3.x
+- VitePress: stable 1.x line
+- `vue-component-meta`: current compatible 3.x line
 - Changesets: 3.x
-- MCP server SDK: `@modelcontextprotocol/server` 2.x when Phase 9 starts
+- MCP server SDK: `@modelcontextprotocol/server` 2.x when the MCP phase starts
 
-Do not pin a prerelease merely because it is newer. A prerelease can be tested in a compatibility job without becoming the supported baseline.
+Do not downgrade the project-wide TypeScript baseline to solve a tool-specific compatibility problem. Isolate compatibility workarounds to the tool that needs them.
 
 ---
 
@@ -57,21 +55,9 @@ apps/*
 packages/*
 ```
 
-Use `bun.lock` as the only dependency lockfile.
+Use `bun.lock` as the only dependency lockfile. Do not add pnpm, Yarn or npm lockfiles.
 
-Do not add pnpm/yarn/npm lockfiles.
-
-### Why Bun workspaces instead of Turborepo initially
-
-The project does not need a task orchestration layer at repository bootstrap.
-
-Start with Bun workspaces and root scripts. Add a task graph/cache tool only after CI measurements demonstrate a real need.
-
-This means:
-
-- no Turborepo in Phase 0,
-- no Nx,
-- no Lerna.
+Start with Bun workspaces and root scripts. Do not add Turborepo, Nx or Lerna in Phase 0. Add task orchestration/caching only after CI measurements demonstrate a real need.
 
 Changesets may later manage package versions/releases; it is not the workspace manager.
 
@@ -79,11 +65,9 @@ Changesets may later manage package versions/releases; it is not the workspace m
 
 # Vue baseline
 
-## Vue 3.5 stable
+Use Vue 3.5 stable as the initial runtime baseline.
 
-The initial implementation baseline is Vue 3.5.x stable.
-
-For published packages, Vue should normally be a peer dependency rather than bundled into doctui.
+Published Vue packages should treat Vue as a peer dependency rather than bundle a second Vue runtime.
 
 Conceptually:
 
@@ -95,33 +79,31 @@ Conceptually:
 }
 ```
 
-The exact range can be narrowed if compatibility testing finds a reason.
-
-Vue 3.6 prereleases may be tested in CI but must not become the default supported runtime until the stable release is deliberately adopted.
-
-## Public API rules
-
-Use Vue-native patterns:
+Use Vue-native public APIs:
 
 - `<script setup lang="ts">`
 - `defineProps`
 - `defineEmits`
 - `defineSlots` where useful
-- `defineModel` only when it keeps the public API clear and declaration output stable
+- `defineModel` when it keeps the public API clear
 - `provide` / `inject`
 - composables
 - slots
 - `modelValue` / `update:modelValue` as the documented two-way binding contract where appropriate
 
-Do not expose React-shaped callback/children APIs merely to resemble Mantine.
+Do not preserve React-shaped callback or children APIs merely to resemble Mantine.
 
 ---
 
-# TypeScript
+# TypeScript 7
 
-Use TypeScript 6.0.x with strict mode.
+## Canonical compiler baseline
 
-Recommended shared compiler direction:
+TypeScript 7 is the canonical TypeScript version for doctui source code, repository scripts and packages.
+
+Use strict mode and an explicit bundled-library configuration rather than relying on moving compiler defaults.
+
+Initial direction:
 
 ```json
 {
@@ -137,40 +119,36 @@ Recommended shared compiler direction:
 }
 ```
 
-Important decisions:
+Package-specific configuration may extend the shared root configuration.
 
-- Explicitly set the target instead of inheriting TypeScript's moving default.
-- Use `moduleResolution: Bundler` for bundled Vue/browser packages.
-- Root/application typecheck configurations use `noEmit`.
-- Declaration generation for Vue packages is handled with `vue-tsc`.
-- Avoid TypeScript 7/native preview builds as the baseline until stable and ecosystem compatibility are proven.
+## Temporary Vue tooling compatibility bridge
 
-Package-specific config may extend the shared root config.
+At the time TypeScript 7 was adopted, parts of the Vue language tooling ecosystem still depended on TypeScript 6-era compiler APIs. Therefore doctui permits a narrow compatibility bridge.
+
+Rules:
+
+- `typescript@7` remains the normal project dependency and source compiler baseline.
+- A separate `@typescript/typescript6` development dependency may be introduced only for a Vue SFC tool that cannot yet consume TypeScript 7.
+- The compatibility version must be invoked through an isolated script/configuration path.
+- Do not alias the repository-wide `typescript` package back to TypeScript 6.
+- Do not compile ordinary `.ts` project code with TypeScript 6 just because `vue-tsc` needs it.
+- Remove the bridge once Vue tooling supports TypeScript 7 natively and the replacement passes doctui CI.
+
+Phase 0 must verify the actual `vue-tsc` and declaration-generation invocation instead of assuming an untested wrapper command.
+
+The same isolation rule applies to `vue-component-meta` if its compiler integration temporarily requires the compatibility compiler.
 
 ---
 
 # Build system
 
-## Vite 8
+Use Vite 8 as the primary build system for Vue package development and library builds. Use the official Vue Vite plugin.
 
-Use Vite 8.1+ as the primary build system for:
+Do not add webpack, a second Rollup build layer, tsup or unbuild in Phase 0 unless Vite library mode fails a demonstrated package requirement.
 
-- Vue package development,
-- library builds,
-- Storybook's Vue/Vite integration,
-- VitePress ecosystem alignment.
+Published packages should be ESM-first.
 
-Use the official Vue Vite plugin.
-
-Do not add webpack, Rollup configuration as a separate top-level build system, tsup or unbuild in Phase 0 unless Vite library mode fails a demonstrated package requirement.
-
-Vite 8 uses Rolldown internally; doctui should benefit from it without building custom bundling infrastructure.
-
-## Library output
-
-Published component packages should be ESM-first.
-
-Target concepts:
+Target concept:
 
 ```text
 packages/core/src
@@ -179,18 +157,85 @@ Vite library build
         ↓
 packages/core/dist
 ├── index.js
-├── *.js / chunks as appropriate
+├── chunks/modules as appropriate
 ├── styles.css
-└── declarations generated by vue-tsc
+└── TypeScript declarations
 ```
 
 Package rules:
 
-- Vue remains external/peer.
-- Preserve useful module boundaries when required for tree shaking.
-- CSS files must be declared as side effects when needed.
+- Vue is external/peer.
 - Define explicit package `exports`.
-- Avoid CommonJS output unless a real consumer requirement appears.
+- Preserve useful module boundaries for tree shaking where needed.
+- CSS must be represented correctly in `sideEffects` when required.
+- Do not produce CommonJS by default.
+
+---
+
+# Linting and formatting: Biome
+
+Biome is the sole repository formatter and general-purpose linter.
+
+Use `@biomejs/biome` 2.5.x or a compatible newer 2.x release.
+
+Do not install or configure ESLint, `eslint-plugin-vue`, TypeScript ESLint or Prettier unless an explicit project-level decision changes this policy.
+
+Expected root commands should converge on:
+
+```text
+bun run lint       # biome check without writes / CI-safe validation
+bun run format     # biome format/write or biome check --write as configured
+bun run check      # combined Biome checks where useful
+```
+
+Direct tooling equivalents include:
+
+```text
+bunx biome check .
+bunx biome check --write .
+bunx biome ci .
+```
+
+## Vue configuration
+
+Enable Biome's Vue domain and Vue/HTML-like parsing/formatting support in `biome.json`.
+
+Initial direction:
+
+```json
+{
+  "$schema": "https://biomejs.dev/schemas/2.5.0/schema.json",
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true
+    },
+    "domains": {
+      "vue": "recommended"
+    }
+  },
+  "html": {
+    "experimentalFullSupportEnabled": true,
+    "formatter": {
+      "enabled": true
+    }
+  }
+}
+```
+
+Biome's full Vue/HTML-like support is still an evolving area. If a valid Vue pattern produces a false positive or formatter problem:
+
+1. confirm it against the current Biome version,
+2. use the narrowest possible Biome override/ignore,
+3. document the reason when it is non-obvious,
+4. do not add ESLint or Prettier as a parallel fallback without an explicit architecture decision.
+
+Biome does not replace TypeScript semantic type checking, Vue compiler checks, accessibility behavior tests or browser tests.
 
 ---
 
@@ -198,28 +243,17 @@ Package rules:
 
 Use platform CSS, not a styling framework.
 
-## Chosen stack
+Chosen direction:
 
-- plain CSS
-- CSS custom properties
-- optional CSS layers for library ordering
-- component-local CSS files or Vue style blocks as implementation needs dictate
-- stable state `data-*` attributes
+- plain CSS,
+- CSS custom properties,
+- optional CSS layers,
+- component-local CSS files or Vue style blocks as appropriate,
+- semantic state `data-*` attributes.
 
-Do not make these core dependencies:
+Core must not depend on Tailwind, UnoCSS, Sass, Less or a runtime CSS-in-JS system.
 
-- Tailwind CSS
-- UnoCSS
-- Sass
-- Less
-- styled-components/emotion-style CSS-in-JS systems
-- a design-system framework
-
-## Theme contract
-
-All public design tokens use the `--dui-*` namespace.
-
-Examples:
+All public design tokens use the `--dui-*` namespace, for example:
 
 ```css
 --dui-color-primary-filled
@@ -230,21 +264,15 @@ Examples:
 --dui-shadow-md
 ```
 
-Theme data flows through `DoctuiProvider` and CSS variables.
+Theme data flows through `DoctuiProvider` and CSS variables. Dark mode is token-driven.
 
-Dark mode is token-driven.
-
-Consumers must be able to use Tailwind, UnoCSS, CSS Modules or plain CSS in their own applications without doctui depending on those tools.
-
-## Style API direction
-
-The initial stable customization surface should be:
+Initial customization surface:
 
 1. regular `class` and `style` forwarding,
 2. CSS variables,
 3. semantic `data-*` state attributes.
 
-A richer `classNames` / `styles` API can be introduced only after component anatomy conventions are stable.
+A richer `classNames` / `styles` API should wait until component anatomy conventions are stable.
 
 ---
 
@@ -252,55 +280,33 @@ A richer `classNames` / `styles` API can be introduced only after component anat
 
 Do not use Reka UI or another headless component framework.
 
-Build doctui-owned primitives for:
+Build doctui-owned primitives for behavior such as:
 
-- Portal
-- FocusTrap
-- ScrollLock
-- DismissableLayer
-- ClickOutside
-- Transition
-- VisuallyHidden
-- overlay coordination
-- focus restoration
-- Combobox state/navigation
+- Portal,
+- FocusTrap,
+- ScrollLock,
+- DismissableLayer,
+- ClickOutside,
+- Transition,
+- VisuallyHidden,
+- overlay coordination,
+- focus restoration,
+- Combobox state/navigation.
 
-## Floating UI
-
-`@floating-ui/dom` is the preferred low-level runtime dependency for positioning when overlay work begins.
-
-Use the DOM/core package directly behind a doctui abstraction rather than adopting a framework component layer.
-
-It should not be added before a component actually requires floating positioning.
+`@floating-ui/dom` is the preferred low-level dependency for floating positioning once an overlay component actually needs it. Do not implement a custom geometry engine.
 
 ---
 
 # Testing
 
-## Unit and component tests
-
 Use:
 
-- Vitest 5
-- `@vue/test-utils` 2.5+
+- Vitest 5,
+- `@vue/test-utils` 2.5+.
 
-Primary tests cover:
+Unit/component tests cover public behavior, props/events/slots, controlled state and regressions.
 
-- props/events/slots,
-- public behavior,
-- controlled state,
-- keyboard behavior where a DOM emulator is sufficient,
-- regressions.
-
-Do not test internal class names unless documented as public API.
-
-## Real browser interaction tests
-
-For components whose correctness depends on browser focus/layout/input behavior, use Vitest Browser Mode with the Playwright browser provider.
-
-This is intentionally not a separate application E2E test suite.
-
-Use real-browser tests selectively for:
+For behavior that depends on a real browser, use Vitest Browser Mode with the Playwright browser provider selectively, especially for:
 
 - Modal/Drawer focus trapping,
 - focus restoration,
@@ -309,13 +315,9 @@ Use real-browser tests selectively for:
 - pointer/focus edge cases,
 - accessibility-critical browser behavior.
 
-Do not make every simple component launch Chromium.
+Do not create a separate full application E2E suite by default.
 
-## Accessibility
-
-Use semantic HTML and WAI-ARIA interaction patterns as the source specification.
-
-Storybook's accessibility tooling/axe integration may be used for automated checks, but automated axe output does not replace keyboard/focus tests.
+Automated accessibility tooling can supplement tests, but it does not replace keyboard/focus testing against relevant WAI-ARIA interaction patterns.
 
 ---
 
@@ -323,24 +325,24 @@ Storybook's accessibility tooling/axe integration may be used for automated chec
 
 Use Storybook 10.6+ with `@storybook/vue3-vite`.
 
-Purpose:
+Storybook is for:
 
 - isolated component development,
-- interactive states,
-- dark/light theme preview,
+- important visual states,
+- theme/dark-mode preview,
 - responsive inspection,
-- interaction demos/tests where useful,
+- interaction examples/tests where useful,
 - accessibility feedback.
 
-Storybook is not the primary documentation website.
+It is not the primary public documentation site.
 
-Production Storybook is statically built and copied under the GitHub Pages output:
+Production Storybook is a static build mounted under the GitHub Pages output, for example:
 
 ```text
 /doctui/storybook/
 ```
 
-No Storybook server is operated in production.
+No Storybook server runs in production.
 
 ---
 
@@ -348,43 +350,28 @@ No Storybook server is operated in production.
 
 Use VitePress stable 1.x for the public documentation site.
 
-Do not use the VitePress 2 alpha line as the initial production baseline.
+Do not make a VitePress prerelease the production baseline without an explicit decision.
 
-VitePress responsibilities:
+VitePress owns:
 
 - getting started,
 - installation,
-- component guides,
 - theming,
 - styling,
-- accessibility,
-- package documentation,
+- accessibility guidance,
+- component/package documentation,
 - migration guides,
 - MCP and AI integration documentation.
 
-The production build is static and deployed to GitHub Pages.
-
-VitePress's built-in Markdown/Shiki stack should be preferred over introducing another documentation renderer.
+Production documentation is built statically and deployed to GitHub Pages.
 
 ---
 
-# Component metadata and documentation generation
+# Component metadata and generated documentation
 
-Use `vue-component-meta` as the first choice for extracting Vue component metadata from TypeScript/Vue sources.
+Use `vue-component-meta` as the first choice for extracting Vue public API information.
 
-It can provide information including:
-
-- props,
-- events,
-- slots,
-- exposed members,
-- type/schema information.
-
-Do not start with a large custom TypeScript AST parser or `ts-morph` unless extraction requirements prove `vue-component-meta` insufficient.
-
-## Canonical registry
-
-Generation pipeline:
+Canonical pipeline:
 
 ```text
 Vue source + TypeScript types
@@ -396,23 +383,16 @@ doctui normalization/validation
 canonical component registry
           ↓
 ├── VitePress API tables
+├── Storybook metadata where useful
 ├── llms.txt
 ├── llms-full.txt
 ├── static metadata JSON
 └── MCP resources/tools
 ```
 
-Handwritten prose/examples can enrich metadata, but public API facts should not be independently duplicated in multiple systems.
+Handwritten prose/examples can enrich metadata, but API facts should not be independently duplicated in multiple systems.
 
-Generation scripts run with Bun.
-
-A small schema validation dependency is acceptable in build tooling if it meaningfully improves generated artifact integrity; it must not leak into the component runtime.
-
----
-
-# LLM artifacts
-
-Generate at build/release time:
+Generated artifacts should include:
 
 ```text
 /llms.txt
@@ -420,32 +400,17 @@ Generate at build/release time:
 /metadata/components.json
 ```
 
-Optional later output:
-
-```text
-/llms/components/button.md
-/llms/components/select.md
-```
-
-These are static GitHub Pages artifacts.
-
-There is no database/API required to serve them.
+They are static GitHub Pages artifacts; no database/API service is required.
 
 ---
 
 # MCP
 
-When Phase 9 starts, use the current stable MCP TypeScript server SDK line, currently `@modelcontextprotocol/server` 2.x rather than beginning new code on the legacy monolithic v1 SDK.
+When the MCP phase starts, use the stable `@modelcontextprotocol/server` 2.x line unless the project deliberately updates the decision.
 
-Initial transport:
+Initial transport: stdio.
 
-- stdio only.
-
-Runtime target:
-
-- Bun and modern Node.js where practical.
-
-Architecture:
+Runtime target: Bun and modern Node.js where practical.
 
 ```text
 AI client
@@ -455,31 +420,7 @@ AI client
 bundled/versioned doctui registry
 ```
 
-Do not require a remotely hosted MCP service.
-
-Do not introduce HTTP/OAuth/server deployment until there is a concrete optional remote-MCP use case.
-
----
-
-# Linting and formatting
-
-## ESLint
-
-Use ESLint 10 flat config with:
-
-- `eslint-plugin-vue`,
-- TypeScript ESLint tooling compatible with TypeScript 6,
-- repository-specific rules where useful.
-
-ESLint owns correctness/code-quality rules.
-
-## Prettier
-
-Use Prettier 3 for formatting Vue, TypeScript, JSON, CSS, Markdown and YAML.
-
-Do not create overlapping stylistic ESLint rules that fight Prettier.
-
-Biome is not the initial formatter/linter baseline because Vue SFC linting quality and Vue-specific rule coverage are more important for this library than reducing the number of tools.
+The default doctui architecture must not require a remotely hosted MCP service.
 
 ---
 
@@ -487,7 +428,7 @@ Biome is not the initial formatter/linter baseline because Vue SFC linting quali
 
 Use Changesets 3.x for monorepo package versioning and changelog intent.
 
-Planned public package family:
+Planned package family:
 
 ```text
 @doctui/core
@@ -500,13 +441,7 @@ Planned public package family:
 
 Do not publish empty placeholder packages.
 
-## npm publishing
-
-Use the public npm registry.
-
-Prefer GitHub Actions trusted publishing/OIDC with npm provenance instead of storing a long-lived npm token when the final workflow/account configuration supports it.
-
-Using npm CLI specifically in the release job for registry publishing is acceptable even though Bun remains the repository package manager; that does not justify adding an npm lockfile.
+Use the public npm registry. Prefer GitHub Actions trusted publishing/OIDC with provenance instead of long-lived npm credentials where supported.
 
 GitHub Releases should accompany meaningful public releases.
 
@@ -514,7 +449,7 @@ GitHub Releases should accompany meaningful public releases.
 
 # CI/CD
 
-Use GitHub Actions on GitHub-hosted runners only for the default workflow.
+Use GitHub Actions on GitHub-hosted runners.
 
 Initial workflows:
 
@@ -530,24 +465,19 @@ release.yml
 security.yml
 ```
 
-## Pull request CI
-
-Run:
+Pull request validation should converge on:
 
 ```text
 bun install --frozen-lockfile
-lint
-typecheck
-test
+Biome checks
+TypeScript 7 checks
+Vue SFC typecheck/declaration compatibility check
+Vitest
 package build
 Storybook build
 VitePress build
 metadata/docs validation
 ```
-
-Browser tests can be split into a separate job once they exist.
-
-## GitHub Pages CD
 
 On `main`:
 
@@ -562,85 +492,78 @@ build Storybook
        ↓
 mount Storybook into static site output
        ↓
-GitHub Pages artifact/deploy
+GitHub Pages deploy
 ```
 
-No SSH and no VPS deployment.
+No SSH or VPS deployment.
 
 ---
 
 # Dependency automation and security
 
-Use GitHub-native/free tooling first:
+Prefer GitHub-native/free tooling:
 
-- Dependabot for dependency update PRs,
+- Dependabot,
 - GitHub dependency review where applicable,
 - CodeQL as the repository matures,
 - `bun audit` in scheduled/security workflows when useful.
 
-Dependency updates should be grouped to avoid excessive update noise.
-
-Do not auto-merge major version upgrades.
+Do not auto-merge major upgrades.
 
 ---
 
 # SSR and browser compatibility
 
-Even though the project docs are statically generated, doctui components must be safe to consume in SSR frameworks.
+Components must be safe for SSR consumers even though doctui's own docs are static.
 
 Rules:
 
-- do not access `window`/`document` at module evaluation time,
+- do not access `window` or `document` at module evaluation time,
 - DOM work belongs in lifecycle hooks or guarded utilities,
-- Teleport/Portal behavior must be hydration-aware,
-- IDs used for accessibility should not create hydration mismatches,
-- browser-only features must degrade predictably.
+- Portal/Teleport behavior must be hydration-aware,
+- accessibility IDs must not create hydration mismatches,
+- browser-only functionality must degrade predictably.
 
-Target modern evergreen browsers.
-
-Build output initially targets ES2022 rather than relying on a moving compiler default.
-
-A formal browser support matrix should be published before 1.0 based on actual CI/browser tests.
+Target modern evergreen browsers. Build output initially targets ES2022.
 
 ---
 
 # Explicitly not in the baseline
 
-Do not add these without a demonstrated requirement:
+Do not add these without a demonstrated requirement and explicit project-level decision where appropriate:
 
-- Reka UI
-- Vuetify / PrimeVue / Naive UI or another component library
-- Tailwind as a core dependency
-- VueUse as a general core runtime dependency
-- Turborepo / Nx / Lerna
-- Sass/Less
-- CSS-in-JS runtime
-- tsup/unbuild alongside Vite
-- a dedicated backend
-- database/Redis
-- Docker-based production deployment
-- self-hosted GitHub runners
-- remote always-on MCP server
-- separate Playwright E2E application suite
-- VitePress prerelease as production baseline
-- Vue prerelease as runtime baseline
+- Reka UI,
+- Vuetify / PrimeVue / Naive UI or another component library,
+- Tailwind/UnoCSS as a core dependency,
+- VueUse as a general core runtime dependency,
+- ESLint,
+- Prettier,
+- TypeScript ESLint,
+- Turborepo / Nx / Lerna,
+- Sass/Less,
+- runtime CSS-in-JS,
+- tsup/unbuild alongside Vite,
+- a dedicated backend,
+- database/Redis,
+- Docker production deployment,
+- self-hosted GitHub runners,
+- remote always-on MCP server,
+- separate Playwright E2E application suite.
 
 ---
 
 # Deferred decisions
 
-Do not lock these choices before the relevant phase:
+Evaluate these when their phase begins instead of locking them during bootstrap:
 
-- date library for `@doctui/dates`,
+- date library,
 - virtualization engine,
-- carousel implementation/dependency,
+- carousel dependency/implementation,
 - rich-text integration,
 - chart integration,
 - visual regression platform,
 - remote MCP transport,
-- richer component style-override API.
-
-Evaluate them against real requirements when the phase begins.
+- richer style-override API.
 
 ---
 
@@ -650,12 +573,10 @@ Evaluate them against real requirements when the phase begins.
 
 ```text
 bun
-TypeScript
-ESLint
-eslint-plugin-vue
-TypeScript ESLint
-Prettier
-Changesets (when release workflow starts)
+TypeScript 7
+@biomejs/biome
+@typescript/typescript6  # compatibility-only, only if M0 proves Vue tooling requires it
+Changesets               # when release workflow starts
 ```
 
 ## `packages/core`
@@ -667,12 +588,12 @@ peer: vue
 runtime later when required: @floating-ui/dom
 ```
 
-Development/build:
+Development/build direction:
 
 ```text
 Vite
 @vitejs/plugin-vue
-vue-tsc
+Vue SFC type/declaration tooling
 Vitest
 @vue/test-utils
 ```
@@ -682,30 +603,26 @@ Vitest
 ```text
 Storybook
 @storybook/vue3-vite
-accessibility addon/tooling
+accessibility tooling
 workspace @doctui/core
 ```
 
 ## `apps/docs`
 
 ```text
-VitePress stable
-workspace doctui packages
-```
-
-## metadata scripts
-
-```text
-vue-component-meta
-Bun scripts
-optional build-time schema validator
+VitePress
+workspace @doctui/core
 ```
 
 ## `packages/mcp` later
 
 ```text
-@modelcontextprotocol/server v2
-canonical generated doctui metadata
+@modelcontextprotocol/server
+versioned doctui registry/metadata
 ```
 
-This separation is important: documentation/test/build dependencies must not accidentally become dependencies downloaded by every `@doctui/core` consumer.
+---
+
+# Canonical interpretation
+
+`docs/TECH_STACK.md` overrides older wording in roadmap or agent material if those documents still refer generically to ESLint/Prettier or TypeScript 6. Such stale references should be updated when touched. The intended baseline is TypeScript 7 + Biome.
