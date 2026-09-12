@@ -1,0 +1,14 @@
+---
+description: Core architectural rules for all doctui changes
+alwaysApply: true
+---
+# doctui core rules
+
+- Read `AGENTS.md` before making changes.
+- Build Vue-first APIs; do not imitate React mechanics when Vue has a native pattern.
+- Do not introduce Reka UI or another component framework.
+- Reuse internal primitives/composables instead of duplicating focus, overlay, dismissal or positioning logic.
+- Treat accessibility and public API compatibility as correctness requirements.
+- Do not switch package managers, formatters, test frameworks or build systems without an explicit task requiring it.
+- Keep runtime dependencies small and justified.
+- Mantine is a reference for ideas and behavior, not a mandate to copy its implementation.
