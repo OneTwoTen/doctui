@@ -1,0 +1,29 @@
+---
+description: Canonical doctui technology stack and dependency boundaries
+globs:
+  - "**/*"
+alwaysApply: true
+---
+
+# Technology stack
+
+Read `docs/TECH_STACK.md` before changing repository tooling, package management, build, tests, docs, release infrastructure or major dependencies.
+
+Baseline direction:
+
+- Bun workspaces; no pnpm/yarn/npm lockfile.
+- Vue 3.5 stable baseline; do not move the default runtime to a prerelease.
+- TypeScript 6 with explicit ES2022/bundler-oriented configuration.
+- Vite 8 library/build tooling.
+- Vitest + Vue Test Utils; use browser-mode tests selectively for real browser behavior.
+- Storybook with Vue/Vite for component development.
+- VitePress stable for public docs.
+- Plain CSS + `--dui-*` variables; no core Tailwind/UnoCSS/CSS-in-JS dependency.
+- No Reka UI or other component/headless framework.
+- Floating UI DOM may be added only when overlay positioning work requires it.
+- `vue-component-meta` is the first choice for generated public API metadata.
+- Changesets is the planned monorepo release/versioning tool.
+- MCP later uses the stable `@modelcontextprotocol/server` v2 line and local stdio first.
+- GitHub Actions + Pages/Releases are the infrastructure baseline; no required VPS.
+
+Do not add Turborepo, Nx, Lerna, tsup, unbuild, Sass, a second test runner or another build system without a concrete measured requirement and an explicit project-level decision.
