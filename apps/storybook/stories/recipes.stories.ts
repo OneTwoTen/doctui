@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Group,
-  Stack,
-  Text,
-  Title,
-} from "@doctui/core";
+import { Box, Button, Flex, Group, Stack, Text, Title } from "@doctui/core";
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import { h } from "vue";
 import { preview } from "./story-helpers";
@@ -73,7 +65,11 @@ export const Default: Story = {
                 ]),
             ),
             h(Group, { gap: "sm", justify: "flex-end" }, () => [
-              h(Button, { variant: "subtle", color: "neutral" }, () => "Cancel"),
+              h(
+                Button,
+                { variant: "subtle", color: "neutral" },
+                () => "Cancel",
+              ),
               h(Button, { color: "success" }, () => "Mark complete"),
             ]),
           ]),
