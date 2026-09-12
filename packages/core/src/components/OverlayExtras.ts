@@ -1,13 +1,4 @@
-import {
-  computed,
-  defineComponent,
-  h,
-  nextTick,
-  type PropType,
-  ref,
-  useId,
-  watch,
-} from "vue";
+import { computed, defineComponent, h, type PropType, ref, useId } from "vue";
 import { DismissableLayer, FocusTrap, Portal } from "../primitives";
 import { useScrollLock } from "../primitives/useScrollLock";
 import type { Radius, Size } from "../theme/types";
@@ -66,7 +57,7 @@ export const Drawer = defineComponent({
                                 : undefined,
                               "aria-label": props.title
                                 ? undefined
-                                : (props.ariaLabel ?? "Drawer"),
+                                : props.ariaLabel,
                               class: ["dui-Drawer", attrs.class],
                               "data-position": props.position,
                               "data-size": props.size,
@@ -236,25 +227,7 @@ export const Menu = defineComponent({
   },
   setup(props, { attrs, emit, slots }) {
     const activeIndex = ref(-1);
-    const menuRoot = ref<HTMLElement>();
     const close = () => emit("update:modelValue", false);
-    const items = () =>
-      Array.from(
-        menuRoot.value?.querySelectorAll<HTMLButtonElement>(
-          "[role='menuitem']",
-        ) ?? [],
-      );
-    const focusActive = async () => {
-      await nextTick();
-      items()[activeIndex.value]?.focus();
-    };
-    const firstEnabled = () => props.data.findIndex((item) => !item.disabled);
-    const lastEnabled = () => {
-      for (let index = props.data.length - 1; index >= 0; index -= 1) {
-        if (!props.data[index]?.disabled) return index;
-      }
-      return -1;
-    };
     const move = (direction: 1 | -1) => {
       let index = activeIndex.value;
       for (let count = 0; count < props.data.length; count += 1) {
@@ -265,18 +238,6 @@ export const Menu = defineComponent({
         }
       }
     };
-    watch(
-      () => props.modelValue,
-      (open) => {
-        if (open) {
-          activeIndex.value = firstEnabled();
-          void focusActive();
-        } else {
-          activeIndex.value = -1;
-        }
-      },
-      { immediate: true },
-    );
     return () =>
       h("div", { ...attrs, class: ["dui-Menu", attrs.class] }, [
         h(
@@ -284,21 +245,6 @@ export const Menu = defineComponent({
           {
             class: "dui-Menu-target",
             onClick: () => emit("update:modelValue", !props.modelValue),
-            onKeydown: (event: KeyboardEvent) => {
-              if (event.key === "Enter" || event.key === " ") {
-                event.preventDefault();
-                emit("update:modelValue", !props.modelValue);
-              } else if (event.key === "ArrowDown" || event.key === "ArrowUp") {
-                event.preventDefault();
-                emit("update:modelValue", true);
-                activeIndex.value =
-                  event.key === "ArrowDown" ? firstEnabled() : lastEnabled();
-                void focusActive();
-              } else if (event.key === "Escape" && props.modelValue) {
-                event.preventDefault();
-                close();
-              }
-            },
           },
           slots.target?.(),
         ),
@@ -313,7 +259,6 @@ export const Menu = defineComponent({
                   h(
                     "div",
                     {
-                      ref: menuRoot,
                       class: "dui-Menu-dropdown",
                       role: "menu",
                       tabindex: -1,
@@ -321,21 +266,16 @@ export const Menu = defineComponent({
                         if (event.key === "ArrowDown") {
                           event.preventDefault();
                           move(1);
-                          void focusActive();
                         } else if (event.key === "ArrowUp") {
                           event.preventDefault();
                           move(-1);
-                          void focusActive();
                         } else if (event.key === "Home") {
                           event.preventDefault();
-                          activeIndex.value = firstEnabled();
-                          void focusActive();
+                          activeIndex.value = 0;
                         } else if (event.key === "End") {
                           event.preventDefault();
-                          activeIndex.value = lastEnabled();
-                          void focusActive();
+                          activeIndex.value = props.data.length - 1;
                         } else if (event.key === "Escape") {
-                          event.preventDefault();
                           close();
                         }
                       },
@@ -347,13 +287,9 @@ export const Menu = defineComponent({
                           type: "button",
                           role: "menuitem",
                           class: "dui-Menu-item",
-                          tabindex: activeIndex.value === index ? 0 : -1,
                           disabled: item.disabled,
                           "data-active":
                             activeIndex.value === index || undefined,
-                          onFocus: () => {
-                            activeIndex.value = index;
-                          },
                           onClick: () => {
                             if (!item.disabled) {
                               emit("select", item.value);

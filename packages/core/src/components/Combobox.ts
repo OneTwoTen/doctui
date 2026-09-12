@@ -89,16 +89,9 @@ export const Combobox = defineComponent({
         option.label.toLocaleLowerCase().includes(normalized),
       );
     });
-    const inputValue = computed(() => {
-      if (props.multiple) return query.value;
-      if (!props.searchable) return selectedOption.value?.label ?? "";
-
-      // Keep the committed selection visible while closed. Once the
-      // combobox is opened, the input becomes a fresh search field.
-      return (
-        query.value || (open.value ? "" : (selectedOption.value?.label ?? ""))
-      );
-    });
+    const inputValue = computed(() =>
+      props.searchable ? query.value : (selectedOption.value?.label ?? ""),
+    );
     const openList = () => {
       if (props.disabled) return;
       open.value = true;

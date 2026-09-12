@@ -428,7 +428,6 @@ describe("Phase 5 combobox contracts", () => {
     expect(
       autocomplete.findAll("[role='option']").map((item) => item.text()),
     ).toEqual(["React"]);
-    await autocomplete.get("[role='option']").trigger("click");
 
     const multi = mount(MultiSelect, {
       props: { data, modelValue: [], label: "Frameworks" },
@@ -436,9 +435,6 @@ describe("Phase 5 combobox contracts", () => {
     await multi.get("input").trigger("keydown", { key: "ArrowDown" });
     await multi.get("input").trigger("keydown", { key: "Enter" });
     expect(multi.emitted("update:modelValue")?.[0]).toEqual([["vue"]]);
-
-    await autocomplete.setProps({ modelValue: "react" });
-    expect(autocomplete.get("input").element.value).toBe("React");
   });
 });
 
@@ -477,33 +473,6 @@ describe("Phase 4 extended overlay contracts", () => {
     expect(menu.emitted("update:modelValue")?.[0]).toEqual([false]);
     menu.unmount();
     trigger.remove();
-  });
-
-  it("opens Menu from the keyboard and moves focus between enabled items", async () => {
-    const menu = mount(Menu, {
-      props: {
-        modelValue: false,
-        data: [
-          { value: "edit", label: "Edit" },
-          { value: "delete", label: "Delete", disabled: true },
-          { value: "archive", label: "Archive" },
-        ],
-      },
-      slots: { target: () => h("button", { type: "button" }, "Actions") },
-      attachTo: document.body,
-    });
-
-    await menu.get(".dui-Menu-target").trigger("keydown", {
-      key: "ArrowDown",
-    });
-    await menu.setProps({ modelValue: true });
-    await nextTick();
-    expect(document.activeElement?.textContent).toBe("Edit");
-
-    await menu.get("[role='menu']").trigger("keydown", { key: "ArrowDown" });
-    await nextTick();
-    expect(document.activeElement?.textContent).toBe("Archive");
-    menu.unmount();
   });
 
   it("dismisses only the top layer when overlays are nested", async () => {
