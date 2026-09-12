@@ -13,12 +13,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-type SemanticColor =
-  | "primary"
-  | "neutral"
-  | "success"
-  | "warning"
-  | "danger";
+type SemanticColor = "primary" | "neutral" | "success" | "warning" | "danger";
 
 type SemanticVariant = "filled" | "light" | "outline" | "subtle";
 
@@ -566,30 +561,26 @@ const StoryDashboardPanel = defineComponent({
             },
             [
               h("h3", { style: { marginBottom: 0 } }, "Recent activity"),
-              h(
-                "ul",
-                { style: { listStyle: "none", margin: 0, padding: 0 } },
-                [
-                  h(StoryActivityItem, {
-                    title: "Theme contract updated",
-                    description:
-                      "Semantic color variants now share one predictable token model.",
-                    tone: "primary",
-                  }),
-                  h(StoryActivityItem, {
-                    title: "Checks passing",
-                    description:
-                      "Lint, typecheck and tests validate the foundation before Phase 2.",
-                    tone: "success",
-                  }),
-                  h(StoryActivityItem, {
-                    title: "Documentation expanded",
-                    description:
-                      "Storybook and VitePress now demonstrate basic and advanced usage.",
-                    tone: "warning",
-                  }),
-                ],
-              ),
+              h("ul", { style: { listStyle: "none", margin: 0, padding: 0 } }, [
+                h(StoryActivityItem, {
+                  title: "Theme contract updated",
+                  description:
+                    "Semantic color variants now share one predictable token model.",
+                  tone: "primary",
+                }),
+                h(StoryActivityItem, {
+                  title: "Checks passing",
+                  description:
+                    "Lint, typecheck and tests validate the foundation before Phase 2.",
+                  tone: "success",
+                }),
+                h(StoryActivityItem, {
+                  title: "Documentation expanded",
+                  description:
+                    "Storybook and VitePress now demonstrate basic and advanced usage.",
+                  tone: "warning",
+                }),
+              ]),
             ],
           ),
         ],
@@ -659,10 +650,16 @@ export const NestedProviders: Story = {
                             },
                           },
                           [
-                            h("h3", { style: { marginTop: 0 } }, "Nested compact scope"),
+                            h(
+                              "h3",
+                              { style: { marginTop: 0 } },
+                              "Nested compact scope",
+                            ),
                             h(
                               "p",
-                              { style: { color: "var(--dui-color-text-muted)" } },
+                              {
+                                style: { color: "var(--dui-color-text-muted)" },
+                              },
                               "The child inherits dark mode, then overrides spacing, radius and primary tokens.",
                             ),
                             themedButton("Nested primary", "primary", "filled"),
@@ -705,16 +702,18 @@ export const CssVariableOverrides: Story = {
                   },
                 },
                 [
-                  h("h2", { style: { marginTop: 0 } }, "Local CSS variable overrides"),
+                  h(
+                    "h2",
+                    { style: { marginTop: 0 } },
+                    "Local CSS variable overrides",
+                  ),
                   previewCard(
                     "No theme object mutation",
                     "The provider remains immutable while a narrower scope overrides documented CSS variables.",
                   ),
-                  h(
-                    "div",
-                    { style: { marginTop: "var(--dui-spacing-md)" } },
-                    [themedButton("Overridden primary", "primary", "filled")],
-                  ),
+                  h("div", { style: { marginTop: "var(--dui-spacing-md)" } }, [
+                    themedButton("Overridden primary", "primary", "filled"),
+                  ]),
                 ],
               ),
           },
