@@ -2,6 +2,8 @@
 
 This file is the primary instruction set for coding agents working in this repository.
 
+The phased implementation plan lives in [`docs/ROADMAP.md`](./docs/ROADMAP.md). When choosing what to build next, follow the roadmap unless the task explicitly changes project direction.
+
 ## Product direction
 
 `doctui` is a Vue 3 UI library with a Mantine-like developer experience, but it is not a Mantine port and must not become a React-shaped API wrapped in Vue syntax.
@@ -16,6 +18,7 @@ Core principles:
 6. Public APIs should be predictable across all components.
 7. Avoid unnecessary runtime dependencies.
 8. Mantine docs/`llms.txt` can be used as behavior and API inspiration, not as a source to blindly copy.
+9. Documentation, LLM artifacts and MCP should converge on one validated public API metadata source rather than independent handwritten copies.
 
 ## Repository architecture
 
@@ -31,11 +34,12 @@ packages/
   form/              # Form state/helpers
   notifications/     # Notification system
   dates/             # Date components and utilities
+  mcp/               # @doctui/mcp-server
 scripts/              # Metadata/docs/llms generators
-docs/                 # Architecture and contribution documents
+docs/                 # Architecture, roadmap and contribution documents
 ```
 
-Do not create a new package for code that is only used by one package. Start local and extract only after the abstraction is proven.
+Do not create a new package for code that is only used by one package. Start local and extract only after the abstraction is proven. Packages listed in the target layout should be created when real implementation work needs them, not as empty placeholders.
 
 ## Component API conventions
 
@@ -112,6 +116,8 @@ A public component is not complete until it has:
 
 Docs examples must use idiomatic Vue and must compile.
 
+When the metadata registry exists, treat it as the shared machine-readable representation consumed by generated API docs, LLM artifacts and MCP. Do not manually maintain a conflicting second API description for those outputs.
+
 ## Mantine reference policy
 
 When using Mantine as a reference:
@@ -146,14 +152,25 @@ Avoid adding:
 - styling frameworks as core runtime dependencies,
 - large utility packages for one helper.
 
+## MCP policy
+
+The MCP package belongs after the public metadata/docs model is sufficiently stable.
+
+- MCP must consume the same validated registry used by docs/LLM tooling.
+- Do not create an independent manually-maintained MCP component database.
+- Prefer a small stable tool surface such as component search, API lookup, examples and use-case discovery.
+- Keep MCP independent from the Vue runtime where practical.
+- MCP must never recommend APIs that are not exported by the matching doctui version.
+
 ## Working procedure
 
 Before coding:
 
 1. Read this file and any scoped `AGENTS.md` beneath the target directory.
-2. Inspect adjacent components and shared types.
-3. Check whether a primitive/composable already solves part of the task.
-4. Confirm the public API before implementing details.
+2. Read the relevant phase in `docs/ROADMAP.md` when the task advances project implementation.
+3. Inspect adjacent components and shared types.
+4. Check whether a primitive/composable already solves part of the task.
+5. Confirm the public API before implementing details.
 
 Before finishing:
 
