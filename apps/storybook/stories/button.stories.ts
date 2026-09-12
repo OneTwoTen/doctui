@@ -1,16 +1,10 @@
-import {
-  Button,
-  Group,
-  getComponentStorybookTitle,
-  Stack,
-  Title,
-} from "@doctui/core";
+import { Button, Group, Stack, Title } from "@doctui/core";
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import { h } from "vue";
 import { preview } from "./story-helpers";
 
 const meta = {
-  title: getComponentStorybookTitle("Button"),
+  title: "Actions/Button",
 } satisfies Meta;
 
 export default meta;
