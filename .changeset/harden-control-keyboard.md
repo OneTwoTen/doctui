@@ -2,4 +2,4 @@
 "@doctui/core": patch
 ---
 
-Harden SegmentedControl roving tabindex and radio-group keyboard behavior, including disabled-option skipping and empty or invalid controlled values. Expose consistent size and disabled state attributes on native checkbox, radio and switch control roots.
+Harden SegmentedControl roving tabindex and radio-group keyboard behavior, including disabled-option skipping and empty or invalid controlled values. Polish Checkbox, Radio and Switch interaction feedback, and add complete size, hover, selected, focus, disabled and reduced-motion styling for SegmentedControl while preserving native input semantics.

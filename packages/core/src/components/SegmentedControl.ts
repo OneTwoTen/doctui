@@ -1,6 +1,6 @@
 import { defineComponent, h, nextTick, type PropType } from "vue";
 import type { Radius, Size } from "../theme/types";
-import { radiusToken, spacingToken } from "./shared";
+import { radiusToken } from "./shared";
 
 export interface SegmentOption {
   value: string | number;
@@ -110,7 +110,6 @@ export const SegmentedControl = defineComponent({
             attrs.style,
             {
               borderRadius: radiusToken(props.radius),
-              gap: spacingToken("xs"),
             },
           ],
         },
