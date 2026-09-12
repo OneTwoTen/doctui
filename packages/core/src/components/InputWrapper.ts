@@ -71,7 +71,10 @@ export const InputWrapper = defineComponent({
                     ? h(
                         "span",
                         {
-                          class: props.classNames?.required,
+                          class: [
+                            "dui-InputWrapper-required",
+                            props.classNames?.required,
+                          ],
                           style: props.styles?.required,
                           "aria-hidden": "true",
                         },
