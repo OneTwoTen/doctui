@@ -162,13 +162,15 @@ describe("Combobox focus-managed listbox contract", () => {
 
     const input = wrapper.get("input");
     await input.trigger("focus");
+    const activeBeforeHover = input.attributes("aria-activedescendant");
     const disabled = wrapper.findAll("[role='option']")[1];
+
+    expect(activeBeforeHover).toBeTruthy();
+    expect(disabled.attributes("id")).not.toBe(activeBeforeHover);
+
     await disabled.trigger("mouseenter");
 
-    const activeId = input.attributes("aria-activedescendant");
-    expect(document.getElementById(activeId)?.textContent).not.toContain(
-      "Beta",
-    );
+    expect(input.attributes("aria-activedescendant")).toBe(activeBeforeHover);
   });
 });
 
