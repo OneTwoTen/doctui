@@ -2,9 +2,9 @@
   "number": "6",
   "title": "feat: add TextInput foundation and Node 24 config",
   "branch": "codex/phase-3-input-node24",
-  "sha": "adb20f32d06c00f343a47d330959f234e6adc0f8",
+  "sha": "db993336425a61cedb554095db29721aef99ddc9",
   "repository": "OneTwoTen/doctui",
   "prUrl": "https://github.com/OneTwoTen/doctui/pull/6",
-  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/34673346807",
-  "generatedAt": "2026-09-12T04:35:04.245Z"
+  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/34673719859",
+  "generatedAt": "2026-09-12T04:43:02.883Z"
 }
