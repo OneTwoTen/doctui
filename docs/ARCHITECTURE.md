@@ -6,6 +6,8 @@ Build a Vue-native component system with the coherence and developer experience 
 
 The detailed implementation plan lives in [`ROADMAP.md`](./ROADMAP.md).
 
+The infrastructure and deployment policy lives in [`INFRASTRUCTURE.md`](./INFRASTRUCTURE.md).
+
 ## Layers
 
 ```text
@@ -61,6 +63,24 @@ Target packages include:
 
 Do not create a package merely because the target architecture lists it. Create packages when there is real implementation and an independent installation/use case.
 
+### GitHub-first, zero-VPS infrastructure
+
+The public project must remain operable without a project-owned VPS or always-on backend.
+
+Default infrastructure:
+
+- GitHub repository for source and collaboration,
+- GitHub Actions for CI, builds, docs generation and release automation,
+- GitHub Pages for VitePress, Storybook, metadata and LLM documentation,
+- GitHub Releases and Actions artifacts for release/CI outputs where useful,
+- GitHub-hosted runners for normal CI.
+
+Do not make Docker hosts, SSH deployment, Kubernetes, databases, Redis, self-hosted runners or another always-on service part of the normal project path.
+
+The static deployment model should remain viable even if the documentation later uses a custom domain.
+
+`@doctui/mcp-server` should run locally for consumers under Bun/Node and consume bundled/generated metadata. A doctui-owned remote MCP server is optional future convenience, not required infrastructure.
+
 ### AI documentation architecture
 
 The preferred flow is:
@@ -80,7 +100,7 @@ MCP should not depend on the Vue runtime where practical; it primarily exposes s
 
 ## Suggested implementation order
 
-1. Monorepo/tooling/CI foundation.
+1. Monorepo/tooling/CI/GitHub Pages foundation.
 2. Theme/token/provider foundation.
 3. Layout and typography primitives.
 4. Button/action controls.
