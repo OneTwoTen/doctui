@@ -1,0 +1,23 @@
+---
+description: Infrastructure and deployment constraints for doctui
+globs:
+  - ".github/**"
+  - "apps/**"
+  - "packages/mcp/**"
+  - "scripts/**"
+alwaysApply: false
+---
+
+# Infrastructure rule
+
+- doctui is GitHub-first and must not require a project-owned VPS.
+- Prefer GitHub Actions for CI/build/release automation.
+- Prefer GitHub Pages for public docs, Storybook, metadata and LLM documentation.
+- Prefer GitHub Releases/Actions artifacts for generated release or CI artifacts.
+- Normal CI must work on GitHub-hosted runners; do not require a self-hosted runner.
+- Do not add SSH deployment, Docker-host deployment, Kubernetes, databases, Redis or other always-on infrastructure to the standard project path without an explicit project-level decision.
+- Keep docs/Storybook/metadata/llms outputs static.
+- `@doctui/mcp-server` should primarily run locally under Bun/Node and consume generated/bundled metadata; doctui must not require an always-on hosted MCP service.
+- Before adding a hosted service, demonstrate why static/build-time GitHub infrastructure cannot satisfy the requirement.
+
+See `docs/INFRASTRUCTURE.md` for the full policy.
