@@ -41,7 +41,8 @@ export const Basic: Story = {
       return h(Radio, {
         ...args,
         modelValue: selected.value,
-        "onUpdate:modelValue": (next: string | number) => (selected.value = next),
+        "onUpdate:modelValue": (next: string | number) =>
+          (selected.value = next),
       });
     }),
 };
