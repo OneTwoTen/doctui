@@ -48,6 +48,7 @@ export const Checkbox = defineComponent({
               {
                 class: ["dui-Checkbox", attrs.class],
                 "data-dui-component": "Checkbox",
+                "data-size": props.size,
                 "data-disabled": props.disabled ? "true" : undefined,
               },
               [
