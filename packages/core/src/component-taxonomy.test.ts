@@ -23,8 +23,8 @@ describe("component taxonomy", () => {
   });
 
   it("uses plural stable category ids for action components", () => {
-    expect(DOCTUI_COMPONENT_METADATA.find(({ name }) => name === "Button")?.category).toBe(
-      "actions",
-    );
+    expect(
+      DOCTUI_COMPONENT_METADATA.find(({ name }) => name === "Button")?.category,
+    ).toBe("actions");
   });
 });
