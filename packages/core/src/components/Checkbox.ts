@@ -97,20 +97,14 @@ export const Checkbox = defineComponent({
                   }),
                 ),
                 h("span", {
-                  class: [
-                    "dui-Checkbox-control",
-                    props.classNames?.indicator,
-                  ],
+                  class: ["dui-Checkbox-control", props.classNames?.indicator],
                   style: props.styles?.indicator,
                   "aria-hidden": "true",
                 }),
                 h(
                   "span",
                   {
-                    class: [
-                      "dui-Checkbox-label",
-                      props.classNames?.labelText,
-                    ],
+                    class: ["dui-Checkbox-label", props.classNames?.labelText],
                     style: props.styles?.labelText,
                   },
                   slots.default?.() ??
