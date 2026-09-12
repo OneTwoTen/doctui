@@ -119,7 +119,8 @@ export const KeyboardAndFilteringMatrix: Story = {
         h(MultiSelect, {
           id: "keyboard-multi",
           label: "Compare frameworks",
-          description: "Backspace removes the last value when the query is empty.",
+          description:
+            "Backspace removes the last value when the query is empty.",
           data,
           modelValue: selectedMany.value,
           clearable: true,
