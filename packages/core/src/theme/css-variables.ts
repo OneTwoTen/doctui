@@ -46,6 +46,10 @@ export function getThemeCssVariables(
     }
 
     for (const [tokenName, tokenValue] of Object.entries(value)) {
+      if (typeof tokenValue !== "string") {
+        continue;
+      }
+
       variables[`${cssName}-${toKebabCase(tokenName)}`] = tokenValue;
     }
   }
