@@ -9,6 +9,10 @@ export default defineConfig({
     nav: [
       { text: "Guide", link: "/guide/getting-started" },
       {
+        text: "Storybook",
+        link: "https://onetwoten.github.io/doctui/storybook/",
+      },
+      {
         text: "Roadmap",
         link: "https://github.com/OneTwoTen/doctui/blob/main/docs/ROADMAP.md",
       },

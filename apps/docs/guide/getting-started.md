@@ -2,6 +2,11 @@
 
 The repository is currently in **Phase 0 — Repository foundation**. Packages are not published to npm yet.
 
+## Public project sites
+
+- [Documentation](https://onetwoten.github.io/doctui/)
+- [Storybook](https://onetwoten.github.io/doctui/storybook/) — interactive component playground and visual states.
+
 ## Local development
 
 ```sh

@@ -2,14 +2,21 @@
 
 A Vue 3 UI component system inspired by the developer experience of Mantine, implemented independently for Vue.
 
+## Public sites
+
+- [Documentation](https://onetwoten.github.io/doctui/)
+- [Storybook](https://onetwoten.github.io/doctui/storybook/) — interactive component playground, examples, variants and visual states.
+
+Both sites are published together through the repository's GitHub Pages deployment.
+
 ## Goals
 
 - Vue-first APIs: `v-model`, slots, emits, provide/inject and composables.
 - No dependency on Reka UI or another component framework.
 - Accessible behavior is part of the component contract, not an optional enhancement.
 - Themeable with CSS variables and stable design tokens.
-- Storybook for interactive component development.
-- VitePress for guides and public documentation.
+- [Storybook](https://onetwoten.github.io/doctui/storybook/) for interactive component development and public previews.
+- [VitePress](https://onetwoten.github.io/doctui/) for guides and public documentation.
 - LLM-friendly documentation with generated `llms.txt` / `llms-full.txt`.
 - MCP support for structured AI access to components, APIs and docs.
 - Small, composable internal primitives instead of duplicated interaction logic.
@@ -69,7 +76,7 @@ GitHub Actions
 └── GitHub Pages deployment
 ```
 
-VitePress, Storybook, metadata and LLM docs should be deployable as static assets to GitHub Pages. Normal CI should use GitHub-hosted runners. `@doctui/mcp-server` is intended to run locally for consumers rather than requiring a doctui-owned always-on MCP backend.
+The GitHub Pages artifact publishes VitePress at [`/doctui/`](https://onetwoten.github.io/doctui/) and mounts Storybook at [`/doctui/storybook/`](https://onetwoten.github.io/doctui/storybook/). Normal CI should use GitHub-hosted runners. `@doctui/mcp-server` is intended to run locally for consumers rather than requiring a doctui-owned always-on MCP backend.
 
 See [`docs/INFRASTRUCTURE.md`](./docs/INFRASTRUCTURE.md) for the full policy.
 
