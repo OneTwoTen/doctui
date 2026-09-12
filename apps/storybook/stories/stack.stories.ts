@@ -1,10 +1,10 @@
-import { Box, getComponentStorybookTitle, Stack } from "@doctui/core";
+import { Box, Stack } from "@doctui/core";
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import { h } from "vue";
 import { preview } from "./story-helpers";
 
 const meta = {
-  title: getComponentStorybookTitle("Stack"),
+  title: "Layout/Stack",
 } satisfies Meta;
 
 export default meta;
