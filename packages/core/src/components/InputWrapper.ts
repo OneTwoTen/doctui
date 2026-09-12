@@ -1,4 +1,12 @@
-import { computed, defineComponent, h, mergeProps, useId } from "vue";
+import {
+  computed,
+  defineComponent,
+  h,
+  mergeProps,
+  type PropType,
+  useId,
+} from "vue";
+import type { FieldClassNames, FieldStyles } from "./field-types";
 
 export interface InputWrapperProps {
   id?: string;
@@ -6,6 +14,8 @@ export interface InputWrapperProps {
   description?: string;
   error?: string;
   required?: boolean;
+  classNames?: FieldClassNames;
+  styles?: FieldStyles;
 }
 
 export const InputWrapper = defineComponent({
@@ -17,6 +27,8 @@ export const InputWrapper = defineComponent({
     description: String,
     error: String,
     required: Boolean,
+    classNames: Object as PropType<FieldClassNames>,
+    styles: Object as PropType<FieldStyles>,
   },
   setup(props, { attrs, slots }) {
     const generatedId = useId();
@@ -32,21 +44,39 @@ export const InputWrapper = defineComponent({
 
       return h(
         "div",
-        mergeProps(attrs, {
-          class: "dui-InputWrapper",
-          "data-dui-component": "InputWrapper",
-          "data-required": props.required ? "true" : undefined,
-          "data-error": props.error ? "true" : undefined,
-        }),
+        mergeProps(
+          {
+            class: ["dui-InputWrapper", props.classNames?.root],
+            style: props.styles?.root,
+          },
+          attrs,
+          {
+            "data-dui-component": "InputWrapper",
+            "data-required": props.required ? "true" : undefined,
+            "data-error": props.error ? "true" : undefined,
+          },
+        ),
         [
           props.label
             ? h(
                 "label",
-                { class: "dui-InputWrapper-label", for: inputId.value },
+                {
+                  class: ["dui-InputWrapper-label", props.classNames?.label],
+                  style: props.styles?.label,
+                  for: inputId.value,
+                },
                 [
                   props.label,
                   props.required
-                    ? h("span", { "aria-hidden": "true" }, " *")
+                    ? h(
+                        "span",
+                        {
+                          class: props.classNames?.required,
+                          style: props.styles?.required,
+                          "aria-hidden": "true",
+                        },
+                        " *",
+                      )
                     : null,
                 ],
               )
@@ -54,7 +84,8 @@ export const InputWrapper = defineComponent({
           h(
             "div",
             {
-              class: "dui-InputWrapper-control",
+              class: ["dui-InputWrapper-control", props.classNames?.control],
+              style: props.styles?.control,
               "data-error": props.error ? "true" : undefined,
             },
             slots.default?.({ id: inputId.value, describedBy }),
@@ -64,7 +95,11 @@ export const InputWrapper = defineComponent({
                 "div",
                 {
                   id: descriptionId,
-                  class: "dui-InputWrapper-description",
+                  class: [
+                    "dui-InputWrapper-description",
+                    props.classNames?.description,
+                  ],
+                  style: props.styles?.description,
                 },
                 props.description,
               )
@@ -74,7 +109,8 @@ export const InputWrapper = defineComponent({
                 "div",
                 {
                   id: errorId,
-                  class: "dui-InputWrapper-error",
+                  class: ["dui-InputWrapper-error", props.classNames?.error],
+                  style: props.styles?.error,
                   role: "alert",
                 },
                 props.error,

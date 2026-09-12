@@ -1,5 +1,6 @@
 import { defineComponent, h, type PropType } from "vue";
 import type { Radius, Size } from "../theme/types";
+import type { FieldClassNames, FieldStyles } from "./field-types";
 import { TextInput } from "./TextInput";
 
 export interface PasswordInputProps {
@@ -15,6 +16,8 @@ export interface PasswordInputProps {
   readonly?: boolean;
   placeholder?: string;
   clearable?: boolean;
+  classNames?: FieldClassNames;
+  styles?: FieldStyles;
 }
 
 export const PasswordInput = defineComponent({
@@ -37,6 +40,8 @@ export const PasswordInput = defineComponent({
     readonly: Boolean,
     placeholder: String,
     clearable: Boolean,
+    classNames: Object as PropType<FieldClassNames>,
+    styles: Object as PropType<FieldStyles>,
   },
   setup(props, { attrs, emit, slots }) {
     return () => {
@@ -59,6 +64,8 @@ export const PasswordInput = defineComponent({
           ? {}
           : { placeholder: props.placeholder }),
         clearable: props.clearable,
+        classNames: props.classNames,
+        styles: props.styles,
         "onUpdate:modelValue": (value: string) =>
           emit("update:modelValue", value),
         onClear: () => emit("clear"),

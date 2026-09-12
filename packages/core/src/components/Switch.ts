@@ -6,6 +6,7 @@ import {
   getInputWrapperProps,
   splitFieldAttrs,
 } from "./field-internals";
+import type { FieldClassNames, FieldStyles } from "./field-types";
 import { InputWrapper } from "./InputWrapper";
 
 export interface SwitchProps {
@@ -17,6 +18,8 @@ export interface SwitchProps {
   required?: boolean;
   disabled?: boolean;
   size?: Size;
+  classNames?: FieldClassNames;
+  styles?: FieldStyles;
 }
 
 export const Switch = defineComponent({
@@ -32,6 +35,8 @@ export const Switch = defineComponent({
     required: Boolean,
     disabled: Boolean,
     size: { type: String as PropType<Size>, default: "md" },
+    classNames: Object as PropType<FieldClassNames>,
+    styles: Object as PropType<FieldStyles>,
   },
   setup(props, { attrs, emit, slots }) {
     return () => {
@@ -41,6 +46,7 @@ export const Switch = defineComponent({
         InputWrapper,
         mergeProps(
           getInputWrapperProps(props, false),
+          { classNames: props.classNames, styles: props.styles },
           rootAttrs,
           getFieldRootStateAttrs(props, "Switch"),
         ),
@@ -49,7 +55,8 @@ export const Switch = defineComponent({
             h(
               "label",
               {
-                class: "dui-Switch",
+                class: ["dui-Switch", props.classNames?.body],
+                style: props.styles?.body,
                 for: id,
                 "data-dui-component": "Switch",
                 "data-checked": props.modelValue ? "true" : undefined,
@@ -76,7 +83,8 @@ export const Switch = defineComponent({
                       describedBy,
                       controlAttrs["aria-describedby"],
                     ),
-                    class: "dui-Switch-input",
+                    class: ["dui-Switch-input", props.classNames?.input],
+                    style: props.styles?.input,
                     onChange: (event: Event) =>
                       emit(
                         "update:modelValue",
@@ -87,14 +95,23 @@ export const Switch = defineComponent({
                 h(
                   "span",
                   {
-                    class: "dui-Switch-track",
+                    class: ["dui-Switch-track", props.classNames?.track],
+                    style: props.styles?.track,
                     "aria-hidden": "true",
                   },
-                  [h("span", { class: "dui-Switch-thumb" })],
+                  [
+                    h("span", {
+                      class: ["dui-Switch-thumb", props.classNames?.thumb],
+                      style: props.styles?.thumb,
+                    }),
+                  ],
                 ),
                 h(
                   "span",
-                  { class: "dui-Switch-label" },
+                  {
+                    class: ["dui-Switch-label", props.classNames?.labelText],
+                    style: props.styles?.labelText,
+                  },
                   slots.default?.() ??
                     (props.label
                       ? [

@@ -6,6 +6,7 @@ import {
   getInputWrapperProps,
   splitFieldAttrs,
 } from "./field-internals";
+import type { FieldClassNames, FieldStyles } from "./field-types";
 import { InputWrapper } from "./InputWrapper";
 import { radiusToken } from "./shared";
 
@@ -23,6 +24,8 @@ export interface TextareaProps {
   placeholder?: string;
   rows?: number;
   resize?: "none" | "vertical" | "horizontal" | "both";
+  classNames?: FieldClassNames;
+  styles?: FieldStyles;
 }
 
 export const Textarea = defineComponent({
@@ -46,6 +49,8 @@ export const Textarea = defineComponent({
       type: String as PropType<TextareaProps["resize"]>,
       default: "vertical",
     },
+    classNames: Object as PropType<FieldClassNames>,
+    styles: Object as PropType<FieldStyles>,
   },
   setup(props, { attrs, emit }) {
     const focused = ref(false);
@@ -57,6 +62,7 @@ export const Textarea = defineComponent({
         InputWrapper,
         mergeProps(
           getInputWrapperProps(props),
+          { classNames: props.classNames, styles: props.styles },
           rootAttrs,
           getFieldRootStateAttrs(props, "Textarea"),
         ),
@@ -86,11 +92,14 @@ export const Textarea = defineComponent({
                 "data-error": props.error ? "true" : undefined,
                 "data-required": props.required ? "true" : undefined,
                 "data-size": props.size,
-                class: "dui-Textarea",
-                style: {
-                  borderRadius: radiusToken(props.radius),
-                  resize: props.resize,
-                },
+                class: ["dui-Textarea", props.classNames?.input],
+                style: [
+                  {
+                    borderRadius: radiusToken(props.radius),
+                    resize: props.resize,
+                  },
+                  props.styles?.input,
+                ],
                 onInput: (event: Event) =>
                   emit(
                     "update:modelValue",

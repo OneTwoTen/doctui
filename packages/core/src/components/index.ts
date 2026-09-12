@@ -9,6 +9,7 @@ export * from "./Code";
 export * from "./Combobox";
 export * from "./Container";
 export * from "./Divider";
+export * from "./field-types";
 export * from "./Flex";
 export * from "./Grid";
 export * from "./Group";

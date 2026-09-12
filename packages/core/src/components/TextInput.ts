@@ -6,6 +6,7 @@ import {
   getInputWrapperProps,
   splitFieldAttrs,
 } from "./field-internals";
+import type { FieldClassNames, FieldStyles } from "./field-types";
 import { InputWrapper } from "./InputWrapper";
 import { radiusToken } from "./shared";
 
@@ -25,6 +26,8 @@ export interface TextInputProps {
   leftSection?: string;
   rightSection?: string;
   clearable?: boolean;
+  classNames?: FieldClassNames;
+  styles?: FieldStyles;
 }
 
 export const TextInput = defineComponent({
@@ -50,6 +53,8 @@ export const TextInput = defineComponent({
     leftSection: String,
     rightSection: String,
     clearable: Boolean,
+    classNames: Object as PropType<FieldClassNames>,
+    styles: Object as PropType<FieldStyles>,
   },
   setup(props, { attrs, emit, slots }) {
     const focused = ref(false);
@@ -61,6 +66,10 @@ export const TextInput = defineComponent({
         InputWrapper,
         mergeProps(
           getInputWrapperProps(props),
+          {
+            classNames: props.classNames,
+            styles: props.styles,
+          },
           rootAttrs,
           getFieldRootStateAttrs(props, "TextInput"),
         ),
@@ -83,7 +92,7 @@ export const TextInput = defineComponent({
             return h(
               "div",
               {
-                class: "dui-TextInput",
+                class: ["dui-TextInput", props.classNames?.wrapper],
                 "data-dui-component": "TextInput",
                 "data-focused": focused.value ? "true" : undefined,
                 "data-disabled": props.disabled ? "true" : undefined,
@@ -91,9 +100,12 @@ export const TextInput = defineComponent({
                 "data-error": props.error ? "true" : undefined,
                 "data-required": props.required ? "true" : undefined,
                 "data-size": props.size,
-                style: {
-                  borderRadius: radiusToken(props.radius),
-                },
+                style: [
+                  {
+                    borderRadius: radiusToken(props.radius),
+                  },
+                  props.styles?.wrapper,
+                ],
               },
               [
                 props.leftSection || slots.leftSection
@@ -101,7 +113,12 @@ export const TextInput = defineComponent({
                       "span",
                       {
                         "data-dui-input-left-section": "",
-                        class: "dui-TextInput-section dui-TextInput-leftSection",
+                        class: [
+                          "dui-TextInput-section dui-TextInput-leftSection",
+                          props.classNames?.section,
+                          props.classNames?.leftSection,
+                        ],
+                        style: props.styles?.leftSection ?? props.styles?.section,
                       },
                       props.leftSection ?? slots.leftSection?.(),
                     )
@@ -118,7 +135,8 @@ export const TextInput = defineComponent({
                     required: props.required,
                     "aria-invalid": ariaInvalid,
                     "aria-describedby": ariaDescribedBy,
-                    class: "dui-TextInput-input",
+                    class: ["dui-TextInput-input", props.classNames?.input],
+                    style: props.styles?.input,
                     onInput: (event: Event) =>
                       emit(
                         "update:modelValue",
@@ -137,7 +155,13 @@ export const TextInput = defineComponent({
                       "span",
                       {
                         "data-dui-input-right-section": "",
-                        class: "dui-TextInput-section dui-TextInput-rightSection",
+                        class: [
+                          "dui-TextInput-section dui-TextInput-rightSection",
+                          props.classNames?.section,
+                          props.classNames?.rightSection,
+                        ],
+                        style:
+                          props.styles?.rightSection ?? props.styles?.section,
                       },
                       props.rightSection ?? slots.rightSection?.(),
                     )
@@ -147,7 +171,11 @@ export const TextInput = defineComponent({
                       "button",
                       {
                         "aria-label": "Clear input",
-                        class: "dui-TextInput-clear",
+                        class: [
+                          "dui-TextInput-clear",
+                          props.classNames?.clearButton,
+                        ],
+                        style: props.styles?.clearButton,
                         type: "button",
                         disabled: props.disabled || props.readonly,
                         onClick: () => {

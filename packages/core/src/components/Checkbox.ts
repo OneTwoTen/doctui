@@ -6,6 +6,7 @@ import {
   getInputWrapperProps,
   splitFieldAttrs,
 } from "./field-internals";
+import type { FieldClassNames, FieldStyles } from "./field-types";
 import { InputWrapper } from "./InputWrapper";
 
 export interface CheckboxProps {
@@ -17,6 +18,8 @@ export interface CheckboxProps {
   required?: boolean;
   disabled?: boolean;
   size?: Size;
+  classNames?: FieldClassNames;
+  styles?: FieldStyles;
 }
 
 export const Checkbox = defineComponent({
@@ -32,6 +35,8 @@ export const Checkbox = defineComponent({
     required: Boolean,
     disabled: Boolean,
     size: { type: String as PropType<Size>, default: "md" },
+    classNames: Object as PropType<FieldClassNames>,
+    styles: Object as PropType<FieldStyles>,
   },
   setup(props, { attrs, emit, slots }) {
     return () => {
@@ -41,6 +46,7 @@ export const Checkbox = defineComponent({
         InputWrapper,
         mergeProps(
           getInputWrapperProps(props, false),
+          { classNames: props.classNames, styles: props.styles },
           rootAttrs,
           getFieldRootStateAttrs(props, "Checkbox"),
         ),
@@ -49,7 +55,8 @@ export const Checkbox = defineComponent({
             h(
               "label",
               {
-                class: "dui-Checkbox",
+                class: ["dui-Checkbox", props.classNames?.body],
+                style: props.styles?.body,
                 for: id,
                 "data-dui-component": "Checkbox",
                 "data-checked": props.modelValue ? "true" : undefined,
@@ -74,7 +81,8 @@ export const Checkbox = defineComponent({
                       describedBy,
                       controlAttrs["aria-describedby"],
                     ),
-                    class: "dui-Checkbox-input",
+                    class: ["dui-Checkbox-input", props.classNames?.input],
+                    style: props.styles?.input,
                     onChange: (event: Event) =>
                       emit(
                         "update:modelValue",
@@ -83,10 +91,13 @@ export const Checkbox = defineComponent({
                   }),
                 ),
                 h("span", {
-                  class: "dui-Checkbox-control",
+                  class: ["dui-Checkbox-control", props.classNames?.indicator],
+                  style: props.styles?.indicator,
                   "aria-hidden": "true",
                 }),
-                h("span", { class: "dui-Checkbox-label" },
+                h(
+                  "span",
+                  { class: ["dui-Checkbox-label", props.classNames?.labelText], style: props.styles?.labelText },
                   slots.default?.() ??
                     (props.label
                       ? [

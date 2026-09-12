@@ -6,6 +6,7 @@ import {
   getInputWrapperProps,
   splitFieldAttrs,
 } from "./field-internals";
+import type { FieldClassNames, FieldStyles } from "./field-types";
 import { InputWrapper } from "./InputWrapper";
 
 export interface RadioProps {
@@ -19,6 +20,8 @@ export interface RadioProps {
   required?: boolean;
   disabled?: boolean;
   size?: Size;
+  classNames?: FieldClassNames;
+  styles?: FieldStyles;
 }
 
 export const Radio = defineComponent({
@@ -39,6 +42,8 @@ export const Radio = defineComponent({
     required: Boolean,
     disabled: Boolean,
     size: { type: String as PropType<Size>, default: "md" },
+    classNames: Object as PropType<FieldClassNames>,
+    styles: Object as PropType<FieldStyles>,
   },
   setup(props, { attrs, emit, slots }) {
     return () => {
@@ -49,6 +54,7 @@ export const Radio = defineComponent({
         InputWrapper,
         mergeProps(
           getInputWrapperProps(props, false),
+          { classNames: props.classNames, styles: props.styles },
           rootAttrs,
           getFieldRootStateAttrs(props, "Radio"),
         ),
@@ -57,7 +63,8 @@ export const Radio = defineComponent({
             h(
               "label",
               {
-                class: "dui-Radio",
+                class: ["dui-Radio", props.classNames?.body],
+                style: props.styles?.body,
                 for: id,
                 "data-dui-component": "Radio",
                 "data-checked": checked ? "true" : undefined,
@@ -84,17 +91,22 @@ export const Radio = defineComponent({
                       describedBy,
                       controlAttrs["aria-describedby"],
                     ),
-                    class: "dui-Radio-input",
+                    class: ["dui-Radio-input", props.classNames?.input],
+                    style: props.styles?.input,
                     onChange: () => emit("update:modelValue", props.value),
                   }),
                 ),
                 h("span", {
-                  class: "dui-Radio-control",
+                  class: ["dui-Radio-control", props.classNames?.indicator],
+                  style: props.styles?.indicator,
                   "aria-hidden": "true",
                 }),
                 h(
                   "span",
-                  { class: "dui-Radio-label" },
+                  {
+                    class: ["dui-Radio-label", props.classNames?.labelText],
+                    style: props.styles?.labelText,
+                  },
                   slots.default?.() ??
                     (props.label
                       ? [
