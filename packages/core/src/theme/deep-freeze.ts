@@ -5,9 +5,7 @@ export function deepFreeze<T>(value: T): T {
 
   Object.freeze(value);
 
-  for (const nestedValue of Object.values(
-    value as Record<string, unknown>,
-  )) {
+  for (const nestedValue of Object.values(value as Record<string, unknown>)) {
     deepFreeze(nestedValue);
   }
 
