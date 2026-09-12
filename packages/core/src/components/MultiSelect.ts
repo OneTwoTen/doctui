@@ -7,6 +7,7 @@ export const MultiSelect = defineComponent({
   inheritAttrs: false,
   emits: {
     "update:modelValue": (_value: readonly (string | number)[]) => true,
+    clear: () => true,
   },
   props: {
     modelValue: {
@@ -17,6 +18,7 @@ export const MultiSelect = defineComponent({
       type: Array as PropType<readonly ComboboxOption[]>,
       required: true,
     },
+    id: String,
     label: String,
     description: String,
     error: String,
@@ -40,6 +42,7 @@ export const MultiSelect = defineComponent({
           multiple: true,
           "onUpdate:modelValue": (value: readonly (string | number)[]) =>
             emit("update:modelValue", value),
+          onClear: () => emit("clear"),
         },
         slots,
       );

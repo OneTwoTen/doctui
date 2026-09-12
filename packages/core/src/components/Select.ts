@@ -5,13 +5,17 @@ import { Combobox, type ComboboxOption } from "./Combobox";
 export const Select = defineComponent({
   name: "DuiSelect",
   inheritAttrs: false,
-  emits: { "update:modelValue": (_value: string | number | null) => true },
+  emits: {
+    "update:modelValue": (_value: string | number | null) => true,
+    clear: () => true,
+  },
   props: {
     modelValue: [String, Number] as PropType<string | number | null>,
     data: {
       type: Array as PropType<readonly ComboboxOption[]>,
       required: true,
     },
+    id: String,
     label: String,
     description: String,
     error: String,
@@ -35,6 +39,7 @@ export const Select = defineComponent({
           multiple: false,
           "onUpdate:modelValue": (value: string | number | null) =>
             emit("update:modelValue", value),
+          onClear: () => emit("clear"),
         },
         slots,
       );

@@ -318,10 +318,11 @@ export const DOCTUI_COMPONENT_METADATA: readonly ComponentMetadataEntry[] = [
     name: "Combobox",
     category: "inputs",
     description:
-      "Shared searchable selection primitive with listbox semantics.",
+      "Focus-managed listbox engine used by doctui selection controls.",
     props: [
       "modelValue",
       "data",
+      "id",
       "multiple",
       "searchable",
       "clearable",
@@ -337,39 +338,24 @@ export const DOCTUI_COMPONENT_METADATA: readonly ComponentMetadataEntry[] = [
       "radius",
     ],
     accessibility: [
-      "Uses combobox/listbox roles and supports Arrow, Home, End, Enter and Escape keyboard behavior.",
+      "Keeps DOM focus on the native combobox input and exposes the active enabled option through aria-activedescendant.",
+      "Arrow keys, Home and End skip disabled options; filtering never leaves aria-activedescendant pointing at a missing option.",
+      "Visible labels use the shared field relationship; ariaLabel is supported when no visible label is rendered, with a safe fallback accessible name.",
+    ],
+    examples: [
+      '<Combobox id="framework" v-model="framework" :data="frameworks" label="Framework" clearable />',
+      '<Combobox v-model="framework" :data="frameworks" searchable aria-label="Search framework" nothing-found="No matches" />',
     ],
   },
   {
     name: "Select",
     category: "inputs",
     description:
-      "Single-value selection control backed by the shared combobox engine.",
+      "Single-value selection control backed by the shared Combobox focus model.",
     props: [
       "modelValue",
       "data",
-      "label",
-      "description",
-      "error",
-      "required",
-      "disabled",
-      "placeholder",
-      "clearable",
-      "ariaLabel",
-      "nothingFound",
-      "size",
-      "radius",
-    ],
-    accessibility: ["Uses the shared combobox keyboard and listbox semantics."],
-  },
-  {
-    name: "Autocomplete",
-    category: "inputs",
-    description:
-      "Searchable single-value input backed by the shared combobox engine.",
-    props: [
-      "modelValue",
-      "data",
+      "id",
       "label",
       "description",
       "error",
@@ -383,17 +369,53 @@ export const DOCTUI_COMPONENT_METADATA: readonly ComponentMetadataEntry[] = [
       "radius",
     ],
     accessibility: [
-      "Uses a searchable combobox and filters options without duplicating navigation logic.",
+      "Uses the Combobox aria-activedescendant focus model and skips disabled options during keyboard navigation.",
+      "Supports a stable public id plus visible-label or ariaLabel accessible naming.",
+      "Clear emits both the existing v-model update and the shared clear event.",
+    ],
+    examples: [
+      '<Select id="assignee" v-model="assignee" :data="people" label="Assignee" clearable @clear="trackCleared" />',
+    ],
+  },
+  {
+    name: "Autocomplete",
+    category: "inputs",
+    description:
+      "Searchable single-value selection control backed by the shared Combobox engine.",
+    props: [
+      "modelValue",
+      "data",
+      "id",
+      "label",
+      "description",
+      "error",
+      "required",
+      "disabled",
+      "placeholder",
+      "clearable",
+      "ariaLabel",
+      "nothingFound",
+      "size",
+      "radius",
+    ],
+    accessibility: [
+      "Filtering preserves a valid active descendant by option value and falls back to the first enabled visible option when needed.",
+      "Empty results remove aria-activedescendant and announce the nothingFound content as status text.",
+      "Clear is forwarded consistently with Select and MultiSelect.",
+    ],
+    examples: [
+      '<Autocomplete id="framework-search" v-model="framework" :data="frameworks" label="Framework" nothing-found="No matches" />',
     ],
   },
   {
     name: "MultiSelect",
     category: "inputs",
     description:
-      "Searchable multi-value selection control backed by the shared combobox engine.",
+      "Searchable multi-value selection control backed by the shared Combobox engine.",
     props: [
       "modelValue",
       "data",
+      "id",
       "label",
       "description",
       "error",
@@ -407,7 +429,12 @@ export const DOCTUI_COMPONENT_METADATA: readonly ComponentMetadataEntry[] = [
       "radius",
     ],
     accessibility: [
-      "Uses a multiselect listbox and supports keyboard selection and removal.",
+      "Uses aria-multiselectable listbox semantics while keeping DOM focus on the native combobox input.",
+      "Backspace removes the last selected value when the search query is empty, and controlled updates immediately refresh aria-selected state.",
+      "Clear emits an empty array plus the shared clear event.",
+    ],
+    examples: [
+      '<MultiSelect id="compare" v-model="frameworks" :data="options" label="Compare with" clearable />',
     ],
   },
   {
