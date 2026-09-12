@@ -42,7 +42,11 @@ export const States: Story = {
         h(Checkbox, { label: "Unchecked", modelValue: false }),
         h(Checkbox, { label: "Checked", modelValue: true }),
         h(Checkbox, { label: "Required", modelValue: false, required: true }),
-        h(Checkbox, { label: "Error", modelValue: false, error: "Please accept this option." }),
+        h(Checkbox, {
+          label: "Error",
+          modelValue: false,
+          error: "Please accept this option.",
+        }),
         h(Checkbox, { label: "Disabled", modelValue: true, disabled: true }),
       ]),
     ),

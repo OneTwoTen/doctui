@@ -47,8 +47,16 @@ export const States: Story = {
           error: "Please shorten this note.",
           modelValue: "Invalid content",
         }),
-        h(Textarea, { label: "Disabled", modelValue: "Disabled", disabled: true }),
-        h(Textarea, { label: "Read only", modelValue: "Focusable and copyable", readonly: true }),
+        h(Textarea, {
+          label: "Disabled",
+          modelValue: "Disabled",
+          disabled: true,
+        }),
+        h(Textarea, {
+          label: "Read only",
+          modelValue: "Focusable and copyable",
+          readonly: true,
+        }),
       ]),
     ),
 };

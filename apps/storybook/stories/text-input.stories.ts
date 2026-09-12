@@ -50,8 +50,16 @@ export const States: Story = {
           error: "This value is invalid.",
           modelValue: "Invalid",
         }),
-        h(TextInput, { label: "Disabled", modelValue: "Disabled", disabled: true }),
-        h(TextInput, { label: "Read only", modelValue: "Focusable", readonly: true }),
+        h(TextInput, {
+          label: "Disabled",
+          modelValue: "Disabled",
+          disabled: true,
+        }),
+        h(TextInput, {
+          label: "Read only",
+          modelValue: "Focusable",
+          readonly: true,
+        }),
       ]),
     ),
 };
@@ -61,9 +69,13 @@ export const Customization: Story = {
     preview(() =>
       h(TextInput, {
         label: "Part styling",
-        description: "class/style target the outer root; classNames/styles target parts.",
+        description:
+          "class/style target the outer root; classNames/styles target parts.",
         modelValue: "Custom field",
-        style: { maxWidth: "30rem", "--dui-field-control-height": "3.25rem" },
+        style: {
+          maxWidth: "30rem",
+          "--dui-field-control-height": "3.25rem",
+        },
         classNames: {
           label: "storybook-custom-label",
           wrapper: "storybook-custom-wrapper",

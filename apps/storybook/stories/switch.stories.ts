@@ -42,7 +42,11 @@ export const States: Story = {
         h(Switch, { label: "Off", modelValue: false }),
         h(Switch, { label: "On", modelValue: true }),
         h(Switch, { label: "Required", modelValue: false, required: true }),
-        h(Switch, { label: "Error", modelValue: false, error: "Enable this setting to continue." }),
+        h(Switch, {
+          label: "Error",
+          modelValue: false,
+          error: "Enable this setting to continue.",
+        }),
         h(Switch, { label: "Disabled", modelValue: true, disabled: true }),
       ]),
     ),

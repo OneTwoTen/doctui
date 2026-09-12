@@ -46,8 +46,16 @@ export const States: Story = {
           error: "Password is too short.",
           modelValue: "short",
         }),
-        h(PasswordInput, { label: "Disabled", modelValue: "secret", disabled: true }),
-        h(PasswordInput, { label: "Read only", modelValue: "secret", readonly: true }),
+        h(PasswordInput, {
+          label: "Disabled",
+          modelValue: "secret",
+          disabled: true,
+        }),
+        h(PasswordInput, {
+          label: "Read only",
+          modelValue: "secret",
+          readonly: true,
+        }),
       ]),
     ),
 };

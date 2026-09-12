@@ -42,7 +42,11 @@ export const States: Story = {
   render: () =>
     preview(() =>
       h(Stack, { gap: "md", style: { maxWidth: "30rem" } }, () => [
-        h(NumberInput, { label: "Error", error: "Outside the allowed range.", modelValue: 120 }),
+        h(NumberInput, {
+          label: "Error",
+          error: "Outside the allowed range.",
+          modelValue: 120,
+        }),
         h(NumberInput, { label: "Disabled", modelValue: 5, disabled: true }),
         h(NumberInput, { label: "Read only", modelValue: 42, readonly: true }),
       ]),

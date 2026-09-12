@@ -49,9 +49,26 @@ export const States: Story = {
   render: () =>
     preview(() =>
       h(Stack, { gap: "md" }, () => [
-        h(Radio, { name: "state-a", value: "a", label: "Checked", modelValue: "a" }),
-        h(Radio, { name: "state-b", value: "b", label: "Error", modelValue: "a", error: "Choose an available option." }),
-        h(Radio, { name: "state-c", value: "c", label: "Disabled", modelValue: "c", disabled: true }),
+        h(Radio, {
+          name: "state-a",
+          value: "a",
+          label: "Checked",
+          modelValue: "a",
+        }),
+        h(Radio, {
+          name: "state-b",
+          value: "b",
+          label: "Error",
+          modelValue: "a",
+          error: "Choose an available option.",
+        }),
+        h(Radio, {
+          name: "state-c",
+          value: "c",
+          label: "Disabled",
+          modelValue: "c",
+          disabled: true,
+        }),
       ]),
     ),
 };
