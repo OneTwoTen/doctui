@@ -48,6 +48,7 @@ export const Switch = defineComponent({
               {
                 class: ["dui-Switch", attrs.class],
                 "data-dui-component": "Switch",
+                "data-size": props.size,
                 "data-disabled": props.disabled ? "true" : undefined,
               },
               [
