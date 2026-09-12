@@ -1,10 +1,10 @@
-import { Box, Flex, getComponentStorybookTitle } from "@doctui/core";
+import { Box, Flex } from "@doctui/core";
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import { h } from "vue";
 import { preview } from "./story-helpers";
 
 const meta = {
-  title: getComponentStorybookTitle("Flex"),
+  title: "Layout/Flex",
 } satisfies Meta;
 
 export default meta;
