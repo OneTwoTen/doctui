@@ -8,6 +8,7 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: "Guide", link: "/guide/getting-started" },
+      { text: "Components", link: "/guide/basic-components" },
       {
         text: "Storybook",
         link: "https://onetwoten.github.io/doctui/storybook/",
@@ -23,6 +24,7 @@ export default defineConfig({
         items: [
           { text: "Getting started", link: "/guide/getting-started" },
           { text: "Theming", link: "/guide/theming" },
+          { text: "Basic components", link: "/guide/basic-components" },
         ],
       },
     ],
