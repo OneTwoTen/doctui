@@ -41,7 +41,7 @@ describe("shared field relationships", () => {
 });
 
 describe("text-like field contract", () => {
-  it("keeps TextInput root attributes separate from native control attributes", async () => {
+  it("keeps TextInput outer field attributes separate from native control attributes", async () => {
     const onInput = vi.fn();
     const wrapper = mount(TextInput, {
       props: {
@@ -62,11 +62,13 @@ describe("text-like field contract", () => {
       },
     });
 
-    const root = wrapper.get("[data-dui-component='TextInput']");
+    const fieldRoot = wrapper.get(".dui-InputWrapper");
+    const visualControl = wrapper.get("[data-dui-component='TextInput']");
     const input = wrapper.get("input");
 
-    expect(root.classes()).toContain("consumer-root");
-    expect(root.attributes("style")).toContain("width: 18rem");
+    expect(fieldRoot.classes()).toContain("consumer-root");
+    expect(fieldRoot.attributes("style")).toContain("width: 18rem");
+    expect(visualControl.classes()).not.toContain("consumer-root");
     expect(input.classes()).not.toContain("consumer-root");
     expect(input.attributes("name")).toBe("email");
     expect(input.attributes("autocomplete")).toBe("email");
@@ -81,7 +83,7 @@ describe("text-like field contract", () => {
     expect(wrapper.emitted("update:modelValue")?.[0]).toEqual(["after"]);
   });
 
-  it("forwards Textarea attributes to its native root/control and keeps readonly focusable", () => {
+  it("forwards Textarea native attributes while keeping layout attributes on the outer field and readonly focusable", () => {
     const wrapper = mount(Textarea, {
       props: {
         id: "notes",
@@ -99,20 +101,22 @@ describe("text-like field contract", () => {
       attachTo: document.body,
     });
 
+    const fieldRoot = wrapper.get(".dui-InputWrapper");
     const textarea = wrapper.get("textarea");
-    expect(textarea.classes()).toContain("consumer-root");
-    expect(textarea.attributes("style")).toContain("min-height: 9rem");
+    expect(fieldRoot.classes()).toContain("consumer-root");
+    expect(fieldRoot.attributes("style")).toContain("min-height: 9rem");
+    expect(fieldRoot.attributes("data-size")).toBe("lg");
+    expect(textarea.classes()).not.toContain("consumer-root");
     expect(textarea.attributes("name")).toBe("notes");
     expect(textarea.attributes("data-probe")).toBe("textarea");
     expect(textarea.attributes("readonly")).toBeDefined();
-    expect(textarea.attributes("data-size")).toBe("lg");
 
     textarea.element.focus();
     expect(document.activeElement).toBe(textarea.element);
     wrapper.unmount();
   });
 
-  it("forwards NumberInput attributes to its native root/control", () => {
+  it("forwards NumberInput native attributes while keeping layout attributes on the outer field", () => {
     const wrapper = mount(NumberInput, {
       props: {
         id: "seats",
@@ -130,15 +134,17 @@ describe("text-like field contract", () => {
       },
     });
 
+    const fieldRoot = wrapper.get(".dui-InputWrapper");
     const input = wrapper.get("input");
-    expect(input.classes()).toContain("consumer-root");
-    expect(input.attributes("style")).toContain("max-width: 8rem");
+    expect(fieldRoot.classes()).toContain("consumer-root");
+    expect(fieldRoot.attributes("style")).toContain("max-width: 8rem");
+    expect(fieldRoot.attributes("data-size")).toBe("sm");
+    expect(input.classes()).not.toContain("consumer-root");
     expect(input.attributes("name")).toBe("seats");
     expect(input.attributes("inputmode")).toBe("numeric");
-    expect(input.attributes("data-size")).toBe("sm");
   });
 
-  it("keeps PasswordInput on the same root/control forwarding contract", () => {
+  it("keeps PasswordInput on the same outer-root/native-control forwarding contract", () => {
     const wrapper = mount(PasswordInput, {
       props: {
         id: "password",
@@ -153,10 +159,12 @@ describe("text-like field contract", () => {
       },
     });
 
-    const root = wrapper.get("[data-dui-component='TextInput']");
+    const fieldRoot = wrapper.get(".dui-InputWrapper");
+    const visualControl = wrapper.get("[data-dui-component='TextInput']");
     const input = wrapper.get("input");
-    expect(root.classes()).toContain("consumer-root");
-    expect(root.attributes("style")).toContain("width: 20rem");
+    expect(fieldRoot.classes()).toContain("consumer-root");
+    expect(fieldRoot.attributes("style")).toContain("width: 20rem");
+    expect(visualControl.classes()).not.toContain("consumer-root");
     expect(input.attributes("name")).toBe("password");
     expect(input.attributes("autocomplete")).toBe("current-password");
     expect(input.attributes("readonly")).toBeDefined();
@@ -164,7 +172,7 @@ describe("text-like field contract", () => {
 });
 
 describe("native boolean control contract", () => {
-  it("keeps Checkbox root styling separate from native attributes and exposes size", () => {
+  it("keeps Checkbox outer field styling separate from native attributes and exposes size", () => {
     const wrapper = mount(Checkbox, {
       props: {
         id: "terms",
@@ -184,16 +192,16 @@ describe("native boolean control contract", () => {
       },
     });
 
-    const root = wrapper.get("[data-dui-component='Checkbox']");
+    const fieldRoot = wrapper.get(".dui-InputWrapper");
+    const body = wrapper.get("[data-dui-component='Checkbox']");
     const input = wrapper.get("input");
-    expect(root.element.tagName).toBe("LABEL");
-    expect(root.attributes("for")).toBe("terms");
-    expect(root.classes()).toContain("consumer-root");
-    expect(root.attributes("style")).toContain("margin-top: 1rem");
-    expect(root.attributes("data-size")).toBe("lg");
-    expect(root.attributes("style")).toContain(
-      "font-size: var(--dui-font-size-lg)",
-    );
+    expect(body.element.tagName).toBe("LABEL");
+    expect(body.attributes("for")).toBe("terms");
+    expect(fieldRoot.classes()).toContain("consumer-root");
+    expect(fieldRoot.attributes("style")).toContain("margin-top: 1rem");
+    expect(fieldRoot.attributes("data-size")).toBe("lg");
+    expect(body.classes()).not.toContain("consumer-root");
+    expect(body.attributes("data-size")).toBe("lg");
     expect(input.attributes("name")).toBe("terms");
     expect(input.attributes("data-probe")).toBe("checkbox");
     expect(input.attributes("aria-describedby")).toBe(
@@ -202,7 +210,7 @@ describe("native boolean control contract", () => {
     expect(input.attributes("required")).toBeDefined();
   });
 
-  it("keeps Radio grouping/native attributes on the input and exposes size", () => {
+  it("keeps Radio grouping/native attributes on the input and outer layout attributes on the field root", () => {
     const wrapper = mount(Radio, {
       props: {
         id: "plan-pro",
@@ -219,12 +227,15 @@ describe("native boolean control contract", () => {
       },
     });
 
-    const root = wrapper.get("[data-dui-component='Radio']");
+    const fieldRoot = wrapper.get(".dui-InputWrapper");
+    const body = wrapper.get("[data-dui-component='Radio']");
     const input = wrapper.get("input");
-    expect(root.attributes("for")).toBe("plan-pro");
-    expect(root.classes()).toContain("consumer-root");
-    expect(root.attributes("style")).toContain("padding: 2px");
-    expect(root.attributes("data-size")).toBe("sm");
+    expect(body.attributes("for")).toBe("plan-pro");
+    expect(fieldRoot.classes()).toContain("consumer-root");
+    expect(fieldRoot.attributes("style")).toContain("padding: 2px");
+    expect(fieldRoot.attributes("data-size")).toBe("sm");
+    expect(body.classes()).not.toContain("consumer-root");
+    expect(body.attributes("data-size")).toBe("sm");
     expect(input.attributes("name")).toBe("plan");
     expect(input.attributes("data-probe")).toBe("radio");
     expect(input.classes()).not.toContain("consumer-root");
@@ -246,11 +257,15 @@ describe("native boolean control contract", () => {
       attachTo: document.body,
     });
 
-    const root = wrapper.get("[data-dui-component='Switch']");
+    const fieldRoot = wrapper.get(".dui-InputWrapper");
+    const body = wrapper.get("[data-dui-component='Switch']");
     const input = wrapper.get("input");
-    expect(root.classes()).toContain("consumer-root");
-    expect(root.attributes("data-size")).toBe("xl");
-    expect(root.attributes("data-disabled")).toBe("true");
+    expect(fieldRoot.classes()).toContain("consumer-root");
+    expect(fieldRoot.attributes("data-size")).toBe("xl");
+    expect(fieldRoot.attributes("data-disabled")).toBe("true");
+    expect(body.classes()).not.toContain("consumer-root");
+    expect(body.attributes("data-size")).toBe("xl");
+    expect(body.attributes("data-disabled")).toBe("true");
     expect(input.attributes("role")).toBe("switch");
     expect(input.attributes("aria-checked")).toBe("true");
     expect(input.attributes("name")).toBe("notifications");
