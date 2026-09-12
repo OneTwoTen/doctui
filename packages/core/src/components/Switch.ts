@@ -1,5 +1,12 @@
-import { defineComponent, h, type PropType, useId } from "vue";
+import { defineComponent, h, mergeProps, type PropType } from "vue";
 import type { Size } from "../theme/types";
+import {
+  composeDescribedBy,
+  getFieldRootStateAttrs,
+  getInputWrapperProps,
+  splitFieldAttrs,
+} from "./field-internals";
+import type { FieldClassNames, FieldStyles } from "./field-types";
 import { InputWrapper } from "./InputWrapper";
 
 export interface SwitchProps {
@@ -11,6 +18,8 @@ export interface SwitchProps {
   required?: boolean;
   disabled?: boolean;
   size?: Size;
+  classNames?: FieldClassNames;
+  styles?: FieldStyles;
 }
 
 export const Switch = defineComponent({
@@ -26,56 +35,103 @@ export const Switch = defineComponent({
     required: Boolean,
     disabled: Boolean,
     size: { type: String as PropType<Size>, default: "md" },
+    classNames: Object as PropType<FieldClassNames>,
+    styles: Object as PropType<FieldStyles>,
   },
   setup(props, { attrs, emit, slots }) {
-    const id = props.id ?? `dui-switch-${useId()}`;
-    return () =>
-      h(
-        InputWrapper,
-        {
-          id,
+    return () => {
+      const { rootAttrs, controlAttrs } = splitFieldAttrs(attrs);
 
-          ...(props.description === undefined
-            ? {}
-            : { description: props.description }),
-          ...(props.error === undefined ? {} : { error: props.error }),
-          required: props.required,
-        },
+      return h(
+        InputWrapper,
+        mergeProps(
+          getInputWrapperProps(props, false),
+          { classNames: props.classNames, styles: props.styles },
+          rootAttrs,
+          getFieldRootStateAttrs(props, "Switch"),
+        ),
         {
-          default: ({ describedBy }: { describedBy?: string }) =>
+          default: ({
+            id,
+            describedBy,
+          }: {
+            id: string;
+            describedBy?: string;
+          }) =>
             h(
               "label",
               {
-                class: ["dui-Switch", attrs.class],
+                class: ["dui-Switch", props.classNames?.body],
+                style: props.styles?.body,
+                for: id,
                 "data-dui-component": "Switch",
+                "data-checked": props.modelValue ? "true" : undefined,
                 "data-disabled": props.disabled ? "true" : undefined,
+                "data-error": props.error ? "true" : undefined,
+                "data-required": props.required ? "true" : undefined,
+                "data-size": props.size,
               },
               [
-                h("input", {
-                  ...attrs,
-                  id,
-                  type: "checkbox",
-                  role: "switch",
-                  checked: props.modelValue,
-                  disabled: props.disabled,
-                  required: props.required,
-                  "aria-checked": String(props.modelValue),
-                  "aria-invalid": props.error ? "true" : undefined,
-                  "aria-describedby": describedBy,
-                  class: "dui-Switch-input",
-                  onChange: (event: Event) =>
-                    emit(
-                      "update:modelValue",
-                      (event.target as HTMLInputElement).checked,
+                h(
+                  "input",
+                  mergeProps(controlAttrs, {
+                    id,
+                    type: "checkbox",
+                    role: "switch",
+                    checked: props.modelValue,
+                    disabled: props.disabled,
+                    required: props.required,
+                    "aria-checked": String(props.modelValue),
+                    "aria-invalid": props.error
+                      ? "true"
+                      : controlAttrs["aria-invalid"],
+                    "aria-describedby": composeDescribedBy(
+                      describedBy,
+                      controlAttrs["aria-describedby"],
                     ),
-                }),
-                slots.default?.() ??
-                  (props.label
-                    ? [props.label, props.required ? " *" : null]
-                    : undefined),
+                    class: ["dui-Switch-input", props.classNames?.input],
+                    style: props.styles?.input,
+                    onChange: (event: Event) =>
+                      emit(
+                        "update:modelValue",
+                        (event.target as HTMLInputElement).checked,
+                      ),
+                  }),
+                ),
+                h(
+                  "span",
+                  {
+                    class: ["dui-Switch-track", props.classNames?.track],
+                    style: props.styles?.track,
+                    "aria-hidden": "true",
+                  },
+                  [
+                    h("span", {
+                      class: ["dui-Switch-thumb", props.classNames?.thumb],
+                      style: props.styles?.thumb,
+                    }),
+                  ],
+                ),
+                h(
+                  "span",
+                  {
+                    class: ["dui-Switch-label", props.classNames?.labelText],
+                    style: props.styles?.labelText,
+                  },
+                  slots.default?.() ??
+                    (props.label
+                      ? [
+                          props.label,
+                          props.required
+                            ? h("span", { "aria-hidden": "true" }, " *")
+                            : null,
+                        ]
+                      : undefined),
+                ),
               ],
             ),
         },
       );
+    };
   },
 });

@@ -12,4 +12,10 @@ alwaysApply: false
 - Dark/light modes must be expressed through token values.
 - Keep selectors shallow and avoid global leakage.
 - Do not encode behavior in class names.
-- Interactive states should be observable through attributes where useful: `data-disabled`, `data-active`, `data-loading`, etc.
+- Interactive states should be observable through attributes where useful: `data-disabled`, `data-active`, `data-loading`, `data-error`, `data-readonly`, `data-checked`, etc.
+- A public `size` prop must scale meaningful component geometry, not only font size. Prefer CSS variables for height, padding, indicator, section, track/thumb and related dimensions.
+- For multi-part components, expose a stable part-based customization API (`classNames`/`styles`) when consumers reasonably need to target internal visual regions. Keep part names consistent across component families.
+- Treat public CSS variables, stable state attributes and documented style-part names as compatibility surface; avoid casual renames.
+- When custom visuals replace browser appearance, retain the native semantic/focusable element whenever possible and style a separate visual surface from its native state.
+- Prefer colocated component/family CSS for new or substantially refactored styling instead of continually growing a single monolithic stylesheet. The package may still bundle those files into one public `styles.css` artifact.
+- Reference libraries such as Mantine should be compared on geometry, visual states, focus treatment and customization contracts as well as prop names; reimplement those ideas with doctui tokens and Vue-native APIs.

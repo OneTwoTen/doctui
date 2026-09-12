@@ -9,12 +9,30 @@ Review in this order:
 1. Public API: consistency, unnecessary props, Vue idioms, breaking changes.
 2. Semantics/accessibility: native semantics, keyboard model, focus, labels, disabled state.
 3. Architecture: duplicated primitives, state ownership, composable boundaries.
-4. Theme/styling: token use, CSS variable contract, state attributes, dark mode.
+4. Theme/styling: token use, CSS variable contract, state attributes, dark mode, geometry across sizes and supported style parts.
 5. Behavior: controlled/uncontrolled transitions, edge states, async/loading cases.
 6. Tests: critical user flows, keyboard/focus, regression coverage, and whether observable behavior or bug fixes were driven by a failing test first where practical.
 7. VitePress docs: public API accuracy and sufficient copy-paste examples for meaningful variants/states/customization paths.
 8. Storybook docs: basic coverage, variants/states, interaction coverage, theming examples and advanced multi-component composition when applicable.
 9. Dependencies/performance: unnecessary packages, listeners, watchers and DOM work.
+
+## Field/input review rule
+
+When reviewing an input-like component, explicitly verify all of the following before approving:
+
+- `InputWrapper` or the equivalent shared primitive owns generated IDs and label/description/error relationships; field implementations do not create a second relationship system.
+- Consumer `class`/`style` land on the outer field root, while native form/autofill/ARIA/data attributes and native listeners land on the real native control.
+- `inheritAttrs: false` is used when attr ownership is split across multiple DOM nodes.
+- A public `size` changes real geometry (height, padding, indicator, section, track/thumb, hit area as relevant) rather than only text size.
+- Size/state geometry is token/CSS-variable driven and remains coherent across `xs/sm/md/lg/xl`.
+- Error, disabled, readonly, selected/checked and focus-visible styling is complete and consistent; focus/error precedence is deliberate.
+- Custom Checkbox/Radio/Switch visuals preserve a real native input for keyboard, focus, form and accessibility semantics.
+- Multi-part customization uses the shared typed `classNames`/`styles` vocabulary instead of undocumented deep selectors or one-off props.
+- Public CSS variables and style-part names are documented and treated as compatibility surface.
+- Tests cover attrs/listener forwarding, custom IDs, description + error composition, required/disabled/readonly behavior and focus. Custom boolean visuals must also prove native type/name/checked/disabled semantics remain intact.
+- Storybook contains a size/state matrix plus realistic composition; VitePress and metadata describe the same final contract.
+
+When Mantine or another mature library is used as reference, compare interaction, geometry, visual state, focus treatment and customization ergonomics. Do not rate parity based only on similarly named props.
 
 ## Test-first review rule
 
@@ -41,6 +59,7 @@ Check that VitePress covers the user-facing concepts introduced or changed by th
 - important states,
 - slots and `v-model`/events,
 - theming and CSS-variable customization,
+- part-based `classNames`/`styles` customization when public,
 - contextual/nested behavior.
 
 Check that Storybook goes beyond a default story and covers where applicable:

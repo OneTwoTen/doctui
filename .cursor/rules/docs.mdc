@@ -8,6 +8,14 @@ alwaysApply: false
 - Public examples must use idiomatic Vue and compile.
 - Each public component needs basic usage plus its important variants and states.
 - Storybook should demonstrate behavior, not just static appearance.
+- Every public component story module must register the actual component in Storybook metadata and expose functional `args`/`argTypes` Controls for the meaningful public props. The primary `Basic`/`Default`/`Playground` story must consume `args`; a primary story showing `This story has no controls` is a documentation failure.
+- Do not add decorative Controls that the story render ignores. Matrix/composition stories may override individual props, but the primary interactive story must respond to Controls.
 - Document accessibility/keyboard behavior for custom interactive widgets.
 - Keep docs metadata structured enough to generate API pages and `llms.txt` later.
 - Do not copy Mantine prose verbatim; describe doctui's actual Vue API and behavior.
+- Public component work normally requires both VitePress and Storybook. Neither surface replaces the other.
+- Storybook should include a realistic advanced composition once related doctui components exist; do not call a single isolated component with many props an advanced example.
+- Components with `size` should have a visual size comparison when geometry is meaningful. Input-like components should show important normal/focus/error/disabled/readonly/checked states as applicable.
+- When `classNames`/`styles` or public CSS variables are exposed, document at least one supported customization example instead of recommending deep selectors.
+- Field docs must state the outer-root versus native-control attribute contract and show accessibility relationships such as labels, description/error and `aria-describedby` composition.
+- Keep component metadata synchronized with every documented public prop, style part and non-obvious accessibility behavior.
