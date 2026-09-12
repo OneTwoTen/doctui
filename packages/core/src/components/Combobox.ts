@@ -277,11 +277,10 @@ export const Combobox = defineComponent({
     watch(activeIndex, (index) => {
       if (!open.value || index < 0) return;
       void nextTick(() => {
-        listbox.value
-          ?.querySelector<HTMLElement>(
-            `[data-dui-combobox-option-index="${index}"]`,
-          )
-          ?.scrollIntoView({ block: "nearest" });
+        const activeOption = listbox.value?.querySelector<HTMLElement>(
+          `[data-dui-combobox-option-index="${index}"]`,
+        );
+        activeOption?.scrollIntoView?.({ block: "nearest" });
       });
     });
 
