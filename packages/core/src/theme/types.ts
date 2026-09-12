@@ -59,7 +59,5 @@ export interface DoctuiThemeOverride {
   shadows?: Partial<Record<Size, string>>;
   breakpoints?: Partial<Record<Size, string>>;
   zIndex?: Partial<DoctuiZIndexScale>;
-  colors?: Partial<
-    Record<DoctuiColorScheme, Partial<DoctuiSemanticColors>>
-  >;
+  colors?: Partial<Record<DoctuiColorScheme, Partial<DoctuiSemanticColors>>>;
 }

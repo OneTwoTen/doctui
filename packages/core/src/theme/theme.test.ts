@@ -1,9 +1,9 @@
 import { mount } from "@vue/test-utils";
-import { defineComponent, h } from "vue";
 import { describe, expect, it } from "vitest";
-import { DoctuiProvider } from "./DoctuiProvider";
-import { getThemeCssVariables } from "./css-variables";
+import { defineComponent, h } from "vue";
 import { createTheme } from "./create-theme";
+import { getThemeCssVariables } from "./css-variables";
+import { DoctuiProvider } from "./DoctuiProvider";
 import { DEFAULT_THEME } from "./default-theme";
 import { mergeTheme } from "./merge-theme";
 

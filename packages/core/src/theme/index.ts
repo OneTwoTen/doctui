@@ -1,9 +1,9 @@
-export { DoctuiProvider } from "./DoctuiProvider";
 export {
   useDoctuiColorScheme,
   useDoctuiTheme,
 } from "./context";
 export { createTheme } from "./create-theme";
+export { DoctuiProvider } from "./DoctuiProvider";
 export { DEFAULT_THEME } from "./default-theme";
 export type {
   Color,

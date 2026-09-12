@@ -1,7 +1,7 @@
 import {
   createTheme,
-  DoctuiProvider,
   type DoctuiColorScheme,
+  DoctuiProvider,
 } from "@doctui/core";
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import { h } from "vue";
@@ -27,10 +27,7 @@ const customTheme = createTheme({
   },
 });
 
-function renderPreview(
-  colorScheme: DoctuiColorScheme,
-  theme = createTheme(),
-) {
+function renderPreview(colorScheme: DoctuiColorScheme, theme = createTheme()) {
   return () => ({
     setup() {
       return () =>

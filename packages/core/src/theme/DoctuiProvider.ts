@@ -3,8 +3,8 @@ import {
   defineComponent,
   h,
   inject,
-  provide,
   type PropType,
+  provide,
 } from "vue";
 import { DOCTUI_CONTEXT_KEY } from "./context";
 import { getThemeCssVariables } from "./css-variables";

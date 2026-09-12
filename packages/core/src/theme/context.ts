@@ -1,9 +1,4 @@
-import {
-  computed,
-  inject,
-  type ComputedRef,
-  type InjectionKey,
-} from "vue";
+import { type ComputedRef, computed, type InjectionKey, inject } from "vue";
 import { DEFAULT_THEME } from "./default-theme";
 import type { DoctuiColorScheme, DoctuiTheme } from "./types";
 
