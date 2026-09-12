@@ -42,13 +42,16 @@ Initial baseline:
 ```text
 Bun 1.4
 Vue 3.5 stable
-TypeScript 6
+TypeScript 7
+Biome 2.5
 Vite 8.1
 Vitest 5
 Storybook 10.6
 VitePress stable 1.x
 GitHub Actions + GitHub Pages
 ```
+
+TypeScript 7 is the project baseline. Vue SFC tooling may temporarily use an isolated TypeScript 6 compatibility bridge until native TypeScript 7 integration is available; that compatibility layer does not change the project baseline.
 
 ## Infrastructure direction
 
