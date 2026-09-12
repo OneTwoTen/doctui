@@ -13,6 +13,7 @@ A Vue 3 UI component system inspired by the developer experience of Mantine, imp
 - LLM-friendly documentation with generated `llms.txt` / `llms-full.txt`.
 - MCP support for structured AI access to components, APIs and docs.
 - Small, composable internal primitives instead of duplicated interaction logic.
+- GitHub-first infrastructure with no required project-owned VPS or always-on backend.
 
 ## Intended workspace
 
@@ -31,6 +32,26 @@ scripts/
 ```
 
 Packages should be created when implementation work actually requires them; the layout above describes the target monorepo.
+
+## Infrastructure direction
+
+The default public infrastructure is intentionally zero-VPS:
+
+```text
+GitHub repository
+      ↓
+GitHub Actions
+      ↓
+├── CI / tests / builds
+├── docs + Storybook generation
+├── metadata + llms generation
+├── releases
+└── GitHub Pages deployment
+```
+
+VitePress, Storybook, metadata and LLM docs should be deployable as static assets to GitHub Pages. Normal CI should use GitHub-hosted runners. `@doctui/mcp-server` is intended to run locally for consumers rather than requiring a doctui-owned always-on MCP backend.
+
+See [`docs/INFRASTRUCTURE.md`](./docs/INFRASTRUCTURE.md) for the full policy.
 
 ## Roadmap
 
