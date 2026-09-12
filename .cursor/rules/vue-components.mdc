@@ -1,0 +1,16 @@
+---
+description: Vue component API conventions for doctui core components
+globs: "packages/**/*.vue,packages/**/*.ts"
+alwaysApply: false
+---
+# Vue component conventions
+
+- Use Vue 3 Composition API and TypeScript.
+- Primary two-way value uses `modelValue` and `update:modelValue`.
+- Prefer slots over props that pass renderable UI fragments.
+- Reuse shared `size`, `radius`, `color`, `variant` and polymorphic types when available.
+- Avoid exposing DOM/internal implementation state as public API.
+- Keep state logic in composables when it is reusable by more than one component.
+- Emit meaningful user-facing events only.
+- Preserve native HTML semantics when a native element can express the behavior.
+- Use stable `data-*` state attributes when consumers need styling hooks.
