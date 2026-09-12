@@ -31,7 +31,8 @@ export const SegmentedControl = defineComponent({
   },
   setup(props, { attrs, emit }) {
     const isEnabled = (index: number) =>
-      !props.disabled && Boolean(props.data[index] && !props.data[index]?.disabled);
+      !props.disabled &&
+      Boolean(props.data[index] && !props.data[index]?.disabled);
 
     const firstEnabledIndex = () =>
       props.data.findIndex((_option, index) => isEnabled(index));
