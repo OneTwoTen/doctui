@@ -86,7 +86,10 @@ describe("Combobox focus-managed listbox contract", () => {
 
     await input.trigger("keydown", { key: "ArrowDown" });
     await nextTick();
-    expect(document.getElementById(input.attributes("aria-activedescendant"))?.textContent).toContain("Two");
+    expect(
+      document.getElementById(input.attributes("aria-activedescendant"))
+        ?.textContent,
+    ).toContain("Two");
     expect(scrollIntoView).toHaveBeenCalled();
     expect(document.activeElement).toBe(input.element);
 
@@ -163,7 +166,9 @@ describe("Combobox focus-managed listbox contract", () => {
     await disabled.trigger("mouseenter");
 
     const activeId = input.attributes("aria-activedescendant");
-    expect(document.getElementById(activeId)?.textContent).not.toContain("Beta");
+    expect(document.getElementById(activeId)?.textContent).not.toContain(
+      "Beta",
+    );
   });
 });
 
@@ -206,9 +211,9 @@ describe("Combobox wrapper parity", () => {
     await input.trigger("focus");
     const options = wrapper.findAll("[role='option']");
     expect(
-      options.find((option) => option.text().includes("Delta"))?.attributes(
-        "aria-selected",
-      ),
+      options
+        .find((option) => option.text().includes("Delta"))
+        ?.attributes("aria-selected"),
     ).toBe("true");
   });
 
