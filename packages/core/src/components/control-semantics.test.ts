@@ -157,4 +157,23 @@ describe("native boolean and radio controls", () => {
     expect(toggle.get("input").attributes("role")).toBe("switch");
     expect(toggle.get("input").attributes("name")).toBe("alerts");
   });
+
+  it("exposes size and disabled state consistently on control roots", () => {
+    const checkbox = mount(Checkbox, {
+      props: { label: "Accept", size: "sm", disabled: true },
+    });
+    const radio = mount(Radio, {
+      props: { label: "Pro", value: "pro", size: "lg", disabled: true },
+    });
+    const toggle = mount(Switch, {
+      props: { label: "Alerts", size: "xl", disabled: true },
+    });
+
+    expect(checkbox.get("label").attributes("data-size")).toBe("sm");
+    expect(checkbox.get("label").attributes("data-disabled")).toBe("true");
+    expect(radio.get("label").attributes("data-size")).toBe("lg");
+    expect(radio.get("label").attributes("data-disabled")).toBe("true");
+    expect(toggle.get("label").attributes("data-size")).toBe("xl");
+    expect(toggle.get("label").attributes("data-disabled")).toBe("true");
+  });
 });
