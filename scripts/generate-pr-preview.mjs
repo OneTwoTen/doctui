@@ -122,8 +122,14 @@ async function writePrPage(outputDirectory) {
 
   await mkdir(outputDirectory, { recursive: true });
   await Promise.all([
-    writeFile(join(outputDirectory, "index.html"), renderPrPreviewPage(metadata)),
-    writeFile(join(outputDirectory, "metadata.json"), `${JSON.stringify(metadata, null, 2)}\n`),
+    writeFile(
+      join(outputDirectory, "index.html"),
+      renderPrPreviewPage(metadata),
+    ),
+    writeFile(
+      join(outputDirectory, "metadata.json"),
+      `${JSON.stringify(metadata, null, 2)}\n`,
+    ),
   ]);
 }
 
@@ -139,7 +145,10 @@ async function writeDashboard(previewsDirectory, outputFile) {
 
     try {
       const metadata = JSON.parse(
-        await readFile(join(previewsDirectory, entry.name, "metadata.json"), "utf8"),
+        await readFile(
+          join(previewsDirectory, entry.name, "metadata.json"),
+          "utf8",
+        ),
       );
       previews.push(metadata);
     } catch {
@@ -169,6 +178,9 @@ async function main() {
   );
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(process.argv[1]).href
+) {
   await main();
 }

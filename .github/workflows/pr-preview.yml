@@ -26,7 +26,7 @@ jobs:
       github.event.action != 'closed' &&
       github.event.pull_request.head.repo.full_name == github.repository
     environment:
-      name: github-pages
+      name: pr-preview
       url: ${{ steps.deployment.outputs.page_url }}previews/pr-${{ github.event.number }}/
     runs-on: ubuntu-latest
     timeout-minutes: 25
@@ -175,7 +175,7 @@ jobs:
       github.event.action == 'closed' &&
       github.event.pull_request.head.repo.full_name == github.repository
     environment:
-      name: github-pages
+      name: pr-preview
       url: ${{ steps.deployment.outputs.page_url }}previews/
     runs-on: ubuntu-latest
     timeout-minutes: 20

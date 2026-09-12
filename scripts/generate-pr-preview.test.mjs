@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
-  renderPrPreviewPage,
   renderPreviewDashboard,
+  renderPrPreviewPage,
 } from "./generate-pr-preview.mjs";
 
 describe("PR preview pages", () => {
