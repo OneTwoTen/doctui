@@ -21,7 +21,7 @@ The machine-readable ID is the contract. Human-facing labels may be presented in
 
 ## Storybook mapping
 
-Component stories use `Category/Component` paths derived from the metadata registry:
+Component stories use `Category/Component` paths:
 
 - `Layout/Box`
 - `Layout/Flex`
@@ -33,6 +33,8 @@ Component stories use `Category/Component` paths derived from the metadata regis
 
 Cross-component examples live under `Recipes/...` instead of pretending to be component categories.
 
+Storybook 10 requires CSF titles and `storySort` configuration to be statically analyzable, so Storybook keeps literal labels in its source files. Tests compare those literals against the canonical metadata registry so the human navigation cannot silently drift from the machine-readable taxonomy.
+
 ## Metadata source
 
 `@doctui/core` exports:
@@ -43,4 +45,4 @@ Cross-component examples live under `Recipes/...` instead of pretending to be co
 - `getComponentMetadata()`
 - `getComponentStorybookTitle()`
 
-Future MCP and registry endpoints should consume these exports rather than maintaining a second category list. That keeps Storybook, docs, and machine discovery aligned as the component set grows.
+Future MCP and registry endpoints should consume these exports rather than maintaining a second machine-readable category list. That keeps Storybook, docs, and machine discovery aligned as the component set grows.
