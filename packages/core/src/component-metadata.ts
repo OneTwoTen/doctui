@@ -2,37 +2,44 @@ export const DOCTUI_COMPONENT_CATEGORIES = [
   {
     id: "layout",
     label: "Layout",
-    description: "Primitives for structure, spacing, alignment, and responsive layout.",
+    description:
+      "Primitives for structure, spacing, alignment, and responsive layout.",
   },
   {
     id: "typography",
     label: "Typography",
-    description: "Components for semantic text, headings, and readable content.",
+    description:
+      "Components for semantic text, headings, and readable content.",
   },
   {
     id: "actions",
     label: "Actions",
-    description: "Controls that trigger user actions, commands, and primary interactions.",
+    description:
+      "Controls that trigger user actions, commands, and primary interactions.",
   },
   {
     id: "inputs",
     label: "Inputs",
-    description: "Form controls for collecting and editing user-provided values.",
+    description:
+      "Form controls for collecting and editing user-provided values.",
   },
   {
     id: "navigation",
     label: "Navigation",
-    description: "Components that move users between views, sections, and destinations.",
+    description:
+      "Components that move users between views, sections, and destinations.",
   },
   {
     id: "data-display",
     label: "Data display",
-    description: "Components for presenting structured values, status, and information.",
+    description:
+      "Components for presenting structured values, status, and information.",
   },
   {
     id: "feedback",
     label: "Feedback",
-    description: "Loading, progress, validation, empty-state, and status feedback.",
+    description:
+      "Loading, progress, validation, empty-state, and status feedback.",
   },
   {
     id: "overlays",
@@ -42,12 +49,14 @@ export const DOCTUI_COMPONENT_CATEGORIES = [
   {
     id: "media",
     label: "Media",
-    description: "Components for images, icons, avatars, and other visual media.",
+    description:
+      "Components for images, icons, avatars, and other visual media.",
   },
   {
     id: "utilities",
     label: "Utilities",
-    description: "Low-level helpers that support composition without defining a major UI domain.",
+    description:
+      "Low-level helpers that support composition without defining a major UI domain.",
   },
 ] as const;
 
