@@ -78,8 +78,7 @@ describe("theme foundation", () => {
   it("allows consumer CSS variables to override provider defaults", () => {
     const wrapper = mount(DoctuiProvider, {
       attrs: {
-        style:
-          "--dui-spacing-md: 3rem; --dui-color-primary-filled: #111827;",
+        style: "--dui-spacing-md: 3rem; --dui-color-primary-filled: #111827;",
       },
       slots: { default: "content" },
     });
