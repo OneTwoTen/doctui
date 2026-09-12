@@ -3,7 +3,10 @@ import { describe, expect, it } from "vitest";
 
 describe("documentation style entrypoints", () => {
   it("loads the published doctui stylesheet in Storybook", async () => {
-    const preview = await readFile("apps/storybook/.storybook/preview.ts", "utf8");
+    const preview = await readFile(
+      "apps/storybook/.storybook/preview.ts",
+      "utf8",
+    );
 
     expect(preview).toContain('import "@doctui/core/styles.css";');
   });
