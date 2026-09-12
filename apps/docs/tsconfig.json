@@ -3,5 +3,9 @@
   "compilerOptions": {
     "types": ["node"]
   },
-  "include": [".vitepress/**/*.ts", ".vitepress/**/*.mts"]
+  "include": [
+    ".vitepress/**/*.ts",
+    ".vitepress/**/*.mts",
+    "../../types/**/*.d.ts"
+  ]
 }

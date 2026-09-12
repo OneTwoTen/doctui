@@ -3,5 +3,10 @@
   "compilerOptions": {
     "types": ["node"]
   },
-  "include": [".storybook/**/*.ts", "stories/**/*.ts", "types.d.ts"]
+  "include": [
+    ".storybook/**/*.ts",
+    "stories/**/*.ts",
+    "types.d.ts",
+    "../../types/**/*.d.ts"
+  ]
 }

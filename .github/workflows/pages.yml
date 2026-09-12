@@ -54,6 +54,22 @@ jobs:
           mkdir -p apps/docs/.vitepress/dist/storybook
           cp -R apps/storybook/storybook-static/. apps/docs/.vitepress/dist/storybook/
 
+      - name: Mount stored PR previews
+        run: |
+          mkdir -p apps/docs/.vitepress/dist/previews
+
+          if git ls-remote --exit-code origin refs/heads/pr-previews >/dev/null 2>&1; then
+            git clone --depth 1 --branch pr-previews \
+              "https://github.com/${GITHUB_REPOSITORY}.git" \
+              "${RUNNER_TEMP}/pr-previews"
+            find "${RUNNER_TEMP}/pr-previews" -mindepth 1 -maxdepth 1 \
+              -type d -name 'pr-*' -exec cp -R {} apps/docs/.vitepress/dist/previews/ \;
+          fi
+
+          node scripts/generate-pr-preview.mjs dashboard \
+            apps/docs/.vitepress/dist/previews \
+            apps/docs/.vitepress/dist/previews/index.html
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:

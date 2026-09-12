@@ -11,6 +11,7 @@ export default defineConfig({
       entry,
       formats: ["es"],
       fileName: "index",
+      cssFileName: "styles",
     },
     rollupOptions: {
       external: ["vue"],
