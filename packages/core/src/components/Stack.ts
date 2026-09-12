@@ -1,6 +1,7 @@
 import { defineComponent, h, type PropType } from "vue";
 import type { Size } from "../theme/types";
-import { Flex, type FlexAlign, type FlexJustify } from "./Flex";
+import type { FlexAlign, FlexJustify } from "./Flex";
+import { getFlexStyle } from "./flex-internals";
 
 export interface StackProps {
   as?: string;
@@ -21,18 +22,23 @@ export const Stack = defineComponent({
   setup(props, { attrs, slots }) {
     return () =>
       h(
-        Flex,
+        props.as,
         {
           ...attrs,
-          as: props.as,
-          gap: props.gap,
-          direction: "column",
-          align: props.align,
-          justify: props.justify,
           "data-dui-component": "Stack",
           class: ["dui-Stack", attrs.class],
+          style: [
+            attrs.style,
+            getFlexStyle(
+              props.gap,
+              "column",
+              props.align,
+              props.justify,
+              "nowrap",
+            ),
+          ],
         },
-        slots,
+        slots.default?.(),
       );
   },
 });

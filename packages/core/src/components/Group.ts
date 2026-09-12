@@ -1,6 +1,7 @@
 import { defineComponent, h, type PropType } from "vue";
 import type { Size } from "../theme/types";
-import { Flex, type FlexAlign, type FlexJustify } from "./Flex";
+import type { FlexAlign, FlexJustify } from "./Flex";
+import { getFlexStyle } from "./flex-internals";
 
 export interface GroupProps {
   as?: string;
@@ -23,19 +24,23 @@ export const Group = defineComponent({
   setup(props, { attrs, slots }) {
     return () =>
       h(
-        Flex,
+        props.as,
         {
           ...attrs,
-          as: props.as,
-          gap: props.gap,
-          direction: "row",
-          align: props.align,
-          justify: props.justify,
-          wrap: props.wrap ? "wrap" : "nowrap",
           "data-dui-component": "Group",
           class: ["dui-Group", attrs.class],
+          style: [
+            attrs.style,
+            getFlexStyle(
+              props.gap,
+              "row",
+              props.align,
+              props.justify,
+              props.wrap ? "wrap" : "nowrap",
+            ),
+          ],
         },
-        slots,
+        slots.default?.(),
       );
   },
 });

@@ -1,22 +1,19 @@
 import { defineComponent, h, type PropType } from "vue";
 import type { Size } from "../theme/types";
-import { spacingToken } from "./shared";
+import {
+  type FlexAlign,
+  type FlexDirection,
+  type FlexJustify,
+  type FlexWrap,
+  getFlexStyle,
+} from "./flex-internals";
 
-export type FlexDirection = "row" | "row-reverse" | "column" | "column-reverse";
-export type FlexAlign =
-  | "stretch"
-  | "flex-start"
-  | "center"
-  | "flex-end"
-  | "baseline";
-export type FlexJustify =
-  | "flex-start"
-  | "center"
-  | "flex-end"
-  | "space-between"
-  | "space-around"
-  | "space-evenly";
-export type FlexWrap = "nowrap" | "wrap" | "wrap-reverse";
+export type {
+  FlexAlign,
+  FlexDirection,
+  FlexJustify,
+  FlexWrap,
+} from "./flex-internals";
 
 export interface FlexProps {
   as?: string;
@@ -48,14 +45,13 @@ export const Flex = defineComponent({
           class: ["dui-Flex", attrs.class],
           style: [
             attrs.style,
-            {
-              display: "flex",
-              gap: spacingToken(props.gap),
-              flexDirection: props.direction,
-              alignItems: props.align,
-              justifyContent: props.justify,
-              flexWrap: props.wrap,
-            },
+            getFlexStyle(
+              props.gap,
+              props.direction,
+              props.align,
+              props.justify,
+              props.wrap,
+            ),
           ],
         },
         slots.default?.(),
