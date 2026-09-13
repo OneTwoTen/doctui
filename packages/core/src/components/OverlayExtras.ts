@@ -40,6 +40,7 @@ export const Drawer = defineComponent({
                   DismissableLayer,
                   {
                     closeOnEscape: props.closeOnEscape,
+                    onEscape: close,
                     ...(props.closeOnClickOutside ? { onOutside: close } : {}),
                   },
                   {
@@ -57,7 +58,8 @@ export const Drawer = defineComponent({
                                 : undefined,
                               "aria-label": props.title
                                 ? undefined
-                                : props.ariaLabel,
+                                : (props.ariaLabel ?? "Drawer"),
+                              "data-dui-component": "Drawer",
                               class: ["dui-Drawer", attrs.class],
                               "data-position": props.position,
                               "data-size": props.size,

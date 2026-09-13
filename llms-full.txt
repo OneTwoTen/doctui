@@ -28,7 +28,7 @@ Generated component and package reference for doctui 0.0.0.
 - DatePicker (@doctui/dates): Date input with an optional calendar selection panel.
 - DateTimePicker (@doctui/dates): Native date-time input with Vue v-model support.
 - Divider (@doctui/core): Separator for related content with optional label content.
-- Drawer (@doctui/core): Accessible side panel with shared overlay and focus behavior.
+- Drawer (@doctui/core): Accessible side dialog with shared overlay, nested-layer dismissal and focus restoration.
 - Flex (@doctui/core): Flexbox layout primitive with theme-token gaps.
 - Grid (@doctui/core): CSS grid layout primitive with token-backed gaps and columns.
 - Group (@doctui/core): Horizontal wrapping layout for related controls and content.
@@ -36,12 +36,12 @@ Generated component and package reference for doctui 0.0.0.
 - Kbd (@doctui/core): Semantic keyboard shortcut label.
 - Loader (@doctui/core): Animated progress indicator for an indeterminate operation.
 - Menu (@doctui/core): Keyboard-navigable menu built from native menu item buttons.
-- Modal (@doctui/core): Accessible dialog with portal, focus trap, Escape dismissal and focus restoration.
+- Modal (@doctui/core): Accessible modal dialog with nested-layer dismissal, reference-counted scroll lock and focus restoration.
 - MonthPicker (@doctui/dates): Month selection control that emits YYYY-MM values.
 - MultiSelect (@doctui/core): Searchable multi-value selection control backed by the shared Combobox engine.
 - Notifications (@doctui/notifications): Accessible renderer for notifications managed by a store.
 - NumberInput (@doctui/core): Native numeric input with numeric v-model values and range constraints.
-- Overlay (@doctui/core): Portal-backed backdrop with controlled visibility and dismissal.
+- Overlay (@doctui/core): Portal-backed semantic-color backdrop with controlled visibility and dismissal.
 - Paper (@doctui/core): Surface container with optional border, radius and shadow.
 - PasswordInput (@doctui/core): Password field built on the shared TextInput contract.
 - Popover (@doctui/core): Dismissable contextual panel anchored to a target slot.
@@ -222,11 +222,14 @@ Accessibility: Uses role=separator and exposes its orientation.
 
 Package: `@doctui/core`
 
-Accessible side panel with shared overlay and focus behavior.
+Accessible side dialog with shared overlay, nested-layer dismissal and focus restoration.
 
 Props: `modelValue`, `title`, `ariaLabel`, `position`, `size`, `radius`, `closeOnEscape`, `closeOnClickOutside`, `withCloseButton`.
 
-Accessibility: Uses a modal dialog, focus trap, Escape dismissal and focus restoration.
+Accessibility: Uses role=dialog and aria-modal, traps focus, closes on Escape when enabled and restores the trigger on close.
+Accessibility: A visible title provides aria-labelledby; ariaLabel names titleless drawers, with Drawer as a safety fallback.
+Accessibility: Shared scroll locking is reference-counted so closing one nested layer never unlocks the page under another open layer.
+Example: <Drawer v-model="open" title="Filters" position="right" size="md">...</Drawer>
 
 ### Flex
 
@@ -300,11 +303,15 @@ Accessibility: Uses menu/menuitem roles and supports Arrow, Home, End and Escape
 
 Package: `@doctui/core`
 
-Accessible dialog with portal, focus trap, Escape dismissal and focus restoration.
+Accessible modal dialog with nested-layer dismissal, reference-counted scroll lock and focus restoration.
 
 Props: `modelValue`, `title`, `ariaLabel`, `size`, `radius`, `centered`, `closeOnEscape`, `closeOnClickOutside`, `withCloseButton`.
 
 Accessibility: Uses role=dialog and aria-modal, traps focus while open, and restores the previously focused element on close.
+Accessibility: A visible title provides aria-labelledby; ariaLabel names titleless dialogs, with Dialog as a safety fallback.
+Accessibility: Only the top dismissable layer reacts to Escape or outside pointer interaction when dialogs are nested.
+Example: <Modal v-model="open" title="Review changes" size="lg" centered>...</Modal>
+Example: <Modal v-model="open" aria-label="Confirm publish" :close-on-click-outside="false">...</Modal>
 
 ### MonthPicker
 
@@ -354,11 +361,13 @@ Example: <NumberInput v-model="quantity" label="Quantity" :min="1" :max="10" siz
 
 Package: `@doctui/core`
 
-Portal-backed backdrop with controlled visibility and dismissal.
+Portal-backed semantic-color backdrop with controlled visibility and dismissal.
 
 Props: `modelValue`, `color`, `opacity`, `closeOnClick`.
 
-Accessibility: Backdrop is not a replacement for a modal dialog; provide an accessible surface inside it.
+Accessibility: Backdrop color uses semantic theme tokens and opacity affects only the backdrop, never dialog content.
+Accessibility: Overlay is a layering primitive, not a dialog; accessible dialog naming and focus management belong to Modal or Drawer.
+Example: <Overlay v-model="open" color="neutral" :opacity="0.55"><div>Surface</div></Overlay>
 
 ### Paper
 

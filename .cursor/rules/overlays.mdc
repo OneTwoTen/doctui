@@ -1,0 +1,46 @@
+---
+description: Shared contract for doctui overlay, dialog, focus, dismissal and scroll-lock behavior
+globs: "packages/core/src/components/{Overlay,Modal,OverlayExtras}*.ts,packages/core/src/primitives/{DismissableLayer,FocusTrap,useScrollLock}*.ts,apps/storybook/stories/{modal,overlay-extras}.stories.ts,apps/docs/guide/overlays.md"
+alwaysApply: false
+---
+# Overlay and dialog contract
+
+Apply these rules to Modal, Drawer, Overlay and the primitives they share.
+
+## Dismissal stack
+
+- Escape and outside-pointer dismissal must be coordinated through the shared dismissable-layer stack. Only the top active layer may dismiss in response to a global interaction.
+- `closeOnEscape` and `closeOnClickOutside` are independent public behaviors. Wire the matching callback as well as the flag; a boolean prop that never reaches a dismissal handler is incomplete.
+- Nested overlay tests must verify that the child closes first and the parent remains open.
+
+## Focus
+
+- Modal-like surfaces must trap focus while active and restore focus to the element that opened that specific layer when they close.
+- Nested layers restore focus one level at a time: child trigger first, then parent trigger when the parent closes.
+- Prefer native focusable controls. Never solve focus trapping by making the entire page inert without proving the nested restoration behavior.
+
+## Scroll locking
+
+- Scroll locking is reference-counted globally but acquisition/release ownership is per hook instance.
+- One instance may acquire at most once and release at most once. A false transition followed by unmount must not decrement twice.
+- Preserve the body's original inline overflow value when the first lock starts and restore it only after the final lock releases.
+
+## Accessible naming
+
+- Every element with `role="dialog"` must have an accessible name.
+- A visible `title` should generate `aria-labelledby` and takes precedence over `ariaLabel`.
+- `ariaLabel` is the explicit titleless-dialog path. Safety fallbacks may prevent unnamed dialogs but must not replace documenting the explicit naming paths.
+
+## Visual and theme contract
+
+- Public `size`, `position`, `radius`, `centered`, `color`, and `opacity` props must map to observable geometry/state or semantic theme variables.
+- Backdrop opacity must affect only the backdrop color, never the overlay's child content.
+- Overlay-family layering must use `--dui-z-index-*` theme variables. Do not add literal z-index numbers in component styles.
+- Modal and Drawer size scales must cover `xs`, `sm`, `md`, `lg`, and `xl` with real width changes.
+
+## Tests and documentation
+
+- Start overlay behavior fixes with failing regression tests before implementation when practical.
+- Cover Escape enabled/disabled, outside click enabled/disabled, nested ordering, focus restoration, reference-counted scroll lock, accessible names, sizing, backdrop tokens and z-index tokens.
+- Storybook must include interaction-oriented states and at least one realistic nested composition when multiple overlay surfaces interact.
+- VitePress and metadata must document the same naming, dismissal, focus, scroll-lock, sizing and layering contract.

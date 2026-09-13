@@ -241,17 +241,21 @@ export const DOCTUI_COMPONENT_METADATA: readonly ComponentMetadataEntry[] = [
     name: "Overlay",
     category: "overlays",
     description:
-      "Portal-backed backdrop with controlled visibility and dismissal.",
+      "Portal-backed semantic-color backdrop with controlled visibility and dismissal.",
     props: ["modelValue", "color", "opacity", "closeOnClick"],
     accessibility: [
-      "Backdrop is not a replacement for a modal dialog; provide an accessible surface inside it.",
+      "Backdrop color uses semantic theme tokens and opacity affects only the backdrop, never dialog content.",
+      "Overlay is a layering primitive, not a dialog; accessible dialog naming and focus management belong to Modal or Drawer.",
+    ],
+    examples: [
+      '<Overlay v-model="open" color="neutral" :opacity="0.55"><div>Surface</div></Overlay>',
     ],
   },
   {
     name: "Modal",
     category: "overlays",
     description:
-      "Accessible dialog with portal, focus trap, Escape dismissal and focus restoration.",
+      "Accessible modal dialog with nested-layer dismissal, reference-counted scroll lock and focus restoration.",
     props: [
       "modelValue",
       "title",
@@ -265,13 +269,19 @@ export const DOCTUI_COMPONENT_METADATA: readonly ComponentMetadataEntry[] = [
     ],
     accessibility: [
       "Uses role=dialog and aria-modal, traps focus while open, and restores the previously focused element on close.",
+      "A visible title provides aria-labelledby; ariaLabel names titleless dialogs, with Dialog as a safety fallback.",
+      "Only the top dismissable layer reacts to Escape or outside pointer interaction when dialogs are nested.",
+    ],
+    examples: [
+      '<Modal v-model="open" title="Review changes" size="lg" centered>...</Modal>',
+      '<Modal v-model="open" aria-label="Confirm publish" :close-on-click-outside="false">...</Modal>',
     ],
   },
   {
     name: "Drawer",
     category: "overlays",
     description:
-      "Accessible side panel with shared overlay and focus behavior.",
+      "Accessible side dialog with shared overlay, nested-layer dismissal and focus restoration.",
     props: [
       "modelValue",
       "title",
@@ -284,7 +294,12 @@ export const DOCTUI_COMPONENT_METADATA: readonly ComponentMetadataEntry[] = [
       "withCloseButton",
     ],
     accessibility: [
-      "Uses a modal dialog, focus trap, Escape dismissal and focus restoration.",
+      "Uses role=dialog and aria-modal, traps focus, closes on Escape when enabled and restores the trigger on close.",
+      "A visible title provides aria-labelledby; ariaLabel names titleless drawers, with Drawer as a safety fallback.",
+      "Shared scroll locking is reference-counted so closing one nested layer never unlocks the page under another open layer.",
+    ],
+    examples: [
+      '<Drawer v-model="open" title="Filters" position="right" size="md">...</Drawer>',
     ],
   },
   {

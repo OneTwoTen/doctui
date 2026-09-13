@@ -14,6 +14,8 @@ import { preview } from "./story-helpers";
 const meta = { title: "Overlays/Extended" } satisfies Meta;
 export default meta;
 type Story = StoryObj<typeof meta>;
+type DrawerSize = "xs" | "sm" | "md" | "lg" | "xl";
+type DrawerPosition = "left" | "right";
 
 const Demo = defineComponent({
   setup() {
@@ -69,4 +71,74 @@ const Demo = defineComponent({
   },
 });
 
+const DrawerGeometryDemo = defineComponent({
+  setup() {
+    const open = ref(false);
+    const size = ref<DrawerSize>("md");
+    const position = ref<DrawerPosition>("right");
+
+    const launch = (nextSize: DrawerSize, nextPosition: DrawerPosition) => {
+      size.value = nextSize;
+      position.value = nextPosition;
+      open.value = true;
+    };
+
+    return () =>
+      h(Stack, { gap: "md", style: { maxWidth: "48rem" } }, () => [
+        h(
+          Text,
+          null,
+          () =>
+            "Launch every Drawer size from either edge; width changes are token-backed.",
+        ),
+        h(
+          "div",
+          { style: { display: "flex", flexWrap: "wrap", gap: "0.5rem" } },
+          (["xs", "sm", "md", "lg", "xl"] as const).flatMap((value) => [
+            h(
+              Button,
+              { onClick: () => launch(value, "left") },
+              () => `${value} left`,
+            ),
+            h(
+              Button,
+              { onClick: () => launch(value, "right") },
+              () => `${value} right`,
+            ),
+          ]),
+        ),
+        h(
+          Drawer,
+          {
+            modelValue: open.value,
+            title: `${size.value.toUpperCase()} ${position.value} drawer`,
+            size: size.value,
+            position: position.value,
+            "onUpdate:modelValue": (value: boolean) => (open.value = value),
+          },
+          {
+            default: () =>
+              h(Stack, { gap: "md" }, () => [
+                h(
+                  Text,
+                  null,
+                  () =>
+                    "Press Escape or click the backdrop to verify the shared dismissal contract.",
+                ),
+                h(
+                  Button,
+                  { onClick: () => (open.value = false) },
+                  () => "Close",
+                ),
+              ]),
+          },
+        ),
+      ]);
+  },
+});
+
 export const Default: Story = { render: () => preview(() => h(Demo)) };
+
+export const DrawerGeometry: Story = {
+  render: () => preview(() => h(DrawerGeometryDemo)),
+};
