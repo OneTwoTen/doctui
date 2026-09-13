@@ -52,7 +52,7 @@ Generated component and package reference for doctui 0.0.0.
 - Space (@doctui/core): Semantic layout spacer using the theme spacing scale.
 - Stack (@doctui/core): Vertical flex layout for consistent spacing between children.
 - Switch (@doctui/core): Boolean toggle that keeps native checkbox behavior behind a doctui track and thumb visual.
-- TagsInput (@doctui/core): Free-form token input for adding, removing and clearing string values.
+- TagsInput (@doctui/core): Free-form token field with deterministic parsing, native focus and accessible token-list semantics.
 - Text (@doctui/core): Semantic text primitive using doctui typography and color tokens.
 - Textarea (@doctui/core): Multi-line text field with shared input wrapper semantics.
 - TextInput (@doctui/core): Single-line text field with shared input wrapper semantics.
@@ -470,11 +470,15 @@ Example: <Switch v-model="notifications" label="Notifications" size="lg" />
 
 Package: `@doctui/core`
 
-Free-form token input for adding, removing and clearing string values.
+Free-form token field with deterministic parsing, native focus and accessible token-list semantics.
 
-Props: `modelValue`, `label`, `description`, `error`, `required`, `disabled`, `readonly`, `placeholder`, `ariaLabel`, `clearable`, `maxTags`, `separator`, `size`, `radius`.
+Props: `modelValue`, `id`, `name`, `label`, `description`, `error`, `required`, `disabled`, `readonly`, `placeholder`, `ariaLabel`, `clearable`, `maxTags`, `separator`, `size`, `radius`.
 
-Accessibility: Uses a native input for entry and gives every removable tag an accessible remove button.
+Accessibility: Uses InputWrapper for SSR-safe IDs and field relationships while keeping a native text input as the entry and focus target.
+Accessibility: Selected tags are exposed as a list with native remove buttons; Backspace on an empty input removes the last tag without moving focus.
+Accessibility: Multi-character separators are parsed from input text, while only one-character separators act as keyboard delimiter keys.
+Example: <TagsInput id="skills" name="skills" v-model="skills" label="Skills" :max-tags="5" clearable />
+Example: <TagsInput v-model="topics" aria-label="Topics" separator="||" />
 
 ### Text
 

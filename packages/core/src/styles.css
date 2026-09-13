@@ -785,6 +785,13 @@
   background: var(--dui-color-surface);
 }
 
+.dui-TagsInput-tags {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dui-spacing-xs);
+}
+
 .dui-TagsInput-input {
   min-width: 8rem;
   flex: 1 1 8rem;

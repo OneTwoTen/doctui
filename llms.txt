@@ -52,7 +52,7 @@ Generated component and package reference for doctui 0.0.0.
 - Space (@doctui/core): Semantic layout spacer using the theme spacing scale.
 - Stack (@doctui/core): Vertical flex layout for consistent spacing between children.
 - Switch (@doctui/core): Boolean toggle that keeps native checkbox behavior behind a doctui track and thumb visual.
-- TagsInput (@doctui/core): Free-form token input for adding, removing and clearing string values.
+- TagsInput (@doctui/core): Free-form token field with deterministic parsing, native focus and accessible token-list semantics.
 - Text (@doctui/core): Semantic text primitive using doctui typography and color tokens.
 - Textarea (@doctui/core): Multi-line text field with shared input wrapper semantics.
 - TextInput (@doctui/core): Single-line text field with shared input wrapper semantics.

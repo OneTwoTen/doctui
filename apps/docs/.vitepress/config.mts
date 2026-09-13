@@ -35,6 +35,7 @@ export default defineConfig({
           { text: "Accessibility", link: "/guide/accessibility" },
           { text: "Basic components", link: "/guide/basic-components" },
           { text: "Selection controls", link: "/guide/selection-controls" },
+          { text: "TagsInput", link: "/guide/tags-input" },
           { text: "Component taxonomy", link: "/guide/component-taxonomy" },
           { text: "Hooks", link: "/guide/hooks" },
           { text: "Form", link: "/guide/form" },
