@@ -238,12 +238,25 @@
 
 .dui-Overlay {
   align-items: center;
-  background: rgb(15 23 42 / 0.55);
+  background: color-mix(
+    in srgb,
+    var(--dui-overlay-color, var(--dui-color-neutral-filled))
+      calc(var(--dui-overlay-opacity, 0.55) * 100%),
+    transparent
+  );
   display: flex;
   inset: 0;
   justify-content: center;
   position: fixed;
   z-index: var(--dui-z-index-overlay);
+}
+
+.dui-Overlay[data-align="start"] {
+  align-items: flex-start;
+}
+
+.dui-Overlay[data-align="center"] {
+  align-items: center;
 }
 
 .dui-Overlay > [data-dui-overlay-surface] {
@@ -252,16 +265,42 @@
 }
 
 .dui-Modal {
+  --dui-modal-width: 32rem;
+
   background: var(--dui-color-surface-raised);
   box-shadow: var(--dui-shadow-xl);
   box-sizing: border-box;
   color: var(--dui-color-text);
   margin: var(--dui-spacing-lg);
   max-height: calc(100vh - 2 * var(--dui-spacing-lg));
-  max-width: min(100%, 42rem);
-  min-width: min(24rem, calc(100vw - 2 * var(--dui-spacing-lg)));
+  max-width: min(
+    calc(100vw - 2 * var(--dui-spacing-lg)),
+    var(--dui-modal-width)
+  );
+  min-width: 0;
   overflow: auto;
   width: 100%;
+  z-index: var(--dui-z-index-modal);
+}
+
+.dui-Modal[data-size="xs"] {
+  --dui-modal-width: 20rem;
+}
+
+.dui-Modal[data-size="sm"] {
+  --dui-modal-width: 26rem;
+}
+
+.dui-Modal[data-size="md"] {
+  --dui-modal-width: 32rem;
+}
+
+.dui-Modal[data-size="lg"] {
+  --dui-modal-width: 42rem;
+}
+
+.dui-Modal[data-size="xl"] {
+  --dui-modal-width: 56rem;
 }
 
 .dui-Modal-header,
@@ -615,14 +654,17 @@
 }
 
 .dui-Drawer {
-  position: fixed;
-  z-index: 1001;
-  top: 0;
-  bottom: 0;
-  width: min(100%, 28rem);
-  padding: var(--dui-spacing-lg);
+  --dui-drawer-width: 28rem;
+
   background: var(--dui-color-surface);
+  bottom: 0;
   box-shadow: var(--dui-shadow-lg);
+  box-sizing: border-box;
+  padding: var(--dui-spacing-lg);
+  position: fixed;
+  top: 0;
+  width: min(100%, var(--dui-drawer-width));
+  z-index: var(--dui-z-index-modal);
 }
 
 .dui-Drawer[data-position="left"] {
@@ -634,15 +676,23 @@
 }
 
 .dui-Drawer[data-size="xs"] {
-  width: min(100%, 16rem);
+  --dui-drawer-width: 16rem;
 }
 
 .dui-Drawer[data-size="sm"] {
-  width: min(100%, 20rem);
+  --dui-drawer-width: 20rem;
+}
+
+.dui-Drawer[data-size="md"] {
+  --dui-drawer-width: 28rem;
 }
 
 .dui-Drawer[data-size="lg"] {
-  width: min(100%, 36rem);
+  --dui-drawer-width: 36rem;
+}
+
+.dui-Drawer[data-size="xl"] {
+  --dui-drawer-width: 48rem;
 }
 
 .dui-Drawer-header {
@@ -685,7 +735,7 @@
 .dui-Popover-panel,
 .dui-Menu-dropdown {
   position: absolute;
-  z-index: 20;
+  z-index: var(--dui-z-index-popover);
   top: calc(100% + 0.35rem);
   left: 0;
   min-width: 12rem;
@@ -719,7 +769,7 @@
 
 .dui-Tooltip-content {
   position: absolute;
-  z-index: 30;
+  z-index: var(--dui-z-index-tooltip);
   left: 50%;
   bottom: calc(100% + 0.35rem);
   transform: translateX(-50%);
