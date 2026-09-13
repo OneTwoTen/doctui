@@ -83,13 +83,10 @@ const SizeAndAlignmentDemo = defineComponent({
           },
           {
             default: () =>
-              h(
-                Text,
-                null,
-                () =>
-                  centered.value
-                    ? "This surface is vertically centered by the shared backdrop."
-                    : "This surface is aligned near the top of the backdrop.",
+              h(Text, null, () =>
+                centered.value
+                  ? "This surface is vertically centered by the shared backdrop."
+                  : "This surface is aligned near the top of the backdrop.",
               ),
           },
         ),
@@ -102,11 +99,16 @@ const DismissalGuardDemo = defineComponent({
     const open = ref(false);
     return () =>
       h(Stack, { gap: "md", style: { maxWidth: "28rem" } }, () => [
-        h(Button, { onClick: () => (open.value = true) }, () => "Open guarded dialog"),
+        h(
+          Button,
+          { onClick: () => (open.value = true) },
+          () => "Open guarded dialog",
+        ),
         h(
           Text,
           { size: "sm", muted: true },
-          () => "Escape and backdrop dismissal are disabled; use the close button.",
+          () =>
+            "Escape and backdrop dismissal are disabled; use the close button.",
         ),
         h(
           Modal,
@@ -119,7 +121,11 @@ const DismissalGuardDemo = defineComponent({
           },
           {
             default: () =>
-              h(Text, null, () => "This pattern protects work from accidental dismissal."),
+              h(
+                Text,
+                null,
+                () => "This pattern protects work from accidental dismissal.",
+              ),
           },
         ),
       ]);
@@ -165,7 +171,10 @@ const AdvancedCompositionDemo = defineComponent({
                 ),
                 h(
                   Button,
-                  { onClick: () => (reviewOpen.value = false), color: "success" },
+                  {
+                    onClick: () => (reviewOpen.value = false),
+                    color: "success",
+                  },
                   () => "Confirm order",
                 ),
                 h(
