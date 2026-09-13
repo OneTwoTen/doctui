@@ -1,0 +1,10 @@
+{
+  "number": "22",
+  "title": "fix(core): harden TagsInput token semantics",
+  "branch": "codex/issue-11-tags-input",
+  "sha": "693527bab4d699eda9e6c59f2179036962160992",
+  "repository": "OneTwoTen/doctui",
+  "prUrl": "https://github.com/OneTwoTen/doctui/pull/22",
+  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/34739729960",
+  "generatedAt": "2026-09-13T05:12:57.617Z"
+}
