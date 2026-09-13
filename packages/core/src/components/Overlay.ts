@@ -25,7 +25,13 @@ export const Overlay = defineComponent({
               "data-dui-component": "Overlay",
               "data-dui-overlay-backdrop": "",
               class: ["dui-Overlay", attrs.class],
-              style: [attrs.style, { opacity: props.opacity }],
+              style: [
+                attrs.style,
+                {
+                  "--dui-overlay-color": `var(--dui-color-${props.color}-filled)`,
+                  "--dui-overlay-opacity": String(props.opacity),
+                },
+              ],
               onClick: (event: MouseEvent) => {
                 if (
                   props.closeOnClick &&
