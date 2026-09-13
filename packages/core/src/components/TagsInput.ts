@@ -241,7 +241,8 @@ export const TagsInput = defineComponent({
                         value: draft.value,
                         disabled: props.disabled,
                         readonly: props.readonly,
-                        required: props.required && props.modelValue.length === 0,
+                        required:
+                          props.required && props.modelValue.length === 0,
                         placeholder:
                           props.modelValue.length === 0
                             ? props.placeholder
