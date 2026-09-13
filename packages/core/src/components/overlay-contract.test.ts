@@ -103,7 +103,9 @@ describe("overlay contract", () => {
       attachTo: document.body,
     });
     expect(
-      document.querySelector<HTMLElement>(".dui-Modal")?.getAttribute("aria-label"),
+      document
+        .querySelector<HTMLElement>(".dui-Modal")
+        ?.getAttribute("aria-label"),
     ).toBe("Dialog");
     modal.unmount();
 
@@ -112,7 +114,9 @@ describe("overlay contract", () => {
       attachTo: document.body,
     });
     expect(
-      document.querySelector<HTMLElement>(".dui-Drawer")?.getAttribute("aria-label"),
+      document
+        .querySelector<HTMLElement>(".dui-Drawer")
+        ?.getAttribute("aria-label"),
     ).toBe("Drawer");
     drawer.unmount();
   });
@@ -131,7 +135,9 @@ describe("overlay contract", () => {
     expect(overlay?.style.getPropertyValue("--dui-overlay-color")).toBe(
       "var(--dui-color-danger-filled)",
     );
-    expect(overlay?.style.getPropertyValue("--dui-overlay-opacity")).toBe("0.4");
+    expect(overlay?.style.getPropertyValue("--dui-overlay-opacity")).toBe(
+      "0.4",
+    );
     expect(overlay?.style.opacity).toBe("");
     wrapper.unmount();
   });
@@ -202,8 +208,7 @@ describe("overlay contract", () => {
                   (drawerOpen.value = value),
               },
               {
-                default: () =>
-                  h("button", { type: "button" }, "Drawer action"),
+                default: () => h("button", { type: "button" }, "Drawer action"),
               },
             ),
           ]);
@@ -217,7 +222,8 @@ describe("overlay contract", () => {
     await nextTick();
     await nextTick();
 
-    const drawerTrigger = document.querySelector<HTMLButtonElement>("#open-drawer");
+    const drawerTrigger =
+      document.querySelector<HTMLButtonElement>("#open-drawer");
     drawerTrigger?.focus();
     drawerTrigger?.click();
     await nextTick();
