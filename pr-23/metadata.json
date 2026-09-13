@@ -2,9 +2,9 @@
   "number": "23",
   "title": "fix(core): harden overlay and dialog behavior",
   "branch": "codex/issue-12-overlay",
-  "sha": "db3504187fb92a39e0c3940a1c66a99543808c9b",
+  "sha": "dcd8512edfb97513e72b6c05e06e93ac2f36438d",
   "repository": "OneTwoTen/doctui",
   "prUrl": "https://github.com/OneTwoTen/doctui/pull/23",
-  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/34750564788",
-  "generatedAt": "2026-09-13T09:56:19.486Z"
+  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/34750596424",
+  "generatedAt": "2026-09-13T09:58:27.223Z"
 }
