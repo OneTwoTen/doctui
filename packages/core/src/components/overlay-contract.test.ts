@@ -164,7 +164,7 @@ describe("overlay contract", () => {
   });
 
   it("maps dialog sizes and layering to public CSS state and theme z-index tokens", () => {
-    const css = readFileSync(new URL("../styles.css", import.meta.url), "utf8");
+    const css = readFileSync("packages/core/src/styles.css", "utf8");
 
     for (const size of ["xs", "sm", "md", "lg", "xl"]) {
       expect(css).toContain(`.dui-Modal[data-size="${size}"]`);
