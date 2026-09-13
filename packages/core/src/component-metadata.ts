@@ -441,9 +441,11 @@ export const DOCTUI_COMPONENT_METADATA: readonly ComponentMetadataEntry[] = [
     name: "TagsInput",
     category: "inputs",
     description:
-      "Free-form token input for adding, removing and clearing string values.",
+      "Free-form token field with deterministic parsing, native focus and accessible token-list semantics.",
     props: [
       "modelValue",
+      "id",
+      "name",
       "label",
       "description",
       "error",
@@ -459,7 +461,13 @@ export const DOCTUI_COMPONENT_METADATA: readonly ComponentMetadataEntry[] = [
       "radius",
     ],
     accessibility: [
-      "Uses a native input for entry and gives every removable tag an accessible remove button.",
+      "Uses InputWrapper for SSR-safe IDs and field relationships while keeping a native text input as the entry and focus target.",
+      "Selected tags are exposed as a list with native remove buttons; Backspace on an empty input removes the last tag without moving focus.",
+      "Multi-character separators are parsed from input text, while only one-character separators act as keyboard delimiter keys.",
+    ],
+    examples: [
+      '<TagsInput id="skills" name="skills" v-model="skills" label="Skills" :max-tags="5" clearable />',
+      '<TagsInput v-model="topics" aria-label="Topics" separator="||" />',
     ],
   },
   {

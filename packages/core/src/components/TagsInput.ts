@@ -1,5 +1,19 @@
-import { computed, defineComponent, h, type PropType, ref, useId } from "vue";
+import {
+  computed,
+  defineComponent,
+  h,
+  mergeProps,
+  nextTick,
+  type PropType,
+  ref,
+} from "vue";
 import type { Radius, Size } from "../theme/types";
+import {
+  composeDescribedBy,
+  getFieldRootStateAttrs,
+  getInputWrapperProps,
+  splitFieldAttrs,
+} from "./field-internals";
 import { InputWrapper } from "./InputWrapper";
 import { fontSizeToken, radiusToken } from "./shared";
 
@@ -11,6 +25,8 @@ export const TagsInput = defineComponent({
       type: Array as PropType<readonly string[]>,
       default: () => [],
     },
+    id: String,
+    name: String,
     label: String,
     description: String,
     error: String,
@@ -32,81 +48,138 @@ export const TagsInput = defineComponent({
     clear: () => true,
   },
   setup(props, { attrs, emit, slots }) {
-    const generatedId = useId();
-    const id = `dui-tags-input-${generatedId}`;
     const draft = ref("");
-    const canAdd = computed(
-      () =>
-        !props.disabled &&
-        !props.readonly &&
-        (props.maxTags === undefined ||
-          props.modelValue.length < props.maxTags),
+    const input = ref<HTMLInputElement>();
+    const canMutate = computed(() => !props.disabled && !props.readonly);
+    const maxTags = computed(() =>
+      props.maxTags === undefined
+        ? Number.POSITIVE_INFINITY
+        : Math.max(0, props.maxTags),
     );
-    const add = (raw: string) => {
-      const value = raw.trim();
-      if (!value || !canAdd.value || props.modelValue.includes(value)) return;
-      emit("update:modelValue", [...props.modelValue, value]);
-      emit("add", value);
-      draft.value = "";
+
+    const commitTags = (rawValues: readonly string[]) => {
+      if (!canMutate.value) return [];
+
+      const next = [...props.modelValue];
+      const added: string[] = [];
+
+      for (const rawValue of rawValues) {
+        const value = rawValue.trim();
+        if (!value || next.includes(value) || next.length >= maxTags.value) {
+          continue;
+        }
+        next.push(value);
+        added.push(value);
+      }
+
+      if (added.length > 0) {
+        emit("update:modelValue", next);
+        for (const value of added) emit("add", value);
+      }
+
+      return added;
     };
-    const remove = (value: string) => {
-      if (props.disabled || props.readonly) return;
+
+    const addDraft = () => {
+      const added = commitTags([draft.value]);
+      if (added.length > 0) draft.value = "";
+    };
+
+    const focusInput = () => {
+      void nextTick(() => input.value?.focus());
+    };
+
+    const remove = (value: string, restoreFocus = false) => {
+      if (!canMutate.value) return;
       emit(
         "update:modelValue",
         props.modelValue.filter((item) => item !== value),
       );
       emit("remove", value);
+      if (restoreFocus) focusInput();
     };
+
     const clear = () => {
-      if (props.disabled || props.readonly || !props.modelValue.length) return;
+      if (!canMutate.value || !props.modelValue.length) return;
       emit("update:modelValue", []);
       emit("clear");
+      draft.value = "";
+      focusInput();
     };
+
     const onKeydown = (event: KeyboardEvent) => {
-      if (event.key === "Enter" || event.key === props.separator) {
+      const isSingleCharacterSeparator =
+        props.separator.length === 1 && event.key === props.separator;
+
+      if (event.key === "Enter" || isSingleCharacterSeparator) {
         event.preventDefault();
-        add(draft.value);
+        addDraft();
       } else if (
         event.key === "Backspace" &&
         !draft.value &&
         props.modelValue.length
       ) {
+        event.preventDefault();
         remove(props.modelValue[props.modelValue.length - 1] as string);
       }
     };
+
     const onInput = (event: Event) => {
+      if (!canMutate.value) return;
+
       const value = (event.target as HTMLInputElement).value;
       if (props.separator && value.includes(props.separator)) {
         const values = value.split(props.separator);
-        values.slice(0, -1).forEach(add);
+        commitTags(values.slice(0, -1));
         draft.value = values.at(-1) ?? "";
       } else {
         draft.value = value;
       }
     };
-    return () =>
-      h(
+
+    return () => {
+      const { rootAttrs, controlAttrs } = splitFieldAttrs(attrs);
+      const explicitAriaLabel =
+        props.ariaLabel ??
+        (typeof controlAttrs["aria-label"] === "string"
+          ? controlAttrs["aria-label"]
+          : undefined);
+      const selectedTagsLabel = `${props.label ?? explicitAriaLabel ?? "Tags"} selected tags`;
+
+      return h(
         InputWrapper,
+        mergeProps(
+          getInputWrapperProps(props),
+          rootAttrs,
+          getFieldRootStateAttrs(props, "TagsInput"),
+        ),
         {
-          id,
-          ...(props.label === undefined ? {} : { label: props.label }),
-          ...(props.description === undefined
-            ? {}
-            : { description: props.description }),
-          ...(props.error === undefined ? {} : { error: props.error }),
-          required: props.required,
-        },
-        {
-          default: ({ describedBy }: { describedBy?: string }) =>
-            h(
+          default: ({
+            id,
+            describedBy,
+          }: {
+            id: string;
+            describedBy?: string;
+          }) => {
+            const ariaDescribedBy = composeDescribedBy(
+              describedBy,
+              controlAttrs["aria-describedby"],
+            );
+            const ariaInvalid = props.error
+              ? "true"
+              : controlAttrs["aria-invalid"];
+            const ariaLabel =
+              explicitAriaLabel ?? (props.label ? undefined : "Tags");
+
+            return h(
               "div",
               {
-                ...attrs,
-                class: ["dui-TagsInput", attrs.class],
+                class: "dui-TagsInput",
                 "data-dui-component": "TagsInput",
+                "data-size": props.size,
                 "data-disabled": props.disabled ? "true" : undefined,
                 "data-readonly": props.readonly ? "true" : undefined,
-                style: attrs.style,
+                "data-error": props.error ? "true" : undefined,
               },
               [
                 h(
@@ -119,46 +192,70 @@ export const TagsInput = defineComponent({
                     },
                   },
                   [
-                    ...props.modelValue.map((value) =>
-                      h("span", { class: "dui-TagsInput-tag" }, [
-                        slots.tag
-                          ? slots.tag({ value })
-                          : h(
-                              "span",
-                              { class: "dui-TagsInput-tag-label" },
-                              value,
-                            ),
-                        h(
-                          "button",
+                    props.modelValue.length > 0
+                      ? h(
+                          "div",
                           {
-                            type: "button",
-                            class: "dui-TagsInput-remove",
-                            disabled: props.disabled || props.readonly,
-                            "aria-label": `Remove ${value}`,
-                            onClick: () => remove(value),
+                            class: "dui-TagsInput-tags",
+                            role: "list",
+                            "aria-label": selectedTagsLabel,
                           },
-                          "×",
-                        ),
-                      ]),
+                          props.modelValue.map((value) =>
+                            h(
+                              "span",
+                              {
+                                class: "dui-TagsInput-tag",
+                                role: "listitem",
+                                key: value,
+                              },
+                              [
+                                slots.tag
+                                  ? slots.tag({ value })
+                                  : h(
+                                      "span",
+                                      { class: "dui-TagsInput-tag-label" },
+                                      value,
+                                    ),
+                                h(
+                                  "button",
+                                  {
+                                    type: "button",
+                                    class: "dui-TagsInput-remove",
+                                    disabled: props.disabled || props.readonly,
+                                    "aria-label": `Remove ${value}`,
+                                    onClick: () => remove(value, true),
+                                  },
+                                  "×",
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      : null,
+                    h(
+                      "input",
+                      mergeProps(controlAttrs, {
+                        ref: input,
+                        id,
+                        name: props.name,
+                        value: draft.value,
+                        disabled: props.disabled,
+                        readonly: props.readonly,
+                        required:
+                          props.required && props.modelValue.length === 0,
+                        placeholder:
+                          props.modelValue.length === 0
+                            ? props.placeholder
+                            : undefined,
+                        "aria-label": ariaLabel,
+                        "aria-invalid": ariaInvalid,
+                        "aria-describedby": ariaDescribedBy,
+                        autocomplete: "off",
+                        class: "dui-TagsInput-input",
+                        onInput,
+                        onKeydown,
+                      }),
                     ),
-                    h("input", {
-                      id,
-                      value: draft.value,
-                      disabled: props.disabled,
-                      readonly: props.readonly,
-                      required: props.required,
-                      placeholder:
-                        props.modelValue.length === 0
-                          ? props.placeholder
-                          : undefined,
-                      "aria-label": props.label ? undefined : props.ariaLabel,
-                      "aria-invalid": props.error ? "true" : undefined,
-                      "aria-describedby": describedBy,
-                      autocomplete: "off",
-                      class: "dui-TagsInput-input",
-                      onInput,
-                      onKeydown,
-                    }),
                     props.clearable && props.modelValue.length
                       ? h(
                           "button",
@@ -175,8 +272,10 @@ export const TagsInput = defineComponent({
                   ],
                 ),
               ],
-            ),
+            );
+          },
         },
       );
+    };
   },
 });
