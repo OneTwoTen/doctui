@@ -30,6 +30,7 @@ export const Modal = defineComponent({
         {
           modelValue: true,
           closeOnClick: props.closeOnClickOutside,
+          "data-align": props.centered ? "center" : "start",
           "onUpdate:modelValue": close,
         },
         {
@@ -55,8 +56,9 @@ export const Modal = defineComponent({
                           "aria-labelledby": props.title ? titleId : undefined,
                           "aria-label": props.title
                             ? undefined
-                            : props.ariaLabel,
+                            : (props.ariaLabel ?? "Dialog"),
                           "data-dui-component": "Modal",
+                          "data-centered": props.centered ? "true" : "false",
                           "data-size": props.size,
                           class: ["dui-Modal", attrs.class],
                           onClick: (event: MouseEvent) =>
