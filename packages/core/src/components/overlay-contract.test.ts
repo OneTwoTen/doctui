@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { mount } from "@vue/test-utils";
 import { afterEach, describe, expect, it } from "vitest";
 import {
@@ -160,6 +161,18 @@ describe("overlay contract", () => {
       document.querySelector<HTMLElement>(".dui-Overlay")?.dataset.align,
     ).toBe("start");
     topAligned.unmount();
+  });
+
+  it("maps dialog sizes and layering to public CSS state and theme z-index tokens", () => {
+    const css = readFileSync(new URL("../styles.css", import.meta.url), "utf8");
+
+    for (const size of ["xs", "sm", "md", "lg", "xl"]) {
+      expect(css).toContain(`.dui-Modal[data-size="${size}"]`);
+      expect(css).toContain(`.dui-Drawer[data-size="${size}"]`);
+    }
+    expect(css).toContain("z-index: var(--dui-z-index-overlay);");
+    expect(css).toContain("z-index: var(--dui-z-index-modal);");
+    expect(css).not.toContain("z-index: 1001;");
   });
 
   it("keeps Escape and focus restoration scoped to the top nested dialog", async () => {
