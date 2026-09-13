@@ -88,7 +88,8 @@ const DrawerGeometryDemo = defineComponent({
         h(
           Text,
           null,
-          () => "Launch every Drawer size from either edge; width changes are token-backed.",
+          () =>
+            "Launch every Drawer size from either edge; width changes are token-backed.",
         ),
         h(
           "div",
@@ -124,7 +125,11 @@ const DrawerGeometryDemo = defineComponent({
                   () =>
                     "Press Escape or click the backdrop to verify the shared dismissal contract.",
                 ),
-                h(Button, { onClick: () => (open.value = false) }, () => "Close"),
+                h(
+                  Button,
+                  { onClick: () => (open.value = false) },
+                  () => "Close",
+                ),
               ]),
           },
         ),
