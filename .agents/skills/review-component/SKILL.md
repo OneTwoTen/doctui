@@ -27,6 +27,7 @@ When reviewing an input-like component, explicitly verify all of the following b
 - Size/state geometry is token/CSS-variable driven and remains coherent across `xs/sm/md/lg/xl`.
 - Error, disabled, readonly, selected/checked and focus-visible styling is complete and consistent; focus/error precedence is deliberate.
 - Custom Checkbox/Radio/Switch visuals preserve a real native input for keyboard, focus, form and accessibility semantics.
+- For token/multi-value text inputs, verify trim/empty/duplicate policy, full-batch limit enforcement, single- vs multi-character separator behavior, atomic `v-model` updates, list semantics, Backspace behavior and deterministic focus after remove/clear actions.
 - Multi-part customization uses the shared typed `classNames`/`styles` vocabulary instead of undocumented deep selectors or one-off props.
 - Public CSS variables and style-part names are documented and treated as compatibility surface.
 - Tests cover attrs/listener forwarding, custom IDs, description + error composition, required/disabled/readonly behavior and focus. Custom boolean visuals must also prove native type/name/checked/disabled semantics remain intact.
