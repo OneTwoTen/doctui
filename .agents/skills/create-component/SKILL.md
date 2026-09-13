@@ -43,8 +43,9 @@ For `InputWrapper`, text-like fields, Checkbox/Radio/Switch, selection inputs an
 5. Prefer CSS variables for geometry and semantic tokens for colors. For new or substantially refactored field styling, use a colocated/family stylesheet that can still be bundled into the package stylesheet.
 6. Custom Checkbox/Radio/Switch visuals must keep the native input as the source of keyboard, focus, form and accessibility semantics. Project native `:checked`, `:disabled` and `:focus-visible` state onto the visual indicator/track.
 7. When users need to customize multiple visual regions, use the shared typed `classNames`/`styles` part contract. Reuse existing part names instead of inventing component-specific synonyms.
-8. Add Storybook coverage that compares `xs/sm/md/lg/xl` geometry and important states. Also keep a realistic form/composition story that shows sibling doctui components working together.
-9. Document outer-root vs native-control attr ownership, accessibility relationships, public CSS variables and style parts in VitePress and metadata.
+8. For free-form token/multi-value text inputs, define trim/duplicate/limit policy before coding. Batch parsing must compute the complete accepted next value before emitting `update:modelValue`; only single-character separators may act as keyboard delimiter keys, while multi-character separators are parsed from input text. Keep the native text input as the stable focus target and document Backspace/remove/clear focus behavior.
+9. Add Storybook coverage that compares `xs/sm/md/lg/xl` geometry and important states. Also keep a realistic form/composition story that shows sibling doctui components working together.
+10. Document outer-root vs native-control attr ownership, accessibility relationships, public CSS variables and style parts in VitePress and metadata.
 
 ## Test-first rule
 
@@ -88,6 +89,7 @@ Prefer small copy-pasteable VitePress examples over prose-only descriptions. Pre
 - [ ] theme tokens/CSS variables used
 - [ ] `size` scales meaningful geometry when exposed
 - [ ] wrapped native-control attrs have an explicit root/control ownership contract
+- [ ] token inputs define normalization, separator, limit and focus behavior explicitly when applicable
 - [ ] multi-part customization uses stable typed style parts when needed
 - [ ] relevant behavior started with a failing test (red) before implementation
 - [ ] keyboard/focus behavior tested
