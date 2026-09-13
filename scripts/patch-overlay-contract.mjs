@@ -128,8 +128,14 @@ styles = styles.replace(
 }`,
 );
 
-styles = styles.replace(/z-index: 20;/g, "z-index: var(--dui-z-index-popover);");
-styles = styles.replace(/z-index: 30;/g, "z-index: var(--dui-z-index-tooltip);");
+styles = styles.replace(
+  /z-index: 20;/g,
+  "z-index: var(--dui-z-index-popover);",
+);
+styles = styles.replace(
+  /z-index: 30;/g,
+  "z-index: var(--dui-z-index-tooltip);",
+);
 await writeFile(stylesPath, styles);
 
 const metadataPath = "packages/core/src/component-metadata.ts";
@@ -217,7 +223,8 @@ const configPath = "apps/docs/.vitepress/config.mts";
 let config = await readFile(configPath, "utf8");
 if (!config.includes('link: "/guide/overlays"')) {
   const marker = '          { text: "TagsInput", link: "/guide/tags-input" },';
-  if (!config.includes(marker)) throw new Error("Missing TagsInput sidebar entry");
+  if (!config.includes(marker))
+    throw new Error("Missing TagsInput sidebar entry");
   config = config.replace(
     marker,
     `${marker}\n          { text: "Overlays", link: "/guide/overlays" },`,
