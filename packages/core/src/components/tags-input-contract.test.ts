@@ -32,7 +32,9 @@ describe("TagsInput contract", () => {
     const visiblyLabelled = mount(TagsInput, {
       props: { id: "topics", label: "Topics" },
     });
-    expect(visiblyLabelled.get("input").attributes("aria-label")).toBeUndefined();
+    expect(
+      visiblyLabelled.get("input").attributes("aria-label"),
+    ).toBeUndefined();
     expect(visiblyLabelled.get("label").attributes("for")).toBe("topics");
   });
 
@@ -68,7 +70,7 @@ describe("TagsInput contract", () => {
     expect(wrapper.emitted("update:modelValue")).toBeUndefined();
 
     await input.trigger("keydown", { key: "Enter" });
-    expect(wrapper.emitted("update:modelValue")).toEqual([[['Vue']]]);
+    expect(wrapper.emitted("update:modelValue")).toEqual([[["Vue"]]]);
   });
 
   it("trims values, rejects duplicates and enforces maxTags across pasted batches", async () => {
@@ -110,8 +112,12 @@ describe("TagsInput contract", () => {
     await wrapper.get("button[aria-label='Clear tags']").trigger("click");
 
     expect(wrapper.emitted("update:modelValue")).toBeUndefined();
-    expect(wrapper.get("button[aria-label='Remove Vue']").attributes("disabled")).toBeDefined();
-    expect(wrapper.get("button[aria-label='Clear tags']").attributes("disabled")).toBeDefined();
+    expect(
+      wrapper.get("button[aria-label='Remove Vue']").attributes("disabled"),
+    ).toBeDefined();
+    expect(
+      wrapper.get("button[aria-label='Clear tags']").attributes("disabled"),
+    ).toBeDefined();
   });
 
   it("exposes selected tags as a list with native remove controls", () => {
@@ -125,9 +131,9 @@ describe("TagsInput contract", () => {
     const list = wrapper.get("[role='list']");
     expect(list.attributes("aria-label")).toBe("Skills selected tags");
     expect(wrapper.findAll("[role='listitem']")).toHaveLength(2);
-    expect(wrapper.get("button[aria-label='Remove Vue']").attributes("type")).toBe(
-      "button",
-    );
+    expect(
+      wrapper.get("button[aria-label='Remove Vue']").attributes("type"),
+    ).toBe("button");
   });
 
   it("returns focus to the input after removing a tag with its remove button", async () => {
@@ -164,7 +170,7 @@ describe("TagsInput contract", () => {
     (input.element as HTMLInputElement).focus();
     await input.trigger("keydown", { key: "Backspace" });
 
-    expect(wrapper.emitted("update:modelValue")).toEqual([[['Vue']]]);
+    expect(wrapper.emitted("update:modelValue")).toEqual([[["Vue"]]]);
     expect(wrapper.emitted("remove")).toEqual([["Rust"]]);
     expect(document.activeElement).toBe(input.element);
 
