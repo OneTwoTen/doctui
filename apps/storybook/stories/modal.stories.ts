@@ -9,7 +9,6 @@ const meta = {
   args: {
     modelValue: true,
     title: "Review changes",
-    ariaLabel: undefined,
     size: "md",
     radius: "md",
     centered: true,
@@ -55,10 +54,10 @@ export const Playground: Story = {
   render: (args) => {
     const Demo = defineComponent({
       setup() {
-        const open = ref(args.modelValue);
+        const open = ref(args.modelValue ?? true);
         watch(
           () => args.modelValue,
-          (value) => (open.value = value),
+          (value) => (open.value = value ?? false),
         );
 
         return () =>
