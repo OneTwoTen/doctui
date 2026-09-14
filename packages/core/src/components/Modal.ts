@@ -94,7 +94,9 @@ export const Modal = defineComponent({
                             ...attrs,
                             role: "dialog",
                             "aria-modal": "true",
-                            "aria-labelledby": props.title ? titleId : undefined,
+                            "aria-labelledby": props.title
+                              ? titleId
+                              : undefined,
                             "aria-label": props.title
                               ? undefined
                               : (props.ariaLabel ?? "Dialog"),
@@ -105,7 +107,9 @@ export const Modal = defineComponent({
                             style: [
                               attrs.style,
                               {
-                                "--dui-modal-width": resolveModalWidth(props.size),
+                                "--dui-modal-width": resolveModalWidth(
+                                  props.size,
+                                ),
                                 borderRadius: `var(--dui-radius-${props.radius})`,
                               },
                             ],
@@ -116,7 +120,10 @@ export const Modal = defineComponent({
                                   props.title
                                     ? h(
                                         "h2",
-                                        { id: titleId, class: "dui-Modal-title" },
+                                        {
+                                          id: titleId,
+                                          class: "dui-Modal-title",
+                                        },
                                         props.title,
                                       )
                                     : null,
