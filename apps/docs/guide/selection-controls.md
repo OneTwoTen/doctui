@@ -26,10 +26,12 @@ const frameworks = [
 ];
 </script>
 
-## Live example
+## Combobox
 
-<div class="docs-preview docs-preview--narrow">
-  <Stack gap="md">
+Use the public `Combobox` directly when an application needs the shared engine without one of the higher-level value adapters.
+
+<div class="docs-preview docs-preview--narrow" data-docs-preview="combobox">
+  <Stack gap="sm">
     <Combobox
       id="docs-raw-framework"
       v-model="rawFramework"
@@ -39,7 +41,26 @@ const frameworks = [
       searchable
       clearable
     />
+    <Text size="sm" muted>Value: {{ rawFramework ?? "none" }}</Text>
+  </Stack>
+</div>
 
+```vue
+<Combobox
+  v-model="framework"
+  label="Combobox"
+  :data="frameworks"
+  searchable
+  clearable
+/>
+```
+
+## Select
+
+`Select` keeps one selected value and uses the same keyboard/listbox engine with a readonly visible editor.
+
+<div class="docs-preview docs-preview--narrow" data-docs-preview="select">
+  <Stack gap="sm">
     <Select
       id="docs-framework"
       v-model="framework"
@@ -48,7 +69,25 @@ const frameworks = [
       :data="frameworks"
       clearable
     />
+    <Text size="sm" muted>Selected: {{ framework ?? "none" }}</Text>
+  </Stack>
+</div>
 
+```vue
+<Select
+  v-model="framework"
+  label="Framework"
+  :data="frameworks"
+  clearable
+/>
+```
+
+## Autocomplete
+
+`Autocomplete` keeps a string model and filters the shared option list as the user types.
+
+<div class="docs-preview docs-preview--narrow" data-docs-preview="autocomplete">
+  <Stack gap="sm">
     <Autocomplete
       id="docs-framework-search"
       v-model="search"
@@ -56,7 +95,25 @@ const frameworks = [
       :data="frameworks"
       nothing-found="No matching framework"
     />
+    <Text size="sm" muted>Query: {{ search || "empty" }}</Text>
+  </Stack>
+</div>
 
+```vue
+<Autocomplete
+  v-model="query"
+  label="Search framework"
+  :data="frameworks"
+  nothing-found="No matching framework"
+/>
+```
+
+## MultiSelect
+
+`MultiSelect` keeps an array model. Search filters remaining choices and Backspace removes the last selected value when the query is empty.
+
+<div class="docs-preview docs-preview--narrow" data-docs-preview="multi-select">
+  <Stack gap="sm">
     <MultiSelect
       id="docs-framework-compare"
       v-model="compare"
@@ -64,35 +121,43 @@ const frameworks = [
       :data="frameworks"
       clearable
     />
-
-    <Text size="sm" muted>Combobox value: {{ rawFramework ?? "none" }}</Text>
+    <Text size="sm" muted>Selected: {{ compare.length ? compare.join(", ") : "none" }}</Text>
   </Stack>
 </div>
 
 ```vue
-<script setup lang="ts">
-import { ref } from "vue";
-import { Autocomplete, Combobox, MultiSelect, Select } from "@doctui/core";
-
-const frameworks = [
-  { value: "vue", label: "Vue" },
-  { value: "react", label: "React", disabled: true },
-  { value: "svelte", label: "Svelte" },
-];
-
-const raw = ref<string | number | null>("vue");
-const selected = ref<string | number | null>("vue");
-const query = ref("");
-const compare = ref<readonly (string | number)[]>([]);
-</script>
-
-<template>
-  <Combobox v-model="raw" label="Combobox" :data="frameworks" searchable clearable />
-  <Select v-model="selected" label="Framework" :data="frameworks" clearable />
-  <Autocomplete v-model="query" label="Search" :data="frameworks" />
-  <MultiSelect v-model="compare" label="Compare" :data="frameworks" clearable />
-</template>
+<MultiSelect
+  v-model="selected"
+  label="Compare"
+  :data="frameworks"
+  clearable
+/>
 ```
+
+## State comparison
+
+Error and disabled states reuse the same field geometry as the rest of doctui. Keeping them visible next to the interactive examples catches regressions that a single happy-path combobox cannot.
+
+<div class="docs-preview docs-preview--compare" data-docs-preview="selection-states">
+  <Select
+    model-value="vue"
+    label="Validation error"
+    :data="frameworks"
+    error="Choose a supported production framework."
+  />
+  <Select
+    model-value="vue"
+    label="Disabled"
+    :data="frameworks"
+    disabled
+  />
+  <MultiSelect
+    :model-value="['vue', 'svelte']"
+    label="Disabled multiple"
+    :data="frameworks"
+    disabled
+  />
+</div>
 
 ## Shared public contract
 
