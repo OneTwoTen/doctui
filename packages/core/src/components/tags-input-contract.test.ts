@@ -1,6 +1,6 @@
 import { mount } from "@vue/test-utils";
 import { describe, expect, it } from "vitest";
-import { nextTick } from "vue";
+import { defineComponent, nextTick, ref } from "vue";
 import { TagsInput } from "../index";
 
 describe("TagsInput contract", () => {
@@ -135,6 +135,35 @@ describe("TagsInput contract", () => {
 
     await input.trigger("keydown", { key: "Enter" });
     expect(wrapper.emitted("update:modelValue")).toEqual([[["Vue"]]]);
+  });
+
+  it("commits Enter exactly once and clears the editor in controlled v-model usage", async () => {
+    const Host = defineComponent({
+      components: { TagsInput },
+      setup() {
+        const value = ref(["Vue", "Accessibility"]);
+        return { value };
+      },
+      template: `
+        <div>
+          <TagsInput v-model="value" label="Topics" />
+          <output data-selected>{{ value.join(",") }}</output>
+        </div>
+      `,
+    });
+
+    const wrapper = mount(Host);
+    const input = wrapper.get("input.dui-TagsInput-input");
+
+    await input.setValue("a");
+    await input.trigger("keydown", { key: "Enter" });
+    await nextTick();
+
+    expect(
+      wrapper.findAll(".dui-TagsInput-tag-label").map((tag) => tag.text()),
+    ).toEqual(["Vue", "Accessibility", "a"]);
+    expect((input.element as HTMLInputElement).value).toBe("");
+    expect(wrapper.get("[data-selected]").text()).toBe("Vue,Accessibility,a");
   });
 
   it("trims values, rejects duplicates and enforces maxTags across pasted batches", async () => {
