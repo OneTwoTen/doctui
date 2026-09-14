@@ -57,22 +57,19 @@ type Story = StoryObj<typeof meta>;
 export const Playground: Story = {
   render: (args) =>
     preview(() =>
-      h(
-        Drawer,
-        args,
-        {
-          default: () =>
-            h(Stack, { gap: "md" }, () => [
-              h(Text, null, () => "Drawer content"),
-              h(
-                Text,
-                { size: "sm", muted: true },
-                () => "Use Controls to verify position, width, radius, backdrop, dismissal and focus behavior.",
-              ),
-            ]),
-          footer: () => h(Text, { size: "sm", muted: true }, () => "Footer slot"),
-        },
-      ),
+      h(Drawer, args, {
+        default: () =>
+          h(Stack, { gap: "md" }, () => [
+            h(Text, null, () => "Drawer content"),
+            h(
+              Text,
+              { size: "sm", muted: true },
+              () =>
+                "Use Controls to verify position, width, radius, backdrop, dismissal and focus behavior.",
+            ),
+          ]),
+        footer: () => h(Text, { size: "sm", muted: true }, () => "Footer slot"),
+      }),
     ),
 };
 
@@ -84,7 +81,12 @@ export const CustomBackdrop: Story = {
   render: (args) =>
     preview(() =>
       h(Drawer, args, {
-        default: () => h(Text, null, () => "Backdrop props are forwarded to the shared Overlay."),
+        default: () =>
+          h(
+            Text,
+            null,
+            () => "Backdrop props are forwarded to the shared Overlay.",
+          ),
       }),
     ),
 };
