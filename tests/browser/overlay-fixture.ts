@@ -111,7 +111,11 @@ const App = defineComponent({
                             ]),
                           footer: () =>
                             h(Group, { gap: "sm" }, () => [
-                              h(Button, { id: "drawer-cancel" }, () => "Cancel"),
+                              h(
+                                Button,
+                                { id: "drawer-cancel" },
+                                () => "Cancel",
+                              ),
                               h(Button, { id: "drawer-save" }, () => "Save"),
                             ]),
                         },
