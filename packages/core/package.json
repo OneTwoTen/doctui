@@ -1,6 +1,6 @@
 {
   "name": "@doctui/core",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Core Vue components and theme primitives for doctui.",
   "type": "module",
   "sideEffects": [

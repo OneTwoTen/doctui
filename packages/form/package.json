@@ -1,6 +1,6 @@
 {
   "name": "@doctui/form",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Vue-first form state and validation helpers for doctui.",
   "type": "module",
   "files": [

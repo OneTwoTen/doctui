@@ -1,6 +1,6 @@
 {
   "name": "@doctui/mcp-server",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Local MCP server for querying doctui component metadata and docs.",
   "type": "module",
   "files": [
