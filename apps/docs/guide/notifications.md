@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Button, DoctuiProvider, Stack } from "@doctui/core";
+import { Button, Group, Stack, Text } from "@doctui/core";
 import {
   Notifications,
   createNotifications,
@@ -9,12 +9,41 @@ const notifications = createNotifications({
   limit: 4,
 });
 
+let uploadId: ReturnType<typeof notifications.show> | undefined;
+
 function showSaved() {
   notifications.show({
     title: "Saved",
     message: "Your changes are ready.",
     color: "success",
   });
+}
+
+function showWarning() {
+  notifications.show({
+    title: "Review required",
+    message: "Two fields still need attention.",
+    color: "warning",
+  });
+}
+
+function startUpload() {
+  uploadId = notifications.show({
+    title: "Uploading",
+    message: "The notification stays visible until it is updated.",
+    autoClose: false,
+  });
+}
+
+function completeUpload() {
+  if (!uploadId) return;
+  notifications.update(uploadId, {
+    title: "Upload complete",
+    message: "The file is ready.",
+    color: "success",
+    autoClose: 3000,
+  });
+  uploadId = undefined;
 }
 </script>
 
@@ -24,21 +53,24 @@ function showSaved() {
 store owns notification state and timers; `<Notifications>` only renders that
 state unless lifecycle ownership is explicitly delegated to it.
 
-<DoctuiProvider>
-  <Stack gap="md" style="max-width: 28rem;">
-    <Button color="success" @click="showSaved">Show notification</Button>
-    <Notifications :store="notifications" />
-  </Stack>
-</DoctuiProvider>
+<div class="docs-preview docs-preview--stack" data-docs-preview="notifications-basic">
+  <Group gap="sm">
+    <Button color="success" @click="showSaved">Show success</Button>
+    <Button color="warning" variant="light" @click="showWarning">Show warning</Button>
+    <Button variant="outline" @click="notifications.clean()">Clear all</Button>
+  </Group>
+  <Text size="sm" muted>Use the dismiss button on a notification to verify native keyboard and pointer behavior.</Text>
+  <Notifications :store="notifications" />
+</div>
 
 ```ts
-import { Notifications, createNotifications } from '@doctui/notifications';
+import { Notifications, createNotifications } from "@doctui/notifications";
 
 const notifications = createNotifications({ limit: 4 });
 notifications.show({
-  title: 'Saved',
-  message: 'Your changes are ready.',
-  color: 'success',
+  title: "Saved",
+  message: "Your changes are ready.",
+  color: "success",
 });
 ```
 
@@ -63,7 +95,7 @@ Do not enable `cleanOnUnmount` on a renderer that shares its store with another
 active route or renderer because that explicitly transfers cleanup ownership to
 that renderer.
 
-## Auto-close timing
+## Auto-close timing and updates
 
 Hovering a notification pauses its auto-close timer. Resuming continues from
 the remaining duration rather than starting the full duration again.
@@ -74,14 +106,22 @@ update; if the notification is paused, that new duration starts when it is
 resumed. Set `autoClose: false` to disable automatic dismissal. Setting
 `autoClose: undefined` restores the default 5000 ms duration.
 
+<div class="docs-preview docs-preview--stack" data-docs-preview="notifications-update">
+  <Group gap="sm">
+    <Button @click="startUpload">Start persistent upload</Button>
+    <Button color="success" variant="light" @click="completeUpload">Complete upload</Button>
+  </Group>
+  <Text size="sm" muted>Start creates a persistent notification; Complete updates that same notification and starts a 3-second close timer.</Text>
+</div>
+
 ```ts
 const id = notifications.show({
-  message: 'Uploading…',
+  message: "Uploading…",
   autoClose: false,
 });
 
 notifications.update(id, {
-  message: 'Upload complete',
+  message: "Upload complete",
   autoClose: 3000,
 });
 ```

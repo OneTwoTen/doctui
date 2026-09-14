@@ -54,5 +54,8 @@ jobs:
       - name: Build
         run: bun run build
 
+      - name: Docs browser preview regression
+        run: bun run test:browser:docs
+
       - name: Check generated metadata
         run: bun run metadata:check

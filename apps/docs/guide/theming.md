@@ -1,3 +1,56 @@
+<script setup lang="ts">
+import {
+  Button,
+  DoctuiProvider,
+  Group,
+  Paper,
+  Stack,
+  Text,
+  createTheme,
+  type DoctuiColorScheme,
+} from "@doctui/core";
+import { ref } from "vue";
+
+const previewScheme = ref<DoctuiColorScheme>("light");
+
+const previewTheme = createTheme({
+  spacing: {
+    md: "1.25rem",
+  },
+  radius: {
+    md: "0.75rem",
+  },
+  colors: {
+    light: {
+      primary: {
+        filled: "#7c3aed",
+        light: "#ede9fe",
+      },
+    },
+    dark: {
+      primary: {
+        filled: "#a78bfa",
+        light: "#2e1065",
+      },
+    },
+  },
+});
+
+const compactTheme = createTheme({
+  spacing: {
+    sm: "0.5rem",
+    md: "0.75rem",
+  },
+  radius: {
+    md: "0.375rem",
+  },
+});
+
+function togglePreviewScheme() {
+  previewScheme.value = previewScheme.value === "light" ? "dark" : "light";
+}
+</script>
+
 # Theming
 
 `@doctui/core` exposes a provider-driven theme contract. Visual components consume semantic `--dui-*` CSS variables instead of hard-coded palette values.
@@ -48,6 +101,21 @@ import { theme } from "./theme";
 </template>
 ```
 
+<div class="docs-preview" data-docs-preview="theme-basic">
+  <DoctuiProvider :theme="previewTheme" color-scheme="light">
+    <Paper with-border shadow="sm" style="padding: var(--dui-spacing-md)">
+      <Stack gap="md">
+        <Text weight="600">Custom provider theme</Text>
+        <Text size="sm" muted>The purple primary color, spacing and radius come from the local theme override.</Text>
+        <Group>
+          <Button>Primary action</Button>
+          <Button variant="light">Secondary action</Button>
+        </Group>
+      </Stack>
+    </Paper>
+  </DoctuiProvider>
+</div>
+
 Resolved themes are deep-readonly. Treat the theme returned by `useDoctuiTheme()` and `DEFAULT_THEME` as immutable values; change the provider's `theme` input instead of mutating a resolved theme.
 
 ## Typography
@@ -80,6 +148,19 @@ The doctui Docs and Storybook load Be Vietnam Pro only for documentation/showcas
 ## Switch light and dark mode
 
 `DoctuiProvider` accepts `light` or `dark`. The provider updates semantic variables for its scope, so components do not need separate dark-mode styles.
+
+<div class="docs-preview" data-docs-preview="theme-color-scheme">
+  <DoctuiProvider :theme="previewTheme" :color-scheme="previewScheme">
+    <Paper with-border style="padding: var(--dui-spacing-md)">
+      <Stack gap="md">
+        <Text>Current local scheme: <strong>{{ previewScheme }}</strong></Text>
+        <Button style="width: fit-content" @click="togglePreviewScheme">
+          Use {{ previewScheme === "light" ? "dark" : "light" }} mode
+        </Button>
+      </Stack>
+    </Paper>
+  </DoctuiProvider>
+</div>
 
 ```vue
 <script setup lang="ts">
@@ -150,6 +231,27 @@ Unspecified values continue to inherit from `DEFAULT_THEME`, including nested se
 Providers can be nested. A child provider inherits the parent's resolved theme and color scheme before applying its own overrides.
 
 This is useful when one section of an application needs denser spacing or a different accent without changing the rest of the page:
+
+<div class="docs-preview docs-preview--compare" data-docs-preview="theme-nested-provider">
+  <DoctuiProvider color-scheme="dark">
+    <Paper with-border style="padding: var(--dui-spacing-md)">
+      <Stack gap="md">
+        <Text weight="600">Parent provider</Text>
+        <Button>Default spacing</Button>
+      </Stack>
+    </Paper>
+  </DoctuiProvider>
+  <DoctuiProvider color-scheme="dark">
+    <DoctuiProvider :theme="compactTheme">
+      <Paper with-border style="padding: var(--dui-spacing-md)">
+        <Stack gap="md">
+          <Text weight="600">Nested compact provider</Text>
+          <Button>Compact spacing</Button>
+        </Stack>
+      </Paper>
+    </DoctuiProvider>
+  </DoctuiProvider>
+</div>
 
 ```vue
 <script setup lang="ts">

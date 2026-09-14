@@ -1,6 +1,7 @@
 import "@doctui/core/styles.css";
 import "@doctui/dates/styles.css";
 import "@doctui/notifications/styles.css";
+import "./preview.css";
 import "./typography.css";
 import {
   ActionIcon,
@@ -54,8 +55,9 @@ import {
   YearPicker,
 } from "@doctui/dates";
 import { Notifications } from "@doctui/notifications";
+import { useData } from "vitepress";
 import DefaultTheme from "vitepress/theme";
-import type { Component } from "vue";
+import { type Component, defineComponent, h } from "vue";
 
 const docsComponents: Record<string, Component> = {
   ActionIcon,
@@ -108,8 +110,28 @@ const docsComponents: Record<string, Component> = {
   YearPicker,
 };
 
+const DocsLayout = defineComponent({
+  name: "DocsLayout",
+  setup() {
+    const { isDark } = useData();
+
+    return () =>
+      h(
+        DoctuiProvider,
+        {
+          class: "docs-doctui-provider",
+          colorScheme: isDark.value ? "dark" : "light",
+        },
+        {
+          default: () => h(DefaultTheme.Layout),
+        },
+      );
+  },
+});
+
 export default {
   ...DefaultTheme,
+  Layout: DocsLayout,
   enhanceApp(
     context: Parameters<NonNullable<typeof DefaultTheme.enhanceApp>>[0],
   ) {

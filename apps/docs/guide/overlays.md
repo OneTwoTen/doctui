@@ -1,3 +1,37 @@
+<script setup lang="ts">
+import {
+  Button,
+  Drawer,
+  Group,
+  Menu,
+  Modal,
+  Overlay,
+  Paper,
+  Popover,
+  Stack,
+  Text,
+  Tooltip,
+} from "@doctui/core";
+import { ref } from "vue";
+
+const modalOpen = ref(false);
+const drawerOpen = ref(false);
+const menuOpen = ref(false);
+const popoverOpen = ref(false);
+const overlayOpen = ref(false);
+const selectedAction = ref("none");
+
+const actions = [
+  { value: "edit", label: "Edit" },
+  { value: "archive", label: "Archive" },
+  { value: "delete", label: "Delete", disabled: true },
+];
+
+function selectAction(value: string | number) {
+  selectedAction.value = String(value);
+}
+</script>
+
 # Overlays
 
 `Overlay`, `Modal`, `Drawer`, `Popover`, `Menu`, and `Tooltip` share doctui-owned interaction primitives for predictable layering, dismissal, focus, accessible trigger relationships, and theme-safe rendering through Vue Teleport.
@@ -18,12 +52,25 @@ Use `portalTarget` when Modal, Drawer, or Overlay must render into another DOM t
 
 Use a visible `title` whenever the dialog has a heading. doctui wires it to `aria-labelledby` automatically.
 
+<div class="docs-preview docs-preview--row">
+  <Button @click="modalOpen = true">Review changes</Button>
+  <Modal v-model="modalOpen" title="Review changes" size="lg" centered>
+    <Stack gap="md">
+      <Text>Review the pending changes before publishing.</Text>
+      <Group justify="flex-end">
+        <Button variant="default" @click="modalOpen = false">Cancel</Button>
+        <Button @click="modalOpen = false">Publish</Button>
+      </Group>
+    </Stack>
+  </Modal>
+</div>
+
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue'
-import { Button, Modal } from '@doctui/core'
+import { ref } from "vue";
+import { Button, Modal } from "@doctui/core";
 
-const open = ref(false)
+const open = ref(false);
 </script>
 
 <template>
@@ -84,6 +131,16 @@ For persistent dialog actions, use the named `footer` slot. See [Dialog footer a
 
 `Drawer` uses the same Overlay, focus, dismissal and scroll-lock contract as `Modal`, but positions a fixed side panel at the left or right edge.
 
+<div class="docs-preview docs-preview--row">
+  <Button variant="default" @click="drawerOpen = true">Open filters</Button>
+  <Drawer v-model="drawerOpen" title="Filters" position="right" size="md">
+    <Stack gap="md">
+      <Text>Filter controls can stay in this side surface.</Text>
+      <Button @click="drawerOpen = false">Apply filters</Button>
+    </Stack>
+  </Drawer>
+</div>
+
 ```vue
 <Drawer
   v-model="filtersOpen"
@@ -113,6 +170,15 @@ Drawer uses a single Portal path through the shared Overlay. Do not wrap Drawer 
 
 `Menu` follows the menu-button keyboard pattern. The element rendered by the `target` slot is the actual trigger: doctui adds `aria-haspopup="menu"`, `aria-expanded`, and `aria-controls` to that element instead of putting those attributes on an implementation wrapper.
 
+<div class="docs-preview docs-preview--stack docs-preview--narrow">
+  <Menu v-model="menuOpen" :data="actions" @select="selectAction">
+    <template #target>
+      <Button>Actions</Button>
+    </template>
+  </Menu>
+  <Text size="sm" muted>Last action: {{ selectedAction }}</Text>
+</div>
+
 ```vue
 <Menu
   v-model="actionsOpen"
@@ -139,6 +205,17 @@ Outside pointer interaction closes the menu when `closeOnClickOutside` is enable
 
 `Popover` treats the `target` slot root as the real trigger. The trigger receives a stable `id`, `aria-haspopup="dialog"`, `aria-expanded`, and `aria-controls`; the controlled panel receives the matching stable panel `id` and uses `aria-labelledby` to take its accessible name from that real trigger. If the trigger already has an `id`, doctui preserves and reuses it.
 
+<div class="docs-preview docs-preview--row">
+  <Popover v-model="popoverOpen" position="right">
+    <template #target>
+      <Button variant="light">Show details</Button>
+    </template>
+    <Paper with-border style="padding: 0.75rem; max-width: 16rem">
+      <Text size="sm">Contextual content stays associated with the real trigger.</Text>
+    </Paper>
+  </Popover>
+</div>
+
 ```vue
 <Popover v-model="detailsOpen" position="right">
   <template #target>
@@ -160,6 +237,12 @@ Core must not grow a custom JavaScript popper engine. If doctui promotes collisi
 ## Tooltip
 
 `Tooltip` is for short, non-essential helper text. It opens on pointer hover and keyboard focus. The slotted root trigger receives `aria-describedby` only while the tooltip is visible, pointing to the rendered `role="tooltip"` element.
+
+<div class="docs-preview docs-preview--row">
+  <Tooltip label="Save changes without publishing">
+    <Button variant="outline">Save draft</Button>
+  </Tooltip>
+</div>
 
 ```vue
 <Tooltip label="Save changes without publishing">
@@ -204,6 +287,18 @@ Menu and Popover do not trap focus. They preserve normal document tab order and 
 ## Overlay primitive
 
 `Overlay` is a layering primitive, not a dialog. It does not provide dialog naming or focus management by itself.
+
+<div class="docs-preview docs-preview--row">
+  <Button variant="subtle" @click="overlayOpen = true">Open custom overlay</Button>
+  <Overlay v-model="overlayOpen" color="neutral" :opacity="0.55" :with-backdrop="true" :close-on-click="true">
+    <Paper with-border style="padding: 1rem; max-width: 20rem; margin: auto">
+      <Stack gap="sm">
+        <Text>This is custom overlay content, not a dialog abstraction.</Text>
+        <Button @click="overlayOpen = false">Close</Button>
+      </Stack>
+    </Paper>
+  </Overlay>
+</div>
 
 ```vue
 <Overlay
