@@ -1,3 +1,5 @@
+import { readFile } from "node:fs/promises";
+import { resolve } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { createNotifications } from "./index";
 
@@ -33,5 +35,16 @@ describe("@doctui/notifications", () => {
     store.resume(id);
     vi.advanceTimersByTime(1000);
     expect(store.notifications.value).toHaveLength(0);
+  });
+
+  it("uses the shared toast z-index token", async () => {
+    const css = await readFile(
+      resolve(process.cwd(), "packages/notifications/src/styles.css"),
+      "utf8",
+    );
+
+    expect(css).toMatch(
+      /\.dui-Notifications[\s\S]*z-index:\s*var\(--dui-z-index-toast\)/,
+    );
   });
 });

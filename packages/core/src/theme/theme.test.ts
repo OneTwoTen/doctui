@@ -10,6 +10,7 @@ import { mergeTheme } from "./merge-theme";
 const customTheme = createTheme({
   spacing: { md: "2rem" },
   radius: { md: "0.875rem" },
+  breakpoints: { md: "52rem" },
   colors: {
     dark: {
       primary: {
@@ -53,7 +54,7 @@ describe("theme foundation", () => {
     );
     expect(variables["--dui-color-text"]).toBe(DEFAULT_THEME.colors.dark.text);
     expect(variables["--dui-z-index-modal"]).toBe("500");
-    expect(variables["--dui-breakpoint-md"]).toBeUndefined();
+    expect(variables["--dui-breakpoint-md"]).toBe("52rem");
   });
 
   it("keeps resolved themes readonly at runtime", () => {
@@ -78,6 +79,9 @@ describe("theme foundation", () => {
     expect(wrapper.element.style.fontFamily).toBe("var(--dui-font-family)");
     expect(wrapper.element.style.getPropertyValue("--dui-spacing-md")).toBe(
       "2rem",
+    );
+    expect(wrapper.element.style.getPropertyValue("--dui-breakpoint-md")).toBe(
+      "52rem",
     );
     expect(
       wrapper.element.style.getPropertyValue("--dui-color-primary-filled"),

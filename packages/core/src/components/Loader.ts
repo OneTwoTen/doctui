@@ -8,6 +8,10 @@ export interface LoaderProps {
   color?: Color;
 }
 
+function loaderColorToken(color: Color): string {
+  return `var(--dui-color-${color}-filled)`;
+}
+
 export const Loader = defineComponent({
   name: "DuiLoader",
   inheritAttrs: false,
@@ -29,7 +33,13 @@ export const Loader = defineComponent({
           "data-size": props.size,
           "data-type": props.type,
           class: ["dui-Loader", `dui-Loader--${props.type}`, attrs.class],
-          style: [attrs.style, { fontSize: fontSizeToken(props.size) }],
+          style: [
+            attrs.style,
+            {
+              color: loaderColorToken(props.color),
+              fontSize: fontSizeToken(props.size),
+            },
+          ],
         },
         props.type === "dots"
           ? [h("i"), h("i"), h("i")]

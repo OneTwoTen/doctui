@@ -9,6 +9,10 @@ export interface DividerProps {
   label?: string;
 }
 
+function dividerColorToken(color: Color): string {
+  return `var(--dui-color-${color}-outline)`;
+}
+
 export const Divider = defineComponent({
   name: "DuiDivider",
   inheritAttrs: false,
@@ -37,10 +41,10 @@ export const Divider = defineComponent({
             attrs.style,
             props.orientation === "vertical"
               ? {
-                  borderInlineStart: `${spacingToken(props.size)} solid var(--dui-color-border)`,
+                  borderInlineStart: `${spacingToken(props.size)} solid ${dividerColorToken(props.color)}`,
                 }
               : {
-                  borderTop: `${spacingToken(props.size)} solid var(--dui-color-border)`,
+                  borderTop: `${spacingToken(props.size)} solid ${dividerColorToken(props.color)}`,
                 },
           ],
         },

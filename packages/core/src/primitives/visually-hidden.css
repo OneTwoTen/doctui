@@ -1,0 +1,11 @@
+.dui-VisuallyHidden[data-focusable="true"]:focus,
+.dui-VisuallyHidden[data-focusable="true"]:focus-within {
+  clip: auto;
+  clip-path: none;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  position: static;
+  white-space: normal;
+  width: auto;
+}
