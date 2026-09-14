@@ -9,7 +9,8 @@ const meta = {
   args: {
     modelValue: "2026-09-14T09:30",
     label: "Publish at",
-    description: "Custom doctui date surface with explicit hour and minute controls.",
+    description:
+      "Custom doctui date surface with explicit hour and minute controls.",
     placeholder: "Select date and time",
     minDate: "2026-01-01",
     maxDate: "2027-12-31",
