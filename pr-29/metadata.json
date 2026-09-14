@@ -2,9 +2,9 @@
   "number": "29",
   "title": "fix(dates): make calendar and date inputs SSR-safe and accessible",
   "branch": "codex/issue-15-dates-a11y",
-  "sha": "5387b2aef259d620f2788ce4e280a8c121a7e7d1",
+  "sha": "11be82e6a3f429612c9d6d9772a21326928b95ec",
   "repository": "OneTwoTen/doctui",
   "prUrl": "https://github.com/OneTwoTen/doctui/pull/29",
-  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/34806557983",
-  "generatedAt": "2026-09-14T04:34:58.456Z"
+  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/34806669808",
+  "generatedAt": "2026-09-14T04:36:41.564Z"
 }
