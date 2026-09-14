@@ -1,1 +1,0 @@
-import{t as e}from"./iframe-k2-aC64r.js";e();
