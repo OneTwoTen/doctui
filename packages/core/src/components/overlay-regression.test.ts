@@ -32,7 +32,9 @@ describe("overlay visual regressions", () => {
     expect(overlay?.style.getPropertyValue("--dui-color-neutral-filled")).toBe(
       "#123456",
     );
-    expect(overlay?.style.getPropertyValue("--dui-z-index-overlay")).not.toBe("");
+    expect(overlay?.style.getPropertyValue("--dui-z-index-overlay")).not.toBe(
+      "",
+    );
 
     wrapper.unmount();
   });
@@ -88,7 +90,9 @@ describe("overlay visual regressions", () => {
 
     const overlay = document.querySelector<HTMLElement>(".dui-Overlay");
     expect(overlay?.dataset.withBackdrop).toBe("false");
-    expect(overlay?.style.getPropertyValue("--dui-overlay-opacity")).toBe("0.25");
+    expect(overlay?.style.getPropertyValue("--dui-overlay-opacity")).toBe(
+      "0.25",
+    );
 
     wrapper.unmount();
   });
