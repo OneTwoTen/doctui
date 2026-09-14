@@ -10,8 +10,6 @@ const meta = {
     modelValue: "2026-09-14",
     label: "Release date",
     description: "Choose when the release becomes available.",
-    error: undefined,
-    ariaLabel: undefined,
     placeholder: "Select date",
     minDate: "2026-09-01",
     maxDate: "2026-10-31",
