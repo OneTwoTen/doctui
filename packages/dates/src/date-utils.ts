@@ -55,10 +55,7 @@ export function monthLabel(date: Date, locale: string): string {
   }).format(date);
 }
 
-export function dayLabels(
-  locale: string,
-  firstDayOfWeek: number,
-): string[] {
+export function dayLabels(locale: string, firstDayOfWeek: number): string[] {
   const normalizedFirstDay = ((firstDayOfWeek % 7) + 7) % 7;
   const base = new Date(2024, 0, 7 + normalizedFirstDay);
 
