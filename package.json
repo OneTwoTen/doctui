@@ -22,6 +22,7 @@
     "test": "vitest run",
     "test:browser": "node scripts/browser-quality-regression.mjs && node scripts/browser-overlay-regression.mjs",
     "test:browser:overlays": "node scripts/browser-overlay-regression.mjs",
+    "test:browser:docs": "node scripts/browser-docs-preview-regression.mjs",
     "test:docs-previews": "node scripts/docs-live-preview-regression.mjs --source",
     "api:check": "bun run scripts/validate-api-drift.ts",
     "quality:check": "bun run api:check && bun run test:docs-previews && bun run test:browser",
