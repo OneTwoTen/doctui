@@ -9,6 +9,7 @@ import {
   DateTimePicker,
   dateValue,
   MonthPicker,
+  NativeDateInput,
   YearPicker,
 } from "./index";
 
@@ -56,11 +57,34 @@ describe("@doctui/dates SSR and field accessibility", () => {
       },
     });
 
-    const clear = wrapper.get('button[aria-label="Clear input"]');
+    const clear = wrapper.get('button[aria-label="Clear date"]');
     expect(clear.attributes("disabled")).toBeDefined();
     await clear.trigger("click");
     expect(wrapper.emitted("clear")).toBeUndefined();
     expect(wrapper.emitted("update:modelValue")).toBeUndefined();
+  });
+
+  it("parses localized DateInput typing back to strict ISO values", async () => {
+    const wrapper = mount(DateInput, {
+      props: {
+        modelValue: null,
+        locale: "en-GB",
+      },
+    });
+    const input = wrapper.get('input[type="text"]');
+
+    await input.setValue("14/09/2026");
+    expect(wrapper.emitted("update:modelValue")?.at(-1)).toEqual([
+      "2026-09-14",
+    ]);
+  });
+
+  it("keeps browser native date semantics isolated to NativeDateInput", () => {
+    const wrapper = mount(NativeDateInput, {
+      props: { modelValue: "2026-09-14", label: "Native date" },
+    });
+
+    expect(wrapper.get('input[type="date"]').element.value).toBe("2026-09-14");
   });
 
   it("gives DateTimePicker the same description, error and clear contract", async () => {
