@@ -2,9 +2,9 @@
   "number": "33",
   "title": "test(quality): add browser regression matrix and API drift checks",
   "branch": "quality/issue-17-browser-api-matrix",
-  "sha": "32fa9fa02033fc0d14f8aed04dc99d49e74b5600",
+  "sha": "a6e87fc7be5a97a755df4bdd1b4cf8b439843506",
   "repository": "OneTwoTen/doctui",
   "prUrl": "https://github.com/OneTwoTen/doctui/pull/33",
-  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/34839017079",
-  "generatedAt": "2026-09-14T11:36:27.149Z"
+  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/34839094668",
+  "generatedAt": "2026-09-14T11:37:23.770Z"
 }
