@@ -42,16 +42,19 @@ describe("overlay footer contract", () => {
   it.each([
     [Modal, ".dui-Modal-footer"],
     [Drawer, ".dui-Drawer-footer"],
-  ] as const)("%s does not render an empty footer", (Component, footerSelector) => {
-    const wrapper = mount(Component, {
-      props: { modelValue: true, title: "No actions" } as never,
-      slots: { default: () => "Body" },
-      attachTo: document.body,
-    });
+  ] as const)(
+    "%s does not render an empty footer",
+    (Component, footerSelector) => {
+      const wrapper = mount(Component, {
+        props: { modelValue: true, title: "No actions" } as never,
+        slots: { default: () => "Body" },
+        attachTo: document.body,
+      });
 
-    expect(document.querySelector(footerSelector)).toBeNull();
-    wrapper.unmount();
-  });
+      expect(document.querySelector(footerSelector)).toBeNull();
+      wrapper.unmount();
+    },
+  );
 
   it("keeps overlay chrome stable while body content scrolls", async () => {
     const css = await readFile(
