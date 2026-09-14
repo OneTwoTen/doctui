@@ -4,6 +4,7 @@ import {
   Button,
   DoctuiProvider,
   Drawer,
+  Group,
   Modal,
   Stack,
 } from "../../packages/core/src";
@@ -76,6 +77,13 @@ const App = defineComponent({
                         () => "Open drawer",
                       ),
                       h(Button, { id: "modal-action" }, () => "Modal action"),
+                      ...Array.from({ length: 24 }, (_, index) =>
+                        h(
+                          "p",
+                          { "data-modal-long-row": "", key: index },
+                          `Long modal content ${index + 1}`,
+                        ),
+                      ),
                       h(
                         Drawer,
                         {
@@ -87,13 +95,32 @@ const App = defineComponent({
                         },
                         {
                           default: () =>
-                            h(
-                              Button,
-                              { id: "drawer-action" },
-                              () => "Drawer action",
-                            ),
+                            h(Stack, { gap: "md" }, () => [
+                              h(
+                                Button,
+                                { id: "drawer-action" },
+                                () => "Drawer action",
+                              ),
+                              ...Array.from({ length: 24 }, (_, index) =>
+                                h(
+                                  "p",
+                                  { "data-drawer-long-row": "", key: index },
+                                  `Long drawer content ${index + 1}`,
+                                ),
+                              ),
+                            ]),
+                          footer: () =>
+                            h(Group, { gap: "sm" }, () => [
+                              h(Button, { id: "drawer-cancel" }, () => "Cancel"),
+                              h(Button, { id: "drawer-save" }, () => "Save"),
+                            ]),
                         },
                       ),
+                    ]),
+                  footer: () =>
+                    h(Group, { gap: "sm" }, () => [
+                      h(Button, { id: "modal-cancel" }, () => "Cancel"),
+                      h(Button, { id: "modal-save" }, () => "Save"),
                     ]),
                 },
               ),
