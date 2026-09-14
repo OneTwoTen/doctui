@@ -1,3 +1,4 @@
+import { createApp, defineComponent, h, nextTick, ref } from "vue";
 import {
   Button,
   Combobox,
@@ -11,7 +12,6 @@ import {
   createNotifications,
   Notifications,
 } from "../../packages/notifications/src";
-import { createApp, defineComponent, h, nextTick, ref } from "vue";
 
 const notifications = createNotifications({ limit: 3 });
 
@@ -31,7 +31,7 @@ const App = defineComponent({
       color: "success",
     });
 
-    const section = (id: string, children: unknown[]) =>
+    const section = (id: string, children: ReturnType<typeof h>[]) =>
       h("section", { id, style: { marginBottom: "2rem" } }, children);
 
     return () =>
@@ -104,7 +104,13 @@ const App = defineComponent({
                       | null
                       | readonly (string | number)[],
                   ) => {
-                    if (!Array.isArray(value)) technology.value = value;
+                    if (
+                      value === null ||
+                      typeof value === "string" ||
+                      typeof value === "number"
+                    ) {
+                      technology.value = value;
+                    }
                   },
                 }),
                 h(
@@ -132,7 +138,11 @@ const App = defineComponent({
                   },
                   {
                     target: () =>
-                      h(Button, { id: "quality-menu-trigger" }, () => "Actions"),
+                      h(
+                        Button,
+                        { id: "quality-menu-trigger" },
+                        () => "Actions",
+                      ),
                   },
                 ),
                 h(
