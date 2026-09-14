@@ -11,11 +11,8 @@ export const VisuallyHidden = defineComponent({
         {
           ...attrs,
           "data-dui-component": "VisuallyHidden",
+          "data-focusable": String(props.focusable),
           class: ["dui-VisuallyHidden", attrs.class],
-          style: [
-            attrs.style,
-            props.focusable ? undefined : { clip: "rect(0 0 0 0)" },
-          ],
         },
         slots.default?.(),
       );
