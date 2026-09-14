@@ -47,7 +47,9 @@ export const PickerDatePanel = defineComponent({
     };
 
     const visibleDate = () =>
-      parseMonth(visibleMonth.value) ?? parseDate(props.modelValue) ?? fallbackDate;
+      parseMonth(visibleMonth.value) ??
+      parseDate(props.modelValue) ??
+      fallbackDate;
     const visibleYear = () => visibleDate().getFullYear();
     const minYear = () =>
       parseDate(props.minDate)?.getFullYear() ?? visibleYear() - 100;
@@ -68,8 +70,12 @@ export const PickerDatePanel = defineComponent({
           ? h(Calendar, {
               modelValue: props.modelValue,
               month: visibleMonth.value,
-              ...(props.minDate !== undefined ? { minDate: props.minDate } : {}),
-              ...(props.maxDate !== undefined ? { maxDate: props.maxDate } : {}),
+              ...(props.minDate !== undefined
+                ? { minDate: props.minDate }
+                : {}),
+              ...(props.maxDate !== undefined
+                ? { maxDate: props.maxDate }
+                : {}),
               locale: props.locale,
               firstDayOfWeek: props.firstDayOfWeek,
               disabled: props.disabled,
