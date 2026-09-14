@@ -2,9 +2,9 @@
   "number": "24",
   "title": "fix(core): harden menu popover and tooltip interactions",
   "branch": "codex/issue-13-menus",
-  "sha": "c348934a070864ccf1c83fd6523cb5966f66a832",
+  "sha": "fe69e844206c955a69d334d0b4d6e470ba6bef35",
   "repository": "OneTwoTen/doctui",
   "prUrl": "https://github.com/OneTwoTen/doctui/pull/24",
-  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/34796435966",
-  "generatedAt": "2026-09-14T01:36:49.905Z"
+  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/34796469837",
+  "generatedAt": "2026-09-14T01:37:39.509Z"
 }
