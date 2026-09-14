@@ -116,7 +116,8 @@ export const FocusTrap = defineComponent({
     };
 
     const onFocusIn = (event: FocusEvent) => {
-      if (!props.active || !props.trapped || !isTopTrap() || !root.value) return;
+      if (!props.active || !props.trapped || !isTopTrap() || !root.value)
+        return;
       if (root.value.contains(event.target as Node)) return;
       focusFirst();
     };
