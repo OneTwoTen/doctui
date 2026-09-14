@@ -80,9 +80,14 @@ export const TagsInput = defineComponent({
       return added;
     };
 
+    const resetDraft = () => {
+      draft.value = "";
+      if (input.value) input.value.value = "";
+    };
+
     const addDraft = () => {
       const added = commitTags([draft.value]);
-      if (added.length > 0) draft.value = "";
+      if (added.length > 0) resetDraft();
     };
 
     const focusInput = () => {
@@ -103,7 +108,7 @@ export const TagsInput = defineComponent({
       if (!canMutate.value || !props.modelValue.length) return;
       emit("update:modelValue", []);
       emit("clear");
-      draft.value = "";
+      resetDraft();
       focusInput();
     };
 
