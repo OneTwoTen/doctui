@@ -51,8 +51,19 @@ export const livePreviewManifest = [
   { component: "YearPicker", guide: "dates.md" },
 ];
 
+export const guidePreviewCoverage = [
+  { guide: "basic-components.md", minPreviews: 14 },
+  { guide: "selection-controls.md", minPreviews: 1 },
+  { guide: "tags-input.md", minPreviews: 3 },
+  { guide: "overlays.md", minPreviews: 6 },
+  { guide: "dialog-actions.md", minPreviews: 5 },
+  { guide: "accessibility.md", minPreviews: 4 },
+  { guide: "notifications.md", minPreviews: 2 },
+  { guide: "dates.md", minPreviews: 7 },
+];
+
 export const renderSmokeCases = [
-  { guide: "basic-components", markers: ["Button", "Grid"] },
+  { guide: "basic-components", markers: ["Button", "Grid", "TextInput"] },
   { guide: "selection-controls", markers: ["Combobox"] },
   { guide: "tags-input", markers: ["TagsInput"] },
 ];
