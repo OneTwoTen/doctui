@@ -52,115 +52,135 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
-  render: (args) =>
-    preview(() => {
-      const open = ref(args.modelValue);
-      watch(
-        () => args.modelValue,
-        (value) => (open.value = value),
-      );
+  render: (args) => {
+    const Demo = defineComponent({
+      setup() {
+        const open = ref(args.modelValue);
+        watch(
+          () => args.modelValue,
+          (value) => (open.value = value),
+        );
 
-      return h(Stack, { gap: "md", style: { maxWidth: "28rem" } }, () => [
-        h(Button, { onClick: () => (open.value = true) }, () => "Open modal"),
-        h(
-          Text,
-          { size: "sm", muted: true },
-          () => "Use Controls to change every public modal behavior.",
-        ),
-        h(
-          Modal,
-          {
-            ...args,
-            modelValue: open.value,
-            "onUpdate:modelValue": (value: boolean) => (open.value = value),
-          },
-          {
-            default: () =>
-              h(Stack, { gap: "md" }, () => [
-                h(Text, null, () => "Resize the dialog, change its radius, backdrop, dismissal and focus behavior from Controls."),
-                h(Button, { onClick: () => (open.value = false) }, () => "Done"),
-              ]),
-            footer: () => h(Text, { size: "sm", muted: true }, () => "Footer slot"),
-          },
-        ),
-      ]);
-    }),
+        return () =>
+          h(Stack, { gap: "md", style: { maxWidth: "28rem" } }, () => [
+            h(Button, { onClick: () => (open.value = true) }, () => "Open modal"),
+            h(
+              Text,
+              { size: "sm", muted: true },
+              () => "Use Controls to change every public modal behavior.",
+            ),
+            h(
+              Modal,
+              {
+                ...args,
+                modelValue: open.value,
+                "onUpdate:modelValue": (value: boolean) => (open.value = value),
+              },
+              {
+                default: () =>
+                  h(Stack, { gap: "md" }, () => [
+                    h(Text, null, () => "Resize the dialog, change its radius, backdrop, dismissal and focus behavior from Controls."),
+                    h(Button, { onClick: () => (open.value = false) }, () => "Done"),
+                  ]),
+                footer: () => h(Text, { size: "sm", muted: true }, () => "Footer slot"),
+              },
+            ),
+          ]);
+      },
+    });
+
+    return preview(() => h(Demo));
+  },
 };
 
 export const Sizes: Story = {
   args: { modelValue: false },
-  render: (args) =>
-    preview(() => {
-      const open = ref(false);
-      const size = ref<"xs" | "sm" | "md" | "lg" | "xl">("md");
-      return h(Stack, { gap: "md" }, () => [
-        h(
-          "div",
-          { style: { display: "flex", flexWrap: "wrap", gap: "0.5rem" } },
-          (["xs", "sm", "md", "lg", "xl"] as const).map((value) =>
+  render: (args) => {
+    const Demo = defineComponent({
+      setup() {
+        const open = ref(false);
+        const size = ref<"xs" | "sm" | "md" | "lg" | "xl">("md");
+
+        return () =>
+          h(Stack, { gap: "md" }, () => [
             h(
-              Button,
-              {
-                onClick: () => {
-                  size.value = value;
-                  open.value = true;
-                },
-              },
-              () => `Open ${value}`,
+              "div",
+              { style: { display: "flex", flexWrap: "wrap", gap: "0.5rem" } },
+              (["xs", "sm", "md", "lg", "xl"] as const).map((value) =>
+                h(
+                  Button,
+                  {
+                    onClick: () => {
+                      size.value = value;
+                      open.value = true;
+                    },
+                  },
+                  () => `Open ${value}`,
+                ),
+              ),
             ),
-          ),
-        ),
-        h(
-          Modal,
-          {
-            ...args,
-            modelValue: open.value,
-            size: size.value,
-            title: `${size.value.toUpperCase()} modal`,
-            "onUpdate:modelValue": (value: boolean) => (open.value = value),
-          },
-          { default: () => h(Text, null, () => "Each token maps to a different real width.") },
-        ),
-      ]);
-    }),
+            h(
+              Modal,
+              {
+                ...args,
+                modelValue: open.value,
+                size: size.value,
+                title: `${size.value.toUpperCase()} modal`,
+                "onUpdate:modelValue": (value: boolean) => (open.value = value),
+              },
+              { default: () => h(Text, null, () => "Each token maps to a different real width.") },
+            ),
+          ]);
+      },
+    });
+
+    return preview(() => h(Demo));
+  },
 };
 
 export const AdvancedComposition: Story = {
   args: { modelValue: false },
-  render: (args) =>
-    preview(() => {
-      const modalOpen = ref(false);
-      const drawerOpen = ref(false);
-      return h(Stack, { gap: "md" }, () => [
-        h(Button, { onClick: () => (modalOpen.value = true) }, () => "Review order"),
-        h(
-          Modal,
-          {
-            ...args,
-            modelValue: modalOpen.value,
-            title: "Review order",
-            size: "lg",
-            centered: true,
-            "onUpdate:modelValue": (value: boolean) => (modalOpen.value = value),
-          },
-          {
-            default: () =>
-              h(Stack, { gap: "md" }, () => [
-                h(Text, null, () => "3 items · Standard delivery · Total $128"),
-                h(Button, { onClick: () => (drawerOpen.value = true) }, () => "Edit delivery details"),
-                h(
-                  Drawer,
-                  {
-                    modelValue: drawerOpen.value,
-                    title: "Delivery details",
-                    size: "sm",
-                    "onUpdate:modelValue": (value: boolean) => (drawerOpen.value = value),
-                  },
-                  { default: () => h(Text, null, () => "Nested Drawer closes before its parent Modal.") },
-                ),
-              ]),
-          },
-        ),
-      ]);
-    }),
+  render: (args) => {
+    const Demo = defineComponent({
+      setup() {
+        const modalOpen = ref(false);
+        const drawerOpen = ref(false);
+
+        return () =>
+          h(Stack, { gap: "md" }, () => [
+            h(Button, { onClick: () => (modalOpen.value = true) }, () => "Review order"),
+            h(
+              Modal,
+              {
+                ...args,
+                modelValue: modalOpen.value,
+                title: "Review order",
+                size: "lg",
+                centered: true,
+                "onUpdate:modelValue": (value: boolean) => (modalOpen.value = value),
+              },
+              {
+                default: () =>
+                  h(Stack, { gap: "md" }, () => [
+                    h(Text, null, () => "3 items · Standard delivery · Total $128"),
+                    h(Button, { onClick: () => (drawerOpen.value = true) }, () => "Edit delivery details"),
+                    h(
+                      Drawer,
+                      {
+                        modelValue: drawerOpen.value,
+                        title: "Delivery details",
+                        size: "sm",
+                        "onUpdate:modelValue": (value: boolean) => (drawerOpen.value = value),
+                      },
+                      { default: () => h(Text, null, () => "Nested Drawer closes before its parent Modal.") },
+                    ),
+                  ]),
+              },
+            ),
+          ]);
+      },
+    });
+
+    return preview(() => h(Demo));
+  },
 };
