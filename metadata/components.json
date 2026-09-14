@@ -141,17 +141,22 @@
       "name": "Calendar",
       "package": "@doctui/dates",
       "category": "inputs",
-      "description": "Month calendar that emits ISO date selections.",
+      "description": "Accessible month grid with ISO date values, range constraints and keyboard navigation.",
       "props": [
+        "id",
         "modelValue",
         "month",
         "minDate",
         "maxDate",
         "locale",
-        "firstDayOfWeek"
+        "firstDayOfWeek",
+        "disabled",
+        "ariaLabel"
       ],
       "accessibility": [
-        "Uses labeled native buttons and exposes selected dates with aria-pressed."
+        "Uses grid/row/gridcell semantics with one roving tab stop.",
+        "Arrow keys move by day/week, Home and End move within the week, and PageUp/PageDown move across months.",
+        "The current date uses aria-current=date and the selected date uses aria-selected."
       ]
     },
     {
@@ -237,36 +242,68 @@
       "name": "DateInput",
       "package": "@doctui/dates",
       "category": "inputs",
-      "description": "Native date input with doctui field labeling and clear behavior.",
+      "description": "SSR-safe native date field with label, description, error and clear behavior.",
       "props": [
+        "id",
         "modelValue",
         "label",
+        "description",
         "error",
+        "ariaLabel",
         "minDate",
         "maxDate",
         "disabled",
         "clearable"
       ],
       "accessibility": [
-        "Uses a native date input associated with its visible label."
+        "Uses Vue useId for stable label/description/error relationships during SSR hydration.",
+        "Errors are referenced with aria-describedby and announced with role=alert.",
+        "When no visible label is supplied, ariaLabel or the default Date accessible name is used."
       ]
     },
     {
       "name": "DatePicker",
       "package": "@doctui/dates",
       "category": "inputs",
-      "description": "Date input with an optional calendar selection panel.",
-      "props": ["modelValue", "label", "minDate", "maxDate", "clearable"],
+      "description": "Date field with an accessible calendar popup and controlled ISO date value.",
+      "props": [
+        "id",
+        "modelValue",
+        "label",
+        "description",
+        "error",
+        "ariaLabel",
+        "minDate",
+        "maxDate",
+        "disabled",
+        "clearable",
+        "locale",
+        "firstDayOfWeek"
+      ],
       "accessibility": [
-        "The calendar toggle exposes expanded state and calendar buttons are keyboard accessible."
+        "The popup trigger exposes aria-expanded, aria-controls and aria-haspopup=grid.",
+        "Escape closes the popup and restores trigger focus; pointer input outside closes it without stealing focus.",
+        "Disabled state is forwarded to the native field, trigger and calendar."
       ]
     },
     {
       "name": "DateTimePicker",
       "package": "@doctui/dates",
       "category": "inputs",
-      "description": "Native date-time input with Vue v-model support.",
-      "props": ["modelValue", "label", "disabled"]
+      "description": "SSR-safe native date-time field with shared label, description, error and clear behavior.",
+      "props": [
+        "id",
+        "modelValue",
+        "label",
+        "description",
+        "error",
+        "ariaLabel",
+        "disabled",
+        "clearable"
+      ],
+      "accessibility": [
+        "Uses the same stable described-by and alert relationships as DateInput."
+      ]
     },
     {
       "name": "Divider",
@@ -401,8 +438,11 @@
       "name": "MonthPicker",
       "package": "@doctui/dates",
       "category": "inputs",
-      "description": "Month selection control that emits YYYY-MM values.",
-      "props": ["modelValue", "year", "locale"]
+      "description": "Keyboard-navigable month listbox that emits YYYY-MM values.",
+      "props": ["modelValue", "year", "locale", "disabled", "ariaLabel"],
+      "accessibility": [
+        "Uses listbox/option semantics with aria-selected and roving keyboard focus."
+      ]
     },
     {
       "name": "MultiSelect",
@@ -800,8 +840,11 @@
       "name": "YearPicker",
       "package": "@doctui/dates",
       "category": "inputs",
-      "description": "Year selection control over a configurable range.",
-      "props": ["modelValue", "minYear", "maxYear"]
+      "description": "Keyboard-navigable year listbox over a configurable range.",
+      "props": ["modelValue", "minYear", "maxYear", "disabled", "ariaLabel"],
+      "accessibility": [
+        "Uses listbox/option semantics with aria-selected and roving keyboard focus."
+      ]
     }
   ],
   "packages": [
