@@ -11,6 +11,7 @@ import { DoctuiProvider, Stack, Text } from "@doctui/core";
 import { ref } from "vue";
 
 const date = ref<string | null>("2026-09-14");
+const dateTime = ref("2026-09-14T09:30");
 const month = ref("2026-09");
 const year = ref<number | null>(2026);
 </script>
@@ -34,7 +35,7 @@ import '@doctui/dates/styles.css';
 
 `DatePicker` is a fully doctui-owned picker surface. It does **not** render a
 browser-native `input[type="date"]`; the visible field is a readonly text input
-with a locale-formatted value, SVG actions and an accessible custom calendar.
+with a locale-formatted value, SVG actions and an accessible custom picker.
 Use `DateInput` when browser-native date chrome is preferred.
 
 <DoctuiProvider>
@@ -75,18 +76,23 @@ const date = ref<string | null>('2026-09-14');
 </template>
 ```
 
-The field and calendar actions expose `aria-expanded`, `aria-controls` and
-`aria-haspopup="grid"`. Opening moves focus into the active calendar day.
-`Escape` closes the popup and restores focus to the calendar action; pointer
-input outside closes it without moving focus. `disabled` is forwarded to the
-field, actions and calendar.
+The picker has three connected views. It opens on the day grid; activating the
+month/year title switches to the month list, and activating the year title from
+there switches to the paged year list. Selecting a year returns to month
+selection, then selecting a month returns to the day grid.
 
-## Native date fields
+The field and calendar action expose `aria-expanded`, `aria-controls` and
+`aria-haspopup="dialog"`. Opening moves focus into the active option. `Escape`
+closes the popup and restores focus to the picker action; pointer input outside
+closes it without moving focus. `disabled` is forwarded to the field, actions
+and all picker views.
 
-`DateInput` and `DateTimePicker` keep native `date` / `datetime-local` browser
-semantics while reusing the core `TextInput` field contract. Both support
-`size`, `radius`, `label`, `description`, `error`, `disabled`, `clearable` and
-`ariaLabel`.
+## Native DateInput
+
+`DateInput` intentionally keeps browser-native `date` semantics while reusing
+the core `TextInput` field contract. The browser or operating system controls
+the native calendar popup, so its popup visuals can differ between platforms.
+Use `DatePicker` when a fully theme-controlled doctui surface is required.
 
 <DoctuiProvider>
   <Stack gap="md" style="max-width: 28rem;">
@@ -103,18 +109,40 @@ semantics while reusing the core `TextInput` field contract. Both support
       label="End date"
       error="End date is required"
     />
-    <DateTimePicker
-      model-value="2026-09-14T09:00"
-      label="Publish at"
-      description="Local date and time"
-      clearable
-    />
   </Stack>
 </DoctuiProvider>
 
 When no visible `label` is supplied, pass `ariaLabel`. Label, description and
 error relationships are provided by the same SSR-safe core field structure used
 by other doctui inputs.
+
+## DateTimePicker
+
+`DateTimePicker` uses a fully custom doctui surface instead of
+`input[type="datetime-local"]`. It reuses the same day → month → year navigation
+as `DatePicker`, then adds explicit hour and minute controls with `Now` and
+`Apply` actions. This keeps the popup visually consistent across browsers and
+platforms.
+
+<DoctuiProvider>
+  <Stack gap="md" style="max-width: 28rem;">
+    <DateTimePicker
+      v-model="dateTime"
+      label="Publish at"
+      description="Choose a local date and time"
+      min-date="2026-01-01"
+      max-date="2027-12-31"
+      :first-day-of-week="1"
+      clearable
+    />
+    <Text size="sm" muted>Selected: {{ dateTime }}</Text>
+  </Stack>
+</DoctuiProvider>
+
+The public value remains a local `YYYY-MM-DDTHH:mm` string. Date and time edits
+are kept as a draft while the popup is open; `Apply` commits the combined value.
+Hour and minute inputs expose explicit accessible names, and `Escape` closes the
+popup while restoring focus to the trigger.
 
 ## Calendar surface
 
@@ -154,13 +182,20 @@ dates.
 <DoctuiProvider>
   <Stack gap="md" style="max-width: 24rem;">
     <MonthPicker v-model="month" :year="2026" />
-    <YearPicker v-model="year" :min-year="2024" :max-year="2030" />
+    <YearPicker
+      v-model="year"
+      :min-year="1900"
+      :max-year="2100"
+      :page-size="12"
+    />
   </Stack>
 </DoctuiProvider>
 
 Month and year pickers use `listbox` / `option` semantics with `aria-selected`.
 Arrow keys move between options and Home/End jump to the first/last option.
-Both controls support `disabled` and a custom `ariaLabel`.
+`YearPicker` shows a bounded page of years and provides Previous years / Next
+years controls, so large ranges do not become a long hidden scroll area.
+`pageSize` defaults to 12 and is clamped to a practical 4–24 option window.
 
 ## Value validation
 
