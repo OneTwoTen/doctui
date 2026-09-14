@@ -77,7 +77,8 @@ function createCdpClient(url) {
 
 async function main() {
   const chrome = findChrome();
-  if (!chrome) throw new Error("Chrome/Chromium is required for browser regressions");
+  if (!chrome)
+    throw new Error("Chrome/Chromium is required for browser regressions");
 
   const vite = spawn(
     "bun",
@@ -115,7 +116,10 @@ async function main() {
       `http://127.0.0.1:${chromePort}/json/list`,
     ).then((response) => response.json());
     const page = targets.find((target) => target.type === "page");
-    assert(page?.webSocketDebuggerUrl, "Chrome did not expose a debuggable page");
+    assert(
+      page?.webSocketDebuggerUrl,
+      "Chrome did not expose a debuggable page",
+    );
 
     client = createCdpClient(page.webSocketDebuggerUrl);
     await client.ready;
@@ -165,7 +169,10 @@ async function main() {
         neutralFilled: provider?.style.getPropertyValue('--dui-color-neutral-filled').trim(),
       };
     })()`);
-    assert(theme.scheme === "dark", `Expected dark provider, got ${theme.scheme}`);
+    assert(
+      theme.scheme === "dark",
+      `Expected dark provider, got ${theme.scheme}`,
+    );
     assert(
       theme.neutralFilled === "#123456",
       `Custom theme token was not observable: ${theme.neutralFilled}`,
@@ -183,11 +190,26 @@ async function main() {
         errorRole: document.querySelector('#quality-email-error')?.getAttribute('role'),
       };
     })()`);
-    assert(field.name === "email", `TextInput did not forward name: ${field.name}`);
-    assert(field.labelMatches, "TextInput label is not associated with the native input");
-    assert(field.described, "TextInput description/error relationships are incomplete");
-    assert(field.invalid === "true", "TextInput error did not expose aria-invalid");
-    assert(field.errorRole === "alert", "TextInput error is not announced as an alert");
+    assert(
+      field.name === "email",
+      `TextInput did not forward name: ${field.name}`,
+    );
+    assert(
+      field.labelMatches,
+      "TextInput label is not associated with the native input",
+    );
+    assert(
+      field.described,
+      "TextInput description/error relationships are incomplete",
+    );
+    assert(
+      field.invalid === "true",
+      "TextInput error did not expose aria-invalid",
+    );
+    assert(
+      field.errorRole === "alert",
+      "TextInput error is not announced as an alert",
+    );
 
     const initialSegment = await evaluate(`(() => {
       const enabled = [...document.querySelectorAll('#segmented-contract [role="radio"]')]
@@ -199,8 +221,14 @@ async function main() {
         text: tabStops[0]?.textContent?.trim(),
       };
     })()`);
-    assert(initialSegment.count === 1, `SegmentedControl has ${initialSegment.count} tab stops`);
-    assert(initialSegment.text === "Vue", `Unexpected initial segment: ${initialSegment.text}`);
+    assert(
+      initialSegment.count === 1,
+      `SegmentedControl has ${initialSegment.count} tab stops`,
+    );
+    assert(
+      initialSegment.text === "Vue",
+      `Unexpected initial segment: ${initialSegment.text}`,
+    );
     await pressKey("ArrowRight");
     await waitForDom(
       `document.querySelector('[data-quality-segment-value]')?.textContent === 'rust'`,
@@ -210,8 +238,14 @@ async function main() {
       active: document.activeElement?.textContent?.trim(),
       checked: document.activeElement?.getAttribute?.('aria-checked'),
     }))()`);
-    assert(movedSegment.active === "Rust", `Segment focus did not move: ${movedSegment.active}`);
-    assert(movedSegment.checked === "true", "SegmentedControl focus and selection drifted");
+    assert(
+      movedSegment.active === "Rust",
+      `Segment focus did not move: ${movedSegment.active}`,
+    );
+    assert(
+      movedSegment.checked === "true",
+      "SegmentedControl focus and selection drifted",
+    );
 
     await evaluate(`(() => {
       const input = document.querySelector('#quality-tech');
@@ -231,7 +265,11 @@ async function main() {
           activeText: active?.textContent?.trim(),
         };
       })()`);
-      return state.expanded === "true" && state.activeExists && state.activeText === "Rust";
+      return (
+        state.expanded === "true" &&
+        state.activeExists &&
+        state.activeText === "Rust"
+      );
     }, "Combobox filtering left aria-activedescendant on a missing option");
     await pressKey("Enter");
     await waitForDom(
@@ -239,7 +277,9 @@ async function main() {
       "Combobox Enter did not select the filtered active option",
     );
 
-    await evaluate(`document.querySelector('#quality-menu-trigger').focus(); true`);
+    await evaluate(
+      `document.querySelector('#quality-menu-trigger').focus(); true`,
+    );
     await pressKey("ArrowDown");
     await waitFor(async () => {
       const active = await evaluate(`(() => ({
@@ -250,7 +290,8 @@ async function main() {
     }, "Menu did not focus the first enabled item from the trigger");
     await pressKey("End");
     assert(
-      (await evaluate("document.activeElement?.textContent?.trim()")) === "Sign out",
+      (await evaluate("document.activeElement?.textContent?.trim()")) ===
+        "Sign out",
       "Menu End did not move focus to the final enabled item",
     );
     await pressKey("Escape");
@@ -259,20 +300,24 @@ async function main() {
       "Menu Escape did not close and restore trigger focus",
     );
 
-    await evaluate(`document.querySelector('.dui-DatePicker__toggle').click(); true`);
+    await evaluate(
+      `document.querySelector('.dui-DatePicker__toggle').click(); true`,
+    );
     await waitForDom(
       `Boolean(document.querySelector('.dui-DatePickerPanel')) && document.activeElement?.getAttribute?.('role') === 'gridcell'`,
       "DatePicker did not open and move focus into the calendar",
     );
     assert(
-      (await evaluate("document.activeElement?.getAttribute?.('aria-label')")) ===
-        "2026-09-14",
+      (await evaluate(
+        "document.activeElement?.getAttribute?.('aria-label')",
+      )) === "2026-09-14",
       "DatePicker did not focus the selected day",
     );
     await pressKey("ArrowRight");
     assert(
-      (await evaluate("document.activeElement?.getAttribute?.('aria-label')")) ===
-        "2026-09-15",
+      (await evaluate(
+        "document.activeElement?.getAttribute?.('aria-label')",
+      )) === "2026-09-15",
       "Calendar ArrowRight did not move to the next day",
     );
     await pressKey("Enter");
@@ -281,7 +326,9 @@ async function main() {
       "DatePicker keyboard selection did not commit and close",
     );
     assert(
-      (await evaluate("document.activeElement?.classList?.contains('dui-DatePicker__toggle')")) === true,
+      (await evaluate(
+        "document.activeElement?.classList?.contains('dui-DatePicker__toggle')",
+      )) === true,
       "DatePicker selection did not restore focus to the toggle",
     );
 
@@ -295,14 +342,25 @@ async function main() {
         dismissTabIndex: dismiss?.tabIndex,
       };
     })()`);
-    assert(notification.live === "polite", "Notification live region is not polite");
-    assert(notification.atomic === "true", "Notification live region is not atomic");
+    assert(
+      notification.live === "polite",
+      "Notification live region is not polite",
+    );
+    assert(
+      notification.atomic === "true",
+      "Notification live region is not atomic",
+    );
     assert(
       notification.dismissLabel?.includes("Dismiss Saved notification"),
       `Notification dismiss control has an unexpected label: ${notification.dismissLabel}`,
     );
-    assert(notification.dismissTabIndex === 0, "Notification dismiss control is not keyboard focusable");
-    await evaluate(`document.querySelector('.dui-Notification button').click(); true`);
+    assert(
+      notification.dismissTabIndex === 0,
+      "Notification dismiss control is not keyboard focusable",
+    );
+    await evaluate(
+      `document.querySelector('.dui-Notification button').click(); true`,
+    );
     await waitForDom(
       `!document.querySelector('.dui-Notification')`,
       "Notification dismiss control did not remove the announcement",
