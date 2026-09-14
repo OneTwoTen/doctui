@@ -2,9 +2,9 @@
   "number": "36",
   "title": "docs: add live previews and regression coverage",
   "branch": "docs/issue-35-live-previews",
-  "sha": "048dc274dbefcb8841ddf94bed6e05681e27776c",
+  "sha": "8d05a5bd992583764609315ad90ca1c82985655b",
   "repository": "OneTwoTen/doctui",
   "prUrl": "https://github.com/OneTwoTen/doctui/pull/36",
-  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/34862354195",
-  "generatedAt": "2026-09-14T15:29:06.684Z"
+  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/34862396816",
+  "generatedAt": "2026-09-14T15:30:07.298Z"
 }
