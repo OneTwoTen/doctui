@@ -50,6 +50,33 @@ import { theme } from "./theme";
 
 Resolved themes are deep-readonly. Treat the theme returned by `useDoctuiTheme()` and `DEFAULT_THEME` as immutable values; change the provider's `theme` input instead of mutating a resolved theme.
 
+## Typography
+
+The default doctui typography stack starts with `Be Vietnam Pro`, followed by native platform fallbacks:
+
+```text
+"Be Vietnam Pro", "Avenir Next", "Segoe UI Variable", "Segoe UI", ui-sans-serif, system-ui, ...
+```
+
+`DoctuiProvider` exposes that value as `--dui-font-family` and applies it to the provider root, so controls that inherit typography and components that reference the token stay consistent inside the doctui subtree.
+
+`@doctui/core` intentionally does **not** download or bundle a webfont. Applications that want the exact default appearance should load `Be Vietnam Pro` themselves; otherwise the stack falls back to the best available platform sans-serif without introducing a hidden network dependency.
+
+For example, an application may load the font through its own asset pipeline and keep the default theme untouched. It can also replace the typography contract completely:
+
+```ts
+import { createTheme } from "@doctui/core";
+
+export const theme = createTheme({
+  fontFamily:
+    '"IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, sans-serif',
+  fontFamilyMonospace:
+    '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace',
+});
+```
+
+The doctui Docs and Storybook load Be Vietnam Pro only for documentation/showcase purposes so component examples display the intended design consistently, including Vietnamese diacritics.
+
 ## Switch light and dark mode
 
 `DoctuiProvider` accepts `light` or `dark`. The provider updates semantic variables for its scope, so components do not need separate dark-mode styles.
@@ -184,6 +211,8 @@ Do not mutate `theme.value`. Update the provider input instead.
 Theme values used directly by component styles are mapped to public variables such as:
 
 ```text
+--dui-font-family
+--dui-font-family-monospace
 --dui-color-primary-filled
 --dui-color-primary-filled-hover
 --dui-color-primary-filled-text
@@ -280,4 +309,4 @@ interface ExampleControlProps {
 
 ## Baseline policy
 
-Phase 1 does **not** inject a global CSS reset. `DoctuiProvider` only establishes scoped theme variables and the active color-scheme attribute. This keeps doctui safe to adopt inside existing applications; component-level baseline styles will remain local to doctui components.
+Phase 1 does **not** inject a global CSS reset. `DoctuiProvider` establishes scoped theme variables, the active color-scheme attribute, and the provider-root font family. This keeps doctui safe to adopt inside existing applications while making typography consistent inside the doctui subtree; component-level baseline styles remain local to doctui components.

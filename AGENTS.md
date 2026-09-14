@@ -25,6 +25,7 @@ Core principles:
 9. Documentation, LLM artifacts and MCP should converge on one validated public API metadata source rather than independent handwritten copies.
 10. doctui is GitHub-first and zero-VPS by default: the normal project lifecycle must not require a project-owned server or always-on backend.
 11. Do not replace the canonical tech stack casually; new infrastructure/tooling must solve a demonstrated requirement.
+12. Visual quality is a release requirement for public components: technically correct but visibly inconsistent or browser-default-looking work is not complete.
 
 ## Repository architecture
 
@@ -69,6 +70,20 @@ Do not create a new package for code that is only used by one package. Start loc
 - Keep style selectors shallow and local.
 - Do not couple behavior to visual classes.
 - Dark mode must be token-driven, not component-by-component overrides.
+- Before styling a component family, inspect adjacent doctui controls and reuse their control height, radius, typography, border, focus, disabled, error, surface and elevation contracts.
+- Do not ship text glyphs such as `×`, `▣`, `‹` or `›` as final UI icons when a stable inline SVG treatment is appropriate.
+- Avoid exposing browser-default chrome inside a custom doctui composite unless native appearance is an explicit product choice.
+
+## Visual quality gate
+
+For every new or materially changed public component:
+
+- Review the rendered result as a product surface, not only DOM/CSS implementation.
+- Compare it with adjacent doctui components and at least one strong reference implementation when useful.
+- Check hierarchy, spacing, typography, iconography, geometry, hover/focus/active/disabled/error states, elevation, dark mode and responsive behavior.
+- Storybook must make defects easy to see with default, empty/value, disabled, error, dark-mode and realistic composition coverage for non-trivial components.
+- Composite controls must look like one intentional control; do not stack native browser chrome and doctui chrome in the same affordance unless explicitly designed that way.
+- A passing lint/type/test/build pipeline does not override a failed visual review.
 
 ## Internal primitives
 
@@ -121,6 +136,12 @@ A public component is not complete until it has:
 - Storybook coverage.
 
 Docs examples must use idiomatic Vue and must compile.
+Every public component documented in VitePress must also have at least one
+live preview rendered by the actual exported component, not only a fenced code
+block. Register components globally in
+`apps/docs/.vitepress/theme/index.ts` (or import them locally) and load their
+public stylesheet. Do not leave PascalCase doctui tags as unresolved custom
+elements; verify the docs build/SSR output contains real component markup.
 
 When the metadata registry exists, treat it as the shared machine-readable representation consumed by generated API docs, LLM artifacts and MCP. Do not manually maintain a conflicting second API description for those outputs.
 
@@ -192,6 +213,7 @@ Before coding:
 5. Inspect adjacent components and shared types.
 6. Check whether a primitive/composable already solves part of the task.
 7. Confirm the public API before implementing details.
+8. For public UI work, inspect rendered visual states and compare geometry/state treatment with adjacent doctui components before finalizing.
 
 Before finishing:
 
@@ -200,5 +222,6 @@ Before finishing:
 3. Confirm Storybook/docs examples still build when affected.
 4. Summarize public API changes and compatibility impact.
 5. Leave unrelated files untouched.
+6. Confirm the component passes the visual quality gate; automated checks alone are not sufficient.
 
 If the repository is still being bootstrapped and commands do not exist yet, do not invent passing test results. State exactly what could and could not be run.

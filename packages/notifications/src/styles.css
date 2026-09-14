@@ -1,0 +1,88 @@
+.dui-Notifications {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dui-spacing-sm);
+  max-width: min(24rem, calc(100vw - (var(--dui-spacing-md) * 2)));
+  position: fixed;
+  z-index: var(--dui-z-index-toast);
+}
+
+.dui-Notifications--top-end {
+  right: var(--dui-spacing-md);
+  top: var(--dui-spacing-md);
+}
+
+.dui-Notifications--top-start {
+  left: var(--dui-spacing-md);
+  top: var(--dui-spacing-md);
+}
+
+.dui-Notifications--bottom-end {
+  bottom: var(--dui-spacing-md);
+  right: var(--dui-spacing-md);
+}
+
+.dui-Notifications--bottom-start {
+  bottom: var(--dui-spacing-md);
+  left: var(--dui-spacing-md);
+}
+
+.dui-Notification {
+  --dui-notification-accent: var(--dui-color-primary-filled);
+
+  align-items: flex-start;
+  background: var(--dui-color-surface-raised);
+  border: 1px solid var(--dui-color-border);
+  border-inline-start: 0.25rem solid var(--dui-notification-accent);
+  border-radius: var(--dui-radius-md);
+  box-shadow: var(--dui-shadow-md);
+  color: var(--dui-color-text);
+  display: grid;
+  gap: var(--dui-spacing-xs) var(--dui-spacing-sm);
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding: var(--dui-spacing-sm) var(--dui-spacing-md);
+}
+
+.dui-Notification[data-color="success"] {
+  --dui-notification-accent: var(--dui-color-success-filled);
+}
+
+.dui-Notification[data-color="warning"] {
+  --dui-notification-accent: var(--dui-color-warning-filled);
+}
+
+.dui-Notification[data-color="danger"] {
+  --dui-notification-accent: var(--dui-color-danger-filled);
+}
+
+.dui-Notification__status {
+  display: grid;
+  gap: var(--dui-spacing-xs);
+  min-width: 0;
+}
+
+.dui-Notification__status > span {
+  overflow-wrap: anywhere;
+}
+
+.dui-Notification > button {
+  align-self: start;
+  background: transparent;
+  border: 0;
+  border-radius: var(--dui-radius-sm);
+  color: var(--dui-color-text-muted);
+  cursor: pointer;
+  font: inherit;
+  line-height: 1;
+  padding: var(--dui-spacing-xs);
+}
+
+.dui-Notification > button:hover {
+  background: var(--dui-color-neutral-subtle-hover);
+  color: var(--dui-color-neutral-subtle-text);
+}
+
+.dui-Notification > button:focus-visible {
+  outline: 2px solid var(--dui-color-focus-ring);
+  outline-offset: 2px;
+}

@@ -50,7 +50,11 @@ export const DoctuiProvider = defineComponent({
           ...attrs,
           "data-dui-provider": "",
           "data-dui-color-scheme": colorScheme.value,
-          style: [cssVariables.value, attrs.style],
+          style: [
+            cssVariables.value,
+            { fontFamily: "var(--dui-font-family)" },
+            attrs.style,
+          ],
         },
         slots.default?.(),
       );

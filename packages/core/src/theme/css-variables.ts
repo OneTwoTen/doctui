@@ -33,6 +33,10 @@ export function getThemeCssVariables(
     variables[`--dui-shadow-${name}`] = value;
   }
 
+  for (const [name, value] of Object.entries(theme.breakpoints)) {
+    variables[`--dui-breakpoint-${name}`] = value;
+  }
+
   for (const [name, value] of Object.entries(theme.zIndex)) {
     variables[`--dui-z-index-${toKebabCase(name)}`] = String(value);
   }

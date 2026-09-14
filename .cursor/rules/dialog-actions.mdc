@@ -1,0 +1,60 @@
+---
+description: Contract for Modal and Drawer footer composition, scrolling, action states and documentation coverage
+globs: "packages/core/src/components/{Modal,Drawer}*.ts,packages/core/src/overlay-footer.css,apps/storybook/stories/{modal,drawer}.stories.ts,apps/docs/guide/{overlays,dialog-actions}.md"
+alwaysApply: false
+---
+# Dialog footer and action contract
+
+Apply these rules to Modal, Drawer and any future modal-like surface that exposes persistent footer actions.
+
+## Composition
+
+- Footer actions belong in a named `footer` slot. Keep Modal and Drawer generic; do not add business-specific props such as `confirmLabel`, `cancelLabel`, `onConfirm`, `confirmLoading`, or destructive-action shortcuts.
+- Consumers compose footer content from public doctui components such as Button, Group, Text and Loader.
+- Omit the footer element entirely when the slot is not provided. Do not render empty action chrome for informational surfaces.
+- Each nested surface owns its own footer. A Drawer opened from a Modal must not reuse or replace the parent Modal footer.
+
+## Layout and scrolling
+
+- Modal and Drawer are flex-column surfaces with header/footer as stable chrome and body as the vertical scroll owner when content exceeds available height.
+- Body must use `min-height: 0` when it is a flex child and must be able to scroll independently.
+- Footer must not shrink away under long content.
+- Footer action layout must support wrapping. Never require a single no-wrap action row for `xs` or narrow custom sizes.
+- Drawer root padding must not cause header/body/footer spacing to stack unpredictably. Apply region spacing explicitly.
+- Use theme spacing, border and surface tokens; do not hard-code product-specific footer colors or spacing.
+
+## Action states
+
+- Loading and disabled behavior belongs to Button or the composed action component, not Modal/Drawer props.
+- Destructive actions should use semantic danger styling and should normally be paired with a safe cancel/keep action.
+- Do not remove a disabled primary action from its expected location when the disabled state communicates an unmet requirement.
+- Loading primary actions must prevent duplicate activation through the Button loading contract.
+
+## Test-first requirement
+
+- Add or update failing tests before changing footer layout or behavior when practical.
+- Tests must verify that body and footer are separate DOM regions, omitted footer slots do not produce empty footer elements, and the shared footer CSS keeps the body scrollable with wrapping action chrome.
+- Browser coverage is required when a change depends on actual viewport geometry, sticky/persistent positioning, overflow or focus behavior.
+
+## Storybook coverage
+
+Modal and Drawer stories must go beyond a single happy-path footer. When applicable, include:
+
+- standard secondary + primary actions,
+- destructive action flow,
+- loading primary action,
+- disabled primary action,
+- long body content with persistent footer,
+- narrow surface with wrapping actions,
+- no-footer informational/read-only surface,
+- custom footer layout such as status text plus actions,
+- nested Modal → Drawer with actions on both layers,
+- relevant Drawer position/backdrop variants.
+
+The primary Playground must still use real `args`/Controls for public component props. Action examples complement Controls; they do not replace them.
+
+## Documentation
+
+- VitePress must explain the composable footer-slot pattern and why doctui does not expose confirm/cancel business props.
+- Provide at least one live rendered footer-actions example plus copy-paste examples for standard and edge action states.
+- Storybook and VitePress should teach the same recommended patterns.

@@ -45,5 +45,14 @@ jobs:
       - name: Test
         run: bun run test
 
+      - name: Check public API and docs drift
+        run: bun run api:check
+
+      - name: Browser regression matrix
+        run: bun run test:browser
+
       - name: Build
         run: bun run build
+
+      - name: Check generated metadata
+        run: bun run metadata:check

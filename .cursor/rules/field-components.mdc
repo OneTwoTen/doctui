@@ -1,0 +1,57 @@
+---
+description: Shared contract for doctui form fields and input-like components
+globs: "packages/core/src/components/{InputWrapper,TextInput,Textarea,NumberInput,PasswordInput,Checkbox,Radio,Switch,Select,Autocomplete,MultiSelect,TagsInput}*.ts,packages/core/src/components/*field*.{ts,css}"
+alwaysApply: false
+---
+# Field component contract
+
+Apply these rules to public input-like components and shared field primitives.
+
+## DOM and attribute ownership
+
+- `InputWrapper` owns generated IDs and label/description/error relationships. Do not duplicate fallback ID generation in individual field components.
+- Consumer `class` and `style` target the **outer field root** so layout styles include label, control, description and error.
+- Native form attributes and listeners (`name`, `autocomplete`, `inputmode`, `form`, `data-*`, `aria-*`, `onInput`, `onChange`, etc.) target the real native form control.
+- Use `inheritAttrs: false` whenever attrs are deliberately split between wrapper and native control.
+- Compose consumer `aria-describedby` with doctui description/error IDs; do not replace either side.
+
+## Native semantics and custom visuals
+
+- Keep a real native `input`, `textarea`, `select` or other semantic control whenever native semantics can represent the behavior.
+- Custom Checkbox/Radio/Switch visuals must not replace native keyboard, focus, form, autofill or accessibility behavior. The native input remains the source of checked/disabled/required semantics.
+- Visually hidden native inputs must remain focusable when enabled; focus-visible styling must be projected to the visual indicator/track.
+- Do not invent `readonly` for boolean controls. Use native `disabled` when interaction must be prevented.
+
+## Token and multi-value inputs
+
+- Free-form token inputs must reuse `InputWrapper` for IDs and field relationships and keep a real native text input as the entry/focus target.
+- Normalize committed string tokens consistently: trim whitespace, ignore empty values, define duplicate policy explicitly, and enforce limits against the complete next value rather than against each token in isolation.
+- Parsing multiple tokens from one typed or pasted value should emit one `update:modelValue` for the complete accepted batch; token-level events may still be emitted once per accepted token.
+- Only a one-character separator may act as a keyboard delimiter key. Multi-character separators are text parsing delimiters and must not be modeled as synthetic `KeyboardEvent.key` values. Enter should remain a predictable commit key.
+- Expose selected tokens with list/listitem semantics when the UI visually represents a token collection. Mutation controls should remain native buttons.
+- Backspace behavior from an empty text input and focus after remove/clear actions must be deterministic and covered by tests. Prefer returning focus to the native text input after an action removes the currently focused token control.
+- `disabled` and `readonly` token inputs must prevent add/remove/clear mutations without destroying the current value.
+
+## Size and visual state
+
+- If a component exposes `size`, the size must change meaningful geometry, not only text size. Scale the relevant height, padding, indicator, section, track/thumb or hit-area dimensions through CSS variables/tokens.
+- Keep geometry in CSS variables with the `--dui-` prefix. Prefer one shared field-size contract over repeated hard-coded dimensions.
+- Error, disabled, readonly, checked/selected and focus-visible states must be visually observable without relying on color alone where practical.
+- State styles must remain correct in light/dark themes through semantic tokens.
+
+## Styling API
+
+- `class`/`style` are for the outer field root.
+- Use the shared part-based `classNames`/`styles` contract for supported internal parts instead of encouraging consumers to depend on deep DOM selectors.
+- Reuse stable part names across the field family (`root`, `label`, `description`, `error`, `control`, `wrapper`, `input`, `section`, `body`, `indicator`, `track`, `thumb`, `labelText`, etc.). Do not create synonymous part names per component without a demonstrated need.
+- Public CSS variables and part names are compatibility surface. Document additions and avoid casual renames.
+
+## Tests and documentation
+
+- Start observable field changes with a failing behavior/regression test before implementation when practical.
+- Cover generated/custom IDs, label relationships, description + error together, required, disabled, readonly where native, native attrs/listeners, focus behavior and consumer ARIA composition.
+- For custom boolean visuals, test that the native input still owns type/name/checked/disabled semantics and keyboard focus.
+- For token inputs, cover separator parsing, duplicate/whitespace normalization, batch limits, Backspace behavior, list semantics and focus restoration after mutation.
+- Storybook must include a size/state matrix and a realistic multi-component composition for field-family changes.
+- VitePress must document root/native attr targeting, accessibility relationships, size behavior, CSS-variable customization and the part-based styles API.
+- Keep component metadata synchronized with every public field prop and customization contract.

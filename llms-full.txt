@@ -1,0 +1,596 @@
+# doctui
+
+Generated component and package reference for doctui 0.0.0.
+
+## Packages
+
+- @doctui/core: Core Vue components, theme and primitives.
+- @doctui/hooks: Reusable Vue composables for browser and app state.
+- @doctui/form: Vue-first form state, validation and submit helpers.
+- @doctui/notifications: Notification store and accessible renderer.
+- @doctui/dates: Dependency-free date and calendar components.
+- @doctui/mcp-server: Local MCP server for querying the generated registry.
+
+## Components
+
+- ActionIcon (@doctui/core): Compact icon-only native button with an accessible name.
+- Autocomplete (@doctui/core): Searchable single-value selection control backed by the shared Combobox engine.
+- Badge (@doctui/core): Compact status label using semantic color and variant tokens.
+- Box (@doctui/core): Low-level polymorphic container with token-based spacing.
+- Button (@doctui/core): Native button control with doctui color, variant and size tokens.
+- Calendar (@doctui/dates): Accessible token-driven month grid with adjacent-month days, range constraints and keyboard navigation.
+- Center (@doctui/core): Flex helper that centers content on both axes.
+- Checkbox (@doctui/core): Native checkbox semantics with doctui-controlled visual geometry and shared field messaging.
+- Code (@doctui/core): Monospace inline or block code presentation.
+- Combobox (@doctui/core): Focus-managed listbox engine used by doctui selection controls.
+- Container (@doctui/core): Centered responsive container constrained by theme breakpoints.
+- DateInput (@doctui/dates): Editable localized date field with strict ISO model values and the shared doctui day/month/year picker dialog.
+- DatePicker (@doctui/dates): Doctui-styled readonly date field with day, month and year picker views in one accessible dialog surface.
+- DateTimePicker (@doctui/dates): Custom doctui date-time field combining the shared day/month/year picker with explicit hour and minute controls.
+- Divider (@doctui/core): Separator for related content with optional label content.
+- Drawer (@doctui/core): Accessible side dialog with shared overlay, nested-layer dismissal and focus restoration.
+- Flex (@doctui/core): Flexbox layout primitive with theme-token gaps.
+- Grid (@doctui/core): CSS grid layout primitive with token-backed gaps and columns.
+- Group (@doctui/core): Horizontal wrapping layout for related controls and content.
+- InputWrapper (@doctui/core): Shared label, description, required and error structure for inputs.
+- Kbd (@doctui/core): Semantic keyboard shortcut label.
+- Loader (@doctui/core): Animated progress indicator for an indeterminate operation.
+- Menu (@doctui/core): Keyboard-navigable menu built from native menu item buttons.
+- Modal (@doctui/core): Accessible modal dialog with nested-layer dismissal, reference-counted scroll lock and focus restoration.
+- MonthPicker (@doctui/dates): Keyboard-navigable month listbox rendered in the shared doctui date surface.
+- MultiSelect (@doctui/core): Searchable multi-value selection control backed by the shared Combobox engine.
+- NativeDateInput (@doctui/dates): Explicit browser-native date input wrapper that keeps OS date picker semantics while sharing doctui core field geometry.
+- Notifications (@doctui/notifications): Accessible notification renderer with explicit shared-store lifecycle ownership.
+- NumberInput (@doctui/core): Native numeric input with numeric v-model values and range constraints.
+- Overlay (@doctui/core): Portal-backed semantic-color backdrop with controlled visibility and dismissal.
+- Paper (@doctui/core): Surface container with optional border, radius and shadow.
+- PasswordInput (@doctui/core): Password field built on the shared TextInput contract.
+- Popover (@doctui/core): Dismissable contextual panel anchored to a target slot.
+- Radio (@doctui/core): Native radio option with doctui-controlled visual geometry for a shared scalar v-model.
+- SegmentedControl (@doctui/core): Single-selection control with radio semantics and arrow navigation.
+- Select (@doctui/core): Single-value selection control backed by the shared Combobox focus model.
+- Skeleton (@doctui/core): Loading placeholder that can reveal its content when ready.
+- Space (@doctui/core): Semantic layout spacer using the theme spacing scale.
+- Stack (@doctui/core): Vertical flex layout for consistent spacing between children.
+- Switch (@doctui/core): Boolean toggle that keeps native checkbox behavior behind a doctui track and thumb visual.
+- TagsInput (@doctui/core): Free-form token field with deterministic parsing, native focus and accessible token-list semantics.
+- Text (@doctui/core): Semantic text primitive using doctui typography and color tokens.
+- Textarea (@doctui/core): Multi-line text field with shared input wrapper semantics.
+- TextInput (@doctui/core): Single-line text field with shared input wrapper semantics.
+- Title (@doctui/core): Semantic h1-h6 heading primitive.
+- Tooltip (@doctui/core): Non-essential contextual text revealed on hover or focus.
+- UnstyledButton (@doctui/core): Native button reset for building custom action surfaces.
+- YearPicker (@doctui/dates): Keyboard-navigable paged year listbox with previous/next range navigation in the shared doctui date surface.
+
+## API details
+
+### ActionIcon
+
+Package: `@doctui/core`
+
+Compact icon-only native button with an accessible name.
+
+Props: `ariaLabel`, `color`, `variant`, `size`, `radius`, `disabled`, `type`.
+
+Accessibility: Requires ariaLabel because icon-only controls need an accessible name.
+
+### Autocomplete
+
+Package: `@doctui/core`
+
+Searchable single-value selection control backed by the shared Combobox engine.
+
+Props: `modelValue`, `data`, `id`, `label`, `description`, `error`, `required`, `disabled`, `placeholder`, `clearable`, `ariaLabel`, `nothingFound`, `size`, `radius`.
+
+Accessibility: Filtering preserves a valid active descendant by option value and falls back to the first enabled visible option when needed.
+Accessibility: Empty results remove aria-activedescendant and announce the nothingFound content as status text.
+Accessibility: Clear is forwarded consistently with Select and MultiSelect.
+Example: <Autocomplete id="framework-search" v-model="framework" :data="frameworks" label="Framework" nothing-found="No matches" />
+
+### Badge
+
+Package: `@doctui/core`
+
+Compact status label using semantic color and variant tokens.
+
+Props: `color`, `variant`, `size`, `radius`.
+
+
+### Box
+
+Package: `@doctui/core`
+
+Low-level polymorphic container with token-based spacing.
+
+Props: `as`, `padding`, `margin`.
+
+
+### Button
+
+Package: `@doctui/core`
+
+Native button control with doctui color, variant and size tokens.
+
+Props: `color`, `variant`, `size`, `radius`, `loading`, `disabled`, `fullWidth`, `type`.
+
+Accessibility: Uses a native button element.
+Accessibility: Loading state disables interaction and exposes aria-busy.
+Accessibility: Focus-visible styles use the theme focus ring token.
+
+### Calendar
+
+Package: `@doctui/dates`
+
+Accessible token-driven month grid with adjacent-month days, range constraints and keyboard navigation.
+
+Props: `id`, `modelValue`, `month`, `minDate`, `maxDate`, `locale`, `firstDayOfWeek`, `disabled`, `ariaLabel`, `headerInteractive`.
+
+Accessibility: Uses grid/row/gridcell semantics with one roving tab stop.
+Accessibility: Arrow keys move by day/week, Home and End move within the week, and PageUp/PageDown move across months.
+Accessibility: The current date uses aria-current=date and the selected date uses aria-selected.
+Accessibility: When headerInteractive is enabled, the month/year title becomes a keyboard-accessible view switch trigger.
+
+### Center
+
+Package: `@doctui/core`
+
+Flex helper that centers content on both axes.
+
+Props: `as`, `inline`.
+
+
+### Checkbox
+
+Package: `@doctui/core`
+
+Native checkbox semantics with doctui-controlled visual geometry and shared field messaging.
+
+Props: `modelValue`, `id`, `label`, `description`, `error`, `required`, `disabled`, `size`, `classNames`, `styles`.
+
+Accessibility: Keeps a native checkbox as the semantic, focus and keyboard source while rendering a custom visual indicator.
+Accessibility: Disabled and required behavior uses native form semantics.
+Example: <Checkbox v-model="accepted" label="Accept terms" size="lg" required />
+
+### Code
+
+Package: `@doctui/core`
+
+Monospace inline or block code presentation.
+
+Props: `block`, `size`.
+
+
+### Combobox
+
+Package: `@doctui/core`
+
+Focus-managed listbox engine used by doctui selection controls.
+
+Props: `modelValue`, `data`, `id`, `multiple`, `searchable`, `clearable`, `label`, `description`, `error`, `required`, `disabled`, `placeholder`, `ariaLabel`, `nothingFound`, `size`, `radius`.
+
+Accessibility: Keeps DOM focus on the native combobox input and exposes the active enabled option through aria-activedescendant.
+Accessibility: Arrow keys, Home and End skip disabled options; filtering never leaves aria-activedescendant pointing at a missing option.
+Accessibility: Visible labels use the shared field relationship; ariaLabel is supported when no visible label is rendered, with a safe fallback accessible name.
+Example: <Combobox id="framework" v-model="framework" :data="frameworks" label="Framework" clearable />
+Example: <Combobox v-model="framework" :data="frameworks" searchable aria-label="Search framework" nothing-found="No matches" />
+
+### Container
+
+Package: `@doctui/core`
+
+Centered responsive container constrained by theme breakpoints.
+
+Props: `as`, `size`.
+
+
+### DateInput
+
+Package: `@doctui/dates`
+
+Editable localized date field with strict ISO model values and the shared doctui day/month/year picker dialog.
+
+Props: `id`, `modelValue`, `label`, `description`, `error`, `ariaLabel`, `placeholder`, `minDate`, `maxDate`, `locale`, `firstDayOfWeek`, `disabled`, `clearable`, `size`, `radius`.
+
+Accessibility: Reuses the core TextInput label, description, error and SSR-safe ID relationships.
+Accessibility: The text field stays editable while the calendar action opens the same custom dialog used by DatePicker.
+Accessibility: Typed localized dates are normalized back to strict YYYY-MM-DD model values only when valid and in range.
+Accessibility: The calendar action exposes aria-expanded, aria-controls and aria-haspopup=dialog.
+
+### DatePicker
+
+Package: `@doctui/dates`
+
+Doctui-styled readonly date field with day, month and year picker views in one accessible dialog surface.
+
+Props: `id`, `modelValue`, `label`, `description`, `error`, `ariaLabel`, `placeholder`, `minDate`, `maxDate`, `disabled`, `clearable`, `locale`, `firstDayOfWeek`, `size`, `radius`.
+
+Accessibility: Uses a readonly text field rather than browser-native date chrome for the custom picker surface.
+Accessibility: The trigger exposes aria-expanded, aria-controls and aria-haspopup=dialog.
+Accessibility: The dialog switches between grid-based day selection and listbox-based month/year selection without leaving the picker.
+Accessibility: Escape closes the popup and restores trigger focus; pointer input outside closes it without stealing focus.
+Accessibility: Disabled state is forwarded to the field, actions and picker views.
+
+### DateTimePicker
+
+Package: `@doctui/dates`
+
+Custom doctui date-time field combining the shared day/month/year picker with explicit hour and minute controls.
+
+Props: `id`, `modelValue`, `label`, `description`, `error`, `ariaLabel`, `placeholder`, `minDate`, `maxDate`, `locale`, `firstDayOfWeek`, `disabled`, `clearable`, `size`, `radius`.
+
+Accessibility: Uses the core field label, description and error relationships with a readonly text trigger.
+Accessibility: The custom picker opens as a dialog instead of invoking browser-native datetime chrome.
+Accessibility: Hour and minute controls have explicit accessible names, and Apply commits the draft date and time.
+Accessibility: Escape closes the dialog and restores trigger focus.
+
+### Divider
+
+Package: `@doctui/core`
+
+Separator for related content with optional label content.
+
+Props: `orientation`, `size`, `color`, `label`.
+
+Accessibility: Uses role=separator and exposes its orientation.
+
+### Drawer
+
+Package: `@doctui/core`
+
+Accessible side dialog with shared overlay, nested-layer dismissal and focus restoration.
+
+Props: `modelValue`, `title`, `ariaLabel`, `position`, `size`, `radius`, `closeOnEscape`, `closeOnClickOutside`, `withCloseButton`.
+
+Accessibility: Uses role=dialog and aria-modal, traps focus, closes on Escape when enabled and restores the trigger on close.
+Accessibility: A visible title provides aria-labelledby; ariaLabel names titleless drawers, with Drawer as a safety fallback.
+Accessibility: Shared scroll locking is reference-counted so closing one nested layer never unlocks the page under another open layer.
+Example: <Drawer v-model="open" title="Filters" position="right" size="md">...</Drawer>
+
+### Flex
+
+Package: `@doctui/core`
+
+Flexbox layout primitive with theme-token gaps.
+
+Props: `as`, `gap`, `direction`, `align`, `justify`, `wrap`.
+
+
+### Grid
+
+Package: `@doctui/core`
+
+CSS grid layout primitive with token-backed gaps and columns.
+
+Props: `as`, `columns`, `gap`, `align`, `justify`.
+
+
+### Group
+
+Package: `@doctui/core`
+
+Horizontal wrapping layout for related controls and content.
+
+Props: `as`, `gap`, `align`, `justify`, `wrap`.
+
+
+### InputWrapper
+
+Package: `@doctui/core`
+
+Shared label, description, required and error structure for inputs.
+
+Props: `id`, `label`, `description`, `error`, `required`, `classNames`, `styles`.
+
+Accessibility: Generates an SSR-safe control ID when one is not provided and associates the visible label with that ID.
+Accessibility: Keeps description and error messages in the DOM together and exposes both IDs to the scoped control slot.
+Example: <InputWrapper label="Email"><template #default="{ id, describedBy }"><input :id="id" :aria-describedby="describedBy" /></template></InputWrapper>
+
+### Kbd
+
+Package: `@doctui/core`
+
+Semantic keyboard shortcut label.
+
+Props: `size`.
+
+
+### Loader
+
+Package: `@doctui/core`
+
+Animated progress indicator for an indeterminate operation.
+
+Props: `type`, `size`, `color`.
+
+Accessibility: Uses role=status and provides a Loading accessible name.
+
+### Menu
+
+Package: `@doctui/core`
+
+Keyboard-navigable menu built from native menu item buttons.
+
+Props: `modelValue`, `data`, `closeOnClickOutside`.
+
+Accessibility: Uses menu/menuitem roles and supports Arrow, Home, End and Escape.
+
+### Modal
+
+Package: `@doctui/core`
+
+Accessible modal dialog with nested-layer dismissal, reference-counted scroll lock and focus restoration.
+
+Props: `modelValue`, `title`, `ariaLabel`, `size`, `radius`, `centered`, `closeOnEscape`, `closeOnClickOutside`, `withCloseButton`.
+
+Accessibility: Uses role=dialog and aria-modal, traps focus while open, and restores the previously focused element on close.
+Accessibility: A visible title provides aria-labelledby; ariaLabel names titleless dialogs, with Dialog as a safety fallback.
+Accessibility: Only the top dismissable layer reacts to Escape or outside pointer interaction when dialogs are nested.
+Example: <Modal v-model="open" title="Review changes" size="lg" centered>...</Modal>
+Example: <Modal v-model="open" aria-label="Confirm publish" :close-on-click-outside="false">...</Modal>
+
+### MonthPicker
+
+Package: `@doctui/dates`
+
+Keyboard-navigable month listbox rendered in the shared doctui date surface.
+
+Props: `modelValue`, `year`, `locale`, `disabled`, `ariaLabel`, `headerInteractive`.
+
+Accessibility: Uses listbox/option semantics with aria-selected and roving keyboard focus.
+Accessibility: When headerInteractive is enabled, the year title becomes a keyboard-accessible switch to year selection.
+
+### MultiSelect
+
+Package: `@doctui/core`
+
+Searchable multi-value selection control backed by the shared Combobox engine.
+
+Props: `modelValue`, `data`, `id`, `label`, `description`, `error`, `required`, `disabled`, `placeholder`, `clearable`, `ariaLabel`, `nothingFound`, `size`, `radius`.
+
+Accessibility: Uses aria-multiselectable listbox semantics while keeping DOM focus on the native combobox input.
+Accessibility: Backspace removes the last selected value when the search query is empty, and controlled updates immediately refresh aria-selected state.
+Accessibility: Clear emits an empty array plus the shared clear event.
+Example: <MultiSelect id="compare" v-model="frameworks" :data="options" label="Compare with" clearable />
+
+### NativeDateInput
+
+Package: `@doctui/dates`
+
+Explicit browser-native date input wrapper that keeps OS date picker semantics while sharing doctui core field geometry.
+
+Props: `id`, `modelValue`, `label`, `description`, `error`, `ariaLabel`, `minDate`, `maxDate`, `disabled`, `clearable`, `size`, `radius`.
+
+Accessibility: Keeps native input[type=date] semantics and browser/OS picker behavior.
+Accessibility: Reuses core field label, description, error, clear, disabled and SSR-safe ID relationships.
+Accessibility: Use DateInput when editable text and a visually consistent doctui picker are preferred.
+
+### Notifications
+
+Package: `@doctui/notifications`
+
+Accessible notification renderer with explicit shared-store lifecycle ownership.
+
+Props: `store`, `position`, `cleanOnUnmount`.
+
+Accessibility: Each notification uses its own polite, atomic status live region so simultaneous messages and updates are announced independently.
+Accessibility: Dismiss controls are native buttons outside the live region, and renderer cleanup is opt-in with cleanOnUnmount for stores owned by that renderer.
+
+### NumberInput
+
+Package: `@doctui/core`
+
+Native numeric input with numeric v-model values and range constraints.
+
+Props: `modelValue`, `id`, `label`, `description`, `error`, `required`, `size`, `radius`, `disabled`, `readonly`, `placeholder`, `min`, `max`, `step`, `classNames`, `styles`.
+
+Accessibility: Uses a native number input with standard keyboard and validation semantics.
+Accessibility: Description, error and consumer-provided aria-describedby IDs are composed instead of replacing one another.
+Example: <NumberInput v-model="quantity" label="Quantity" :min="1" :max="10" size="sm" />
+
+### Overlay
+
+Package: `@doctui/core`
+
+Portal-backed semantic-color backdrop with controlled visibility and dismissal.
+
+Props: `modelValue`, `color`, `opacity`, `closeOnClick`.
+
+Accessibility: Backdrop color uses semantic theme tokens and opacity affects only the backdrop, never dialog content.
+Accessibility: Overlay is a layering primitive, not a dialog; accessible dialog naming and focus management belong to Modal or Drawer.
+Example: <Overlay v-model="open" color="neutral" :opacity="0.55"><div>Surface</div></Overlay>
+
+### Paper
+
+Package: `@doctui/core`
+
+Surface container with optional border, radius and shadow.
+
+Props: `shadow`, `radius`, `withBorder`.
+
+
+### PasswordInput
+
+Package: `@doctui/core`
+
+Password field built on the shared TextInput contract.
+
+Props: `modelValue`, `id`, `label`, `description`, `error`, `required`, `size`, `radius`, `disabled`, `readonly`, `placeholder`, `clearable`, `classNames`, `styles`.
+
+Accessibility: Uses a native password input and the shared label/help/error relationship contract.
+Accessibility: Native form attributes and listeners are forwarded to the password input while class/style customize the outer field root.
+Example: <PasswordInput v-model="password" label="Password" autocomplete="current-password" />
+
+### Popover
+
+Package: `@doctui/core`
+
+Dismissable contextual panel anchored to a target slot.
+
+Props: `modelValue`, `position`, `closeOnEscape`, `closeOnClickOutside`.
+
+Accessibility: Provides dialog semantics and consistent outside/Escape dismissal.
+
+### Radio
+
+Package: `@doctui/core`
+
+Native radio option with doctui-controlled visual geometry for a shared scalar v-model.
+
+Props: `modelValue`, `value`, `name`, `id`, `label`, `description`, `error`, `required`, `disabled`, `size`, `classNames`, `styles`.
+
+Accessibility: Uses native radio semantics and keyboard behavior; provide the same name for options in one group.
+Accessibility: The custom visual indicator does not replace the native input in the accessibility tree.
+Example: <Radio v-model="plan" name="plan" value="pro" label="Pro" size="md" />
+
+### SegmentedControl
+
+Package: `@doctui/core`
+
+Single-selection control with radio semantics and arrow navigation.
+
+Props: `modelValue`, `data`, `ariaLabel`, `size`, `radius`, `disabled`.
+
+Accessibility: Uses radiogroup/radio roles; Arrow, Home, End, Enter and Space are supported.
+
+### Select
+
+Package: `@doctui/core`
+
+Single-value selection control backed by the shared Combobox focus model.
+
+Props: `modelValue`, `data`, `id`, `label`, `description`, `error`, `required`, `disabled`, `placeholder`, `clearable`, `ariaLabel`, `nothingFound`, `size`, `radius`.
+
+Accessibility: Uses the Combobox aria-activedescendant focus model and skips disabled options during keyboard navigation.
+Accessibility: Supports a stable public id plus visible-label or ariaLabel accessible naming.
+Accessibility: Clear emits both the existing v-model update and the shared clear event.
+Example: <Select id="assignee" v-model="assignee" :data="people" label="Assignee" clearable @clear="trackCleared" />
+
+### Skeleton
+
+Package: `@doctui/core`
+
+Loading placeholder that can reveal its content when ready.
+
+Props: `visible`, `height`, `width`, `radius`.
+
+Accessibility: The placeholder is hidden from assistive technology while visible.
+
+### Space
+
+Package: `@doctui/core`
+
+Semantic layout spacer using the theme spacing scale.
+
+Props: `size`, `orientation`.
+
+
+### Stack
+
+Package: `@doctui/core`
+
+Vertical flex layout for consistent spacing between children.
+
+Props: `as`, `gap`, `align`, `justify`.
+
+
+### Switch
+
+Package: `@doctui/core`
+
+Boolean toggle that keeps native checkbox behavior behind a doctui track and thumb visual.
+
+Props: `modelValue`, `id`, `label`, `description`, `error`, `required`, `disabled`, `size`, `classNames`, `styles`.
+
+Accessibility: Uses a native checkbox with role=switch and aria-checked while preserving native keyboard and disabled behavior.
+Accessibility: Focus-visible styling is rendered on the visual track without hiding the native focus source from assistive technology.
+Example: <Switch v-model="notifications" label="Notifications" size="lg" />
+
+### TagsInput
+
+Package: `@doctui/core`
+
+Free-form token field with deterministic parsing, native focus and accessible token-list semantics.
+
+Props: `modelValue`, `id`, `name`, `label`, `description`, `error`, `required`, `disabled`, `readonly`, `placeholder`, `ariaLabel`, `clearable`, `maxTags`, `separator`, `size`, `radius`.
+
+Accessibility: Uses InputWrapper for SSR-safe IDs and field relationships while keeping a native text input as the entry and focus target.
+Accessibility: Selected tags are exposed as a list with native remove buttons; Backspace on an empty input removes the last tag without moving focus.
+Accessibility: Multi-character separators are parsed from input text, while only one-character separators act as keyboard delimiter keys.
+Example: <TagsInput id="skills" name="skills" v-model="skills" label="Skills" :max-tags="5" clearable />
+Example: <TagsInput v-model="topics" aria-label="Topics" separator="||" />
+
+### Text
+
+Package: `@doctui/core`
+
+Semantic text primitive using doctui typography and color tokens.
+
+Props: `as`, `size`, `muted`, `weight`.
+
+
+### Textarea
+
+Package: `@doctui/core`
+
+Multi-line text field with shared input wrapper semantics.
+
+Props: `modelValue`, `id`, `label`, `description`, `error`, `required`, `size`, `radius`, `disabled`, `readonly`, `placeholder`, `rows`, `resize`, `classNames`, `styles`.
+
+Accessibility: Uses a native textarea and links its label, description and error text through accessible IDs.
+Accessibility: Read-only fields remain focusable while disabled fields use native disabled semantics.
+Example: <Textarea v-model="bio" label="Bio" size="lg" :styles="fieldStyles" />
+
+### TextInput
+
+Package: `@doctui/core`
+
+Single-line text field with shared input wrapper semantics.
+
+Props: `modelValue`, `id`, `label`, `description`, `error`, `required`, `size`, `radius`, `disabled`, `readonly`, `type`, `placeholder`, `leftSection`, `rightSection`, `clearable`, `classNames`, `styles`.
+
+Accessibility: Uses a native input and links its label, description and error text through accessible IDs.
+Accessibility: Consumer aria-describedby IDs are composed with doctui-generated message IDs, and error state forces aria-invalid=true.
+Example: <TextInput v-model="email" label="Email" autocomplete="email" size="lg" />
+Example: <TextInput v-model="query" :class-names="fieldClasses" :styles="fieldStyles" />
+
+### Title
+
+Package: `@doctui/core`
+
+Semantic h1-h6 heading primitive.
+
+Props: `order`.
+
+Accessibility: Heading level is represented by the rendered native h1-h6 element.
+
+### Tooltip
+
+Package: `@doctui/core`
+
+Non-essential contextual text revealed on hover or focus.
+
+Props: `label`, `modelValue`, `position`.
+
+Accessibility: Appears on focus as well as hover and is not intended for critical information.
+
+### UnstyledButton
+
+Package: `@doctui/core`
+
+Native button reset for building custom action surfaces.
+
+Props: `disabled`, `type`.
+
+Accessibility: Preserves native button keyboard and disabled behavior.
+
+### YearPicker
+
+Package: `@doctui/dates`
+
+Keyboard-navigable paged year listbox with previous/next range navigation in the shared doctui date surface.
+
+Props: `modelValue`, `minYear`, `maxYear`, `pageSize`, `disabled`, `ariaLabel`.
+
+Accessibility: Uses listbox/option semantics with aria-selected and roving keyboard focus.
+Accessibility: Previous years and Next years buttons expose bounded range navigation without requiring a long scroll.
+Accessibility: The current year uses aria-current=date when visible.

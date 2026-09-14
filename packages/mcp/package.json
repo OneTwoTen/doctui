@@ -1,0 +1,31 @@
+{
+  "name": "@doctui/mcp-server",
+  "version": "0.0.0",
+  "description": "Local MCP server for querying doctui component metadata and docs.",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "bin": {
+    "doctui-mcp": "./dist/index.js"
+  },
+  "scripts": {
+    "clean": "node -e \"require('node:fs').rmSync('dist',{ recursive: true, force: true })\"",
+    "build": "bun run clean && bun run --bun vite build && tsc -p tsconfig.build.json",
+    "test": "vitest run src/server.test.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server": "^2.0.0",
+    "zod": "^4.2.0"
+  }
+}

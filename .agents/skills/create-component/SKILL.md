@@ -19,8 +19,8 @@ Creating a new component under `packages/core` or substantially redesigning an e
 
 1. Read `/AGENTS.md` and relevant Cursor rules.
 2. Study adjacent doctui components and shared types before designing the API.
-3. If Mantine is a reference, extract behavior/UX concepts only; explicitly translate React patterns into Vue patterns.
-4. Write down the proposed public API: props, emits, slots, exposed methods and state attributes.
+3. If Mantine is a reference, extract behavior/UX concepts only; explicitly translate React patterns into Vue patterns. Compare geometry, state visuals, focus treatment and customization surface in addition to prop names.
+4. Write down the proposed public API: props, emits, slots, exposed methods, state attributes, public CSS variables and style parts when applicable.
 5. Identify reusable lower-level behavior. Build/reuse an internal primitive or composable instead of duplicating it.
 6. Write the smallest behavioral/regression tests for the new contract **before implementation**. Run the relevant test and confirm it fails for the expected missing behavior (red). If the environment cannot run tests, state that explicitly instead of claiming a red test.
 7. Implement the minimum semantic markup and behavior required to make the new tests pass (green), then add styling through existing theme tokens/CSS variables.
@@ -31,6 +31,21 @@ Creating a new component under `packages/core` or substantially redesigning an e
 12. Add/update VitePress documentation and API metadata. Every meaningful public prop, variant, state, slot, theming/customization path or non-obvious behavior introduced by the change must have a representative copy-paste example where practical; do not stop at one minimal example when the API exposes more user-facing behavior.
 13. Run the repository's formatter, lint, typecheck, relevant tests, Storybook build and docs build when affected.
 14. Report public API decisions, accessibility behavior, red-to-green test coverage, Storybook composition coverage and any deliberate differences from the reference.
+
+## Field/input component rule
+
+For `InputWrapper`, text-like fields, Checkbox/Radio/Switch, selection inputs and any component that wraps a native form control:
+
+1. Read `.cursor/rules/field-components.mdc` before changing the DOM or styling contract.
+2. Keep generated IDs plus label/description/error relationships centralized in the shared field primitive. Do not duplicate fallback ID generation in every field.
+3. Consumer `class`/`style` belong to the outer field root. Native form/autofill/ARIA/data attributes and native listeners belong to the actual native control. Use `inheritAttrs: false` to make that split explicit.
+4. If `size` is public, write a failing test that proves it changes observable state/geometry. Size must scale appropriate height, padding, indicator, section or track/thumb dimensions rather than only font size.
+5. Prefer CSS variables for geometry and semantic tokens for colors. For new or substantially refactored field styling, use a colocated/family stylesheet that can still be bundled into the package stylesheet.
+6. Custom Checkbox/Radio/Switch visuals must keep the native input as the source of keyboard, focus, form and accessibility semantics. Project native `:checked`, `:disabled` and `:focus-visible` state onto the visual indicator/track.
+7. When users need to customize multiple visual regions, use the shared typed `classNames`/`styles` part contract. Reuse existing part names instead of inventing component-specific synonyms.
+8. For free-form token/multi-value text inputs, define trim/duplicate/limit policy before coding. Batch parsing must compute the complete accepted next value before emitting `update:modelValue`; only single-character separators may act as keyboard delimiter keys, while multi-character separators are parsed from input text. Keep the native text input as the stable focus target and document Backspace/remove/clear focus behavior.
+9. Add Storybook coverage that compares `xs/sm/md/lg/xl` geometry and important states. Also keep a realistic form/composition story that shows sibling doctui components working together.
+10. Document outer-root vs native-control attr ownership, accessibility relationships, public CSS variables and style parts in VitePress and metadata.
 
 ## Test-first rule
 
@@ -72,12 +87,16 @@ Prefer small copy-pasteable VitePress examples over prose-only descriptions. Pre
 - [ ] no Reka UI/component framework dependency
 - [ ] shared primitives reused
 - [ ] theme tokens/CSS variables used
+- [ ] `size` scales meaningful geometry when exposed
+- [ ] wrapped native-control attrs have an explicit root/control ownership contract
+- [ ] token inputs define normalization, separator, limit and focus behavior explicitly when applicable
+- [ ] multi-part customization uses stable typed style parts when needed
 - [ ] relevant behavior started with a failing test (red) before implementation
 - [ ] keyboard/focus behavior tested
 - [ ] disabled/loading/error states covered when applicable
 - [ ] Storybook covers basic, meaningful variants/states and interactions
 - [ ] Storybook includes a realistic advanced multi-component composition when applicable
 - [ ] VitePress docs include sufficient copy-paste examples for the public API surface
-- [ ] docs/API metadata added
+- [ ] docs/API metadata added and synchronized
 - [ ] Storybook and docs builds pass
 - [ ] no undocumented breaking API change

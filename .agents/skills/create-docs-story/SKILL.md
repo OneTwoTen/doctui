@@ -13,23 +13,37 @@ For doctui, "documentation" means **both**:
 
 Do not consider a public component documented when only one of these surfaces is complete unless the task explicitly scopes one surface out.
 
+## Mandatory live VitePress rendering
+
+Every public component documented in VitePress must be shown at least once as
+a live, rendered doctui component, not only as a fenced code block. Component
+tags must resolve to the actual exported component through an explicit local
+import or the shared `apps/docs/.vitepress/theme/index.ts` registration. Never
+leave PascalCase doctui tags as unresolved custom elements.
+
+When adding a component from a new package, register its component and load
+its public stylesheet in the VitePress theme. The docs build must verify that
+the preview renders real component markup (for example a `data-dui-component`
+attribute), in addition to compiling the Markdown.
+
 ## Workflow
 
 1. Read the component implementation and tests; document actual behavior, not intended behavior.
 2. Inventory the public surface that needs examples: core usage, meaningful props/variants, states, slots, events/`v-model`, accessibility behavior and supported customization paths.
 3. Create a minimal basic example that a user can copy in VitePress and a matching basic Storybook story.
-4. Add copy-paste VitePress examples for each meaningful public behavior. Do not consider docs complete when only the basic example exists but the API exposes additional important variants, states or customization paths.
-5. Add Storybook stories for meaningful variants, sizes/colors, visual states and edge states; add an interactive story for keyboard/focus-sensitive behavior.
-6. Add at least one **advanced composition story** for public components that are normally used with other doctui components. Compose multiple exported doctui components into a realistic higher-level UI instead of showing every component only in isolation.
-7. Prefer advanced stories that demonstrate a real product pattern such as a settings panel, form section, toolbar, card, empty state, confirmation flow, filter bar or dashboard block.
-8. For foundation APIs that exist before enough public components are available, create a realistic composed foundation preview and replace/extend it with actual doctui-component composition once those components exist.
-9. Document `v-model`, emits and named slots explicitly when they exist.
-10. Add accessibility notes for non-native widgets.
-11. Document supported theming/CSS-variable customization with at least one concrete VitePress example and one visual Storybook example when the component exposes or consumes public theme tokens.
-12. Ensure examples use only public APIs, except local Storybook-only demo components used to compose a foundation preview before corresponding public doctui components exist.
-13. Keep VitePress examples small enough to copy without unrelated setup; advanced Storybook stories may be larger when the composition itself is the lesson.
-14. Keep source metadata structured so docs generators can produce API tables and future `llms.txt` output.
-15. Run Storybook/docs builds when available.
+4. Add at least one live VitePress preview using the actual exported component, and verify it renders rather than remaining an unresolved custom element.
+5. Add copy-paste VitePress examples for each meaningful public behavior. Do not consider docs complete when only the basic example exists but the API exposes additional important variants, states or customization paths.
+6. Add Storybook stories for meaningful variants, sizes/colors, visual states and edge states; add an interactive story for keyboard/focus-sensitive behavior.
+7. Add at least one **advanced composition story** for public components that are normally used with other doctui components. Compose multiple exported doctui components into a realistic higher-level UI instead of showing every component only in isolation.
+8. Prefer advanced stories that demonstrate a real product pattern such as a settings panel, form section, toolbar, card, empty state, confirmation flow, filter bar or dashboard block.
+9. For foundation APIs that exist before enough public components are available, create a realistic composed foundation preview and replace/extend it with actual doctui-component composition once those components exist.
+10. Document `v-model`, emits and named slots explicitly when they exist.
+11. Add accessibility notes for non-native widgets.
+12. Document supported theming/CSS-variable customization with at least one concrete VitePress example and one visual Storybook example when the component exposes or consumes public theme tokens.
+13. Ensure examples use only public APIs, except local Storybook-only demo components used to compose a foundation preview before corresponding public doctui components exist.
+14. Keep VitePress examples small enough to copy without unrelated setup; advanced Storybook stories may be larger when the composition itself is the lesson.
+15. Keep source metadata structured so docs generators can produce API tables and future `llms.txt` output.
+16. Run Storybook/docs builds when available.
 
 ## Storybook coverage rule
 
@@ -43,6 +57,26 @@ A normal public component should usually have the following Storybook coverage w
 - `AdvancedComposition` — a realistic UI composed from multiple doctui components.
 
 Do not create redundant stories only to satisfy names. Combine stories when that makes comparison clearer, but preserve the coverage above.
+
+### Footer and action coverage
+
+When a public component exposes a persistent action region such as a named `footer` slot, documentation must show more than one static footer label. Cover the product states users actually need to compose.
+
+For modal-like surfaces such as Modal and Drawer, include these Storybook scenarios when applicable:
+
+- standard secondary + primary actions,
+- destructive action with semantic danger styling,
+- loading primary action and duplicate-submit prevention,
+- disabled primary action,
+- long body content with persistent footer actions,
+- narrow surface with wrapping actions,
+- informational/read-only surface with no footer,
+- custom footer layout such as status text plus actions,
+- nested surfaces where each layer owns its own actions.
+
+Use public action components such as `Button`, `Group`, `Text`, and `Loader` inside the slot. Do not solve documentation convenience by adding product-specific dialog props such as `confirmLabel`, `cancelLabel`, `onConfirm`, or `confirmLoading` when the component is intentionally composable.
+
+VitePress must include at least one **live rendered** named-slot example for an important action region, plus copy-paste examples for meaningful edge states. If long-content or fixed/persistent action behavior depends on viewport geometry, pair source/unit coverage with browser-level regression evidence.
 
 ### Advanced composition requirement
 

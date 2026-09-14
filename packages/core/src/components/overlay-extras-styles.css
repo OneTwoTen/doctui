@@ -1,0 +1,146 @@
+.dui-Popover,
+.dui-Menu {
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+}
+
+.dui-Popover-target,
+.dui-Menu-target {
+  display: inline-flex;
+  max-width: 100%;
+}
+
+.dui-Popover-panel,
+.dui-Menu-dropdown {
+  background: var(--dui-color-surface-raised);
+  border: 1px solid var(--dui-color-border);
+  border-radius: var(--dui-radius-md);
+  box-shadow: var(--dui-shadow-md);
+  box-sizing: border-box;
+  color: var(--dui-color-text);
+  left: 0;
+  margin: 0;
+  max-width: min(24rem, calc(100vw - 2 * var(--dui-spacing-md)));
+  min-width: 12rem;
+  padding: var(--dui-spacing-sm);
+  position: absolute;
+  top: calc(100% + var(--dui-spacing-xs));
+  z-index: var(--dui-z-index-popover);
+}
+
+.dui-Popover-panel {
+  line-height: var(--dui-line-height-md);
+  width: max-content;
+}
+
+.dui-Popover-panel[data-position="top"] {
+  bottom: calc(100% + var(--dui-spacing-xs));
+  top: auto;
+}
+
+.dui-Popover-panel[data-position="right"] {
+  left: calc(100% + var(--dui-spacing-xs));
+  top: 0;
+}
+
+.dui-Popover-panel[data-position="bottom"] {
+  bottom: auto;
+  left: 0;
+  right: auto;
+  top: calc(100% + var(--dui-spacing-xs));
+}
+
+.dui-Popover-panel[data-position="left"] {
+  left: auto;
+  right: calc(100% + var(--dui-spacing-xs));
+  top: 0;
+}
+
+.dui-Menu-dropdown {
+  display: grid;
+  gap: 0.125rem;
+  width: max-content;
+}
+
+.dui-Menu-item {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: var(--dui-radius-sm);
+  box-sizing: border-box;
+  color: var(--dui-color-text);
+  cursor: pointer;
+  display: flex;
+  font: inherit;
+  justify-content: flex-start;
+  line-height: var(--dui-line-height-md);
+  min-height: 2rem;
+  min-width: 100%;
+  padding: var(--dui-spacing-xs) var(--dui-spacing-sm);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.dui-Menu-item:hover:not(:disabled),
+.dui-Menu-item[data-active="true"] {
+  background: var(--dui-color-surface-muted);
+}
+
+.dui-Menu-item:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--dui-color-focus-ring);
+  outline: 0;
+}
+
+.dui-Menu-item:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.dui-Tooltip {
+  display: inline-flex;
+  max-width: 100%;
+  position: relative;
+  vertical-align: middle;
+}
+
+.dui-Tooltip-content {
+  background: var(--dui-color-text);
+  border-radius: var(--dui-radius-sm);
+  bottom: calc(100% + var(--dui-spacing-xs));
+  box-sizing: border-box;
+  color: var(--dui-color-surface);
+  font-size: var(--dui-font-size-xs);
+  left: 50%;
+  line-height: var(--dui-line-height-sm);
+  max-width: min(18rem, calc(100vw - 2 * var(--dui-spacing-sm)));
+  overflow-wrap: anywhere;
+  padding: 0.4rem 0.55rem;
+  pointer-events: none;
+  position: absolute;
+  text-align: left;
+  transform: translateX(-50%);
+  white-space: normal;
+  width: max-content;
+  z-index: var(--dui-z-index-tooltip);
+}
+
+.dui-Tooltip-content[data-position="bottom"] {
+  bottom: auto;
+  top: calc(100% + var(--dui-spacing-xs));
+}
+
+.dui-Tooltip-content[data-position="right"] {
+  bottom: auto;
+  left: calc(100% + var(--dui-spacing-xs));
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.dui-Tooltip-content[data-position="left"] {
+  bottom: auto;
+  left: auto;
+  right: calc(100% + var(--dui-spacing-xs));
+  top: 50%;
+  transform: translateY(-50%);
+}

@@ -1,0 +1,63 @@
+# doctui
+
+Generated component and package reference for doctui 0.0.0.
+
+## Packages
+
+- @doctui/core: Core Vue components, theme and primitives.
+- @doctui/hooks: Reusable Vue composables for browser and app state.
+- @doctui/form: Vue-first form state, validation and submit helpers.
+- @doctui/notifications: Notification store and accessible renderer.
+- @doctui/dates: Dependency-free date and calendar components.
+- @doctui/mcp-server: Local MCP server for querying the generated registry.
+
+## Components
+
+- ActionIcon (@doctui/core): Compact icon-only native button with an accessible name.
+- Autocomplete (@doctui/core): Searchable single-value selection control backed by the shared Combobox engine.
+- Badge (@doctui/core): Compact status label using semantic color and variant tokens.
+- Box (@doctui/core): Low-level polymorphic container with token-based spacing.
+- Button (@doctui/core): Native button control with doctui color, variant and size tokens.
+- Calendar (@doctui/dates): Accessible token-driven month grid with adjacent-month days, range constraints and keyboard navigation.
+- Center (@doctui/core): Flex helper that centers content on both axes.
+- Checkbox (@doctui/core): Native checkbox semantics with doctui-controlled visual geometry and shared field messaging.
+- Code (@doctui/core): Monospace inline or block code presentation.
+- Combobox (@doctui/core): Focus-managed listbox engine used by doctui selection controls.
+- Container (@doctui/core): Centered responsive container constrained by theme breakpoints.
+- DateInput (@doctui/dates): Editable localized date field with strict ISO model values and the shared doctui day/month/year picker dialog.
+- DatePicker (@doctui/dates): Doctui-styled readonly date field with day, month and year picker views in one accessible dialog surface.
+- DateTimePicker (@doctui/dates): Custom doctui date-time field combining the shared day/month/year picker with explicit hour and minute controls.
+- Divider (@doctui/core): Separator for related content with optional label content.
+- Drawer (@doctui/core): Accessible side dialog with shared overlay, nested-layer dismissal and focus restoration.
+- Flex (@doctui/core): Flexbox layout primitive with theme-token gaps.
+- Grid (@doctui/core): CSS grid layout primitive with token-backed gaps and columns.
+- Group (@doctui/core): Horizontal wrapping layout for related controls and content.
+- InputWrapper (@doctui/core): Shared label, description, required and error structure for inputs.
+- Kbd (@doctui/core): Semantic keyboard shortcut label.
+- Loader (@doctui/core): Animated progress indicator for an indeterminate operation.
+- Menu (@doctui/core): Keyboard-navigable menu built from native menu item buttons.
+- Modal (@doctui/core): Accessible modal dialog with nested-layer dismissal, reference-counted scroll lock and focus restoration.
+- MonthPicker (@doctui/dates): Keyboard-navigable month listbox rendered in the shared doctui date surface.
+- MultiSelect (@doctui/core): Searchable multi-value selection control backed by the shared Combobox engine.
+- NativeDateInput (@doctui/dates): Explicit browser-native date input wrapper that keeps OS date picker semantics while sharing doctui core field geometry.
+- Notifications (@doctui/notifications): Accessible notification renderer with explicit shared-store lifecycle ownership.
+- NumberInput (@doctui/core): Native numeric input with numeric v-model values and range constraints.
+- Overlay (@doctui/core): Portal-backed semantic-color backdrop with controlled visibility and dismissal.
+- Paper (@doctui/core): Surface container with optional border, radius and shadow.
+- PasswordInput (@doctui/core): Password field built on the shared TextInput contract.
+- Popover (@doctui/core): Dismissable contextual panel anchored to a target slot.
+- Radio (@doctui/core): Native radio option with doctui-controlled visual geometry for a shared scalar v-model.
+- SegmentedControl (@doctui/core): Single-selection control with radio semantics and arrow navigation.
+- Select (@doctui/core): Single-value selection control backed by the shared Combobox focus model.
+- Skeleton (@doctui/core): Loading placeholder that can reveal its content when ready.
+- Space (@doctui/core): Semantic layout spacer using the theme spacing scale.
+- Stack (@doctui/core): Vertical flex layout for consistent spacing between children.
+- Switch (@doctui/core): Boolean toggle that keeps native checkbox behavior behind a doctui track and thumb visual.
+- TagsInput (@doctui/core): Free-form token field with deterministic parsing, native focus and accessible token-list semantics.
+- Text (@doctui/core): Semantic text primitive using doctui typography and color tokens.
+- Textarea (@doctui/core): Multi-line text field with shared input wrapper semantics.
+- TextInput (@doctui/core): Single-line text field with shared input wrapper semantics.
+- Title (@doctui/core): Semantic h1-h6 heading primitive.
+- Tooltip (@doctui/core): Non-essential contextual text revealed on hover or focus.
+- UnstyledButton (@doctui/core): Native button reset for building custom action surfaces.
+- YearPicker (@doctui/dates): Keyboard-navigable paged year listbox with previous/next range navigation in the shared doctui date surface.
