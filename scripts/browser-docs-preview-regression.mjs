@@ -10,6 +10,17 @@ const docsPort = 4177;
 const chromePort = 9227;
 const origin = `http://127.0.0.1:${docsPort}`;
 const docsBase = "/doctui";
+const auditedRoutes = [
+  "/guide/theming",
+  "/guide/basic-components",
+  "/guide/selection-controls",
+  "/guide/tags-input",
+  "/guide/overlays",
+  "/guide/dialog-actions",
+  "/guide/accessibility",
+  "/guide/notifications",
+  "/guide/dates",
+];
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
@@ -157,6 +168,38 @@ async function main() {
         `Docs page ${path} did not render ${readySelector}`,
       );
     };
+    const auditPreviewGeometry = async (path, viewportLabel) => {
+      await navigate(path, ".docs-preview");
+      const audit = await evaluate(`(() => {
+        const previews = [...document.querySelectorAll(".docs-preview")];
+        const viewportWidth = window.innerWidth;
+        return {
+          previewCount: previews.length,
+          documentOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+          overflowingPreviews: previews.filter((preview) => {
+            const rect = preview.getBoundingClientRect();
+            return rect.left < -1 || rect.right > viewportWidth + 1;
+          }).length,
+          transparentPreviews: previews.filter((preview) => {
+            const background = getComputedStyle(preview).backgroundColor;
+            return background === "rgba(0, 0, 0, 0)" || background === "transparent";
+          }).length,
+        };
+      })()`);
+      assert(audit.previewCount > 0, `${path} has no rendered preview boundaries`);
+      assert(
+        audit.documentOverflow <= 1,
+        `${path} overflows ${viewportLabel} viewport by ${audit.documentOverflow}px`,
+      );
+      assert(
+        audit.overflowingPreviews === 0,
+        `${path} has ${audit.overflowingPreviews} preview boundaries outside the ${viewportLabel} viewport`,
+      );
+      assert(
+        audit.transparentPreviews === 0,
+        `${path} has ${audit.transparentPreviews} previews without a themed surface`,
+      );
+    };
 
     await navigate(
       "/guide/basic-components",
@@ -282,35 +325,23 @@ async function main() {
       "TagsInput docs page overflows horizontally",
     );
 
+    for (const path of auditedRoutes) {
+      await auditPreviewGeometry(path, "desktop");
+    }
+
     await client.send("Emulation.setDeviceMetricsOverride", {
       width: 390,
       height: 844,
       deviceScaleFactor: 1,
       mobile: true,
     });
-    await navigate("/guide/basic-components", ".docs-preview");
-    const mobileAudit = await evaluate(`(() => {
-      const previews = [...document.querySelectorAll(".docs-preview")];
-      return {
-        viewportWidth: window.innerWidth,
-        documentOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
-        overflowingPreviews: previews.filter((preview) => {
-          const rect = preview.getBoundingClientRect();
-          return rect.left < -1 || rect.right > window.innerWidth + 1;
-        }).length,
-      };
-    })()`);
-    assert(
-      mobileAudit.documentOverflow <= 1,
-      `Mobile docs page overflows horizontally by ${mobileAudit.documentOverflow}px`,
-    );
-    assert(
-      mobileAudit.overflowingPreviews === 0,
-      `${mobileAudit.overflowingPreviews} docs previews overflow the mobile viewport`,
-    );
+
+    for (const path of auditedRoutes) {
+      await auditPreviewGeometry(path, "mobile");
+    }
 
     console.log(
-      "Docs browser preview regression: theme, overlays and responsive geometry OK",
+      "Docs browser preview regression: theme, interactions and responsive geometry OK across audited guides",
     );
   } finally {
     client?.close();
