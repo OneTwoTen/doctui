@@ -215,42 +215,46 @@ async function main() {
       `Modal size control did not change real geometry: ${xsGeometry.width} -> ${xlWidth}`,
     );
 
-    await evaluate(`
-      window.__doctuiFocusEvents = [];
-      document.addEventListener('focusin', (event) => {
-        const target = event.target;
+    const pressTab = async (shift = false) => {
+      const modifiers = shift ? 8 : 0;
+      await client.send("Input.dispatchKeyEvent", {
+        type: "keyDown",
+        key: "Tab",
+        code: "Tab",
+        modifiers,
+      });
+      await client.send("Input.dispatchKeyEvent", {
+        type: "keyUp",
+        key: "Tab",
+        code: "Tab",
+        modifiers,
+      });
+      await sleep(20);
+    };
+    const assertModalFocus = async (label) => {
+      const state = await evaluate(`(() => {
+        const modal = document.querySelector('.dui-Modal');
         const active = document.activeElement;
-        window.__doctuiFocusEvents.push({
-          target: target instanceof HTMLElement
-            ? target.id || target.className || target.tagName
-            : String(target),
+        return {
+          contained: Boolean(modal?.contains(active)),
           active: active instanceof HTMLElement
             ? active.id || active.className || active.tagName
             : String(active),
-        });
-      }, true);
-      true;
-    `);
-    await evaluate("document.querySelector('#outside').focus(); true;");
-    await sleep(50);
-    const focusState = await evaluate(`(() => {
-      const modal = document.querySelector('.dui-Modal');
-      const trap = document.querySelector('.dui-FocusTrap');
-      const active = document.activeElement;
-      return {
-        contained: Boolean(modal?.contains(active)),
-        trapContainsActive: Boolean(trap?.contains(active)),
-        trapCount: document.querySelectorAll('.dui-FocusTrap').length,
-        active: active instanceof HTMLElement
-          ? active.id || active.className || active.tagName
-          : String(active),
-        events: window.__doctuiFocusEvents,
-      };
-    })()`);
-    assert(
-      focusState.contained,
-      `Focus escaped the active Modal: ${JSON.stringify(focusState)}`,
-    );
+        };
+      })()`);
+      assert(
+        state.contained,
+        `${label}: focus escaped the active Modal (${state.active})`,
+      );
+    };
+
+    await assertModalFocus("Initial focus");
+    await pressTab(true);
+    await assertModalFocus("Shift+Tab wrap");
+    for (let index = 0; index < 6; index += 1) {
+      await pressTab();
+      await assertModalFocus(`Tab ${index + 1}`);
+    }
 
     await evaluate(`
       document.querySelector('#open-drawer').focus();
