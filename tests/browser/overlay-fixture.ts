@@ -1,6 +1,12 @@
 import "../../packages/core/src/styles.css";
-import { Button, DoctuiProvider, Drawer, Modal, Stack } from "../../packages/core/src";
 import { createApp, defineComponent, h, nextTick, ref } from "vue";
+import {
+  Button,
+  DoctuiProvider,
+  Drawer,
+  Modal,
+  Stack,
+} from "../../packages/core/src";
 
 const App = defineComponent({
   setup() {
@@ -32,12 +38,8 @@ const App = defineComponent({
                   id: "modal-size",
                   value: modalSize.value,
                   onChange: (event: Event) => {
-                    modalSize.value = (event.target as HTMLSelectElement).value as
-                      | "xs"
-                      | "sm"
-                      | "md"
-                      | "lg"
-                      | "xl";
+                    modalSize.value = (event.target as HTMLSelectElement)
+                      .value as "xs" | "sm" | "md" | "lg" | "xl";
                   },
                 },
                 ["xs", "sm", "md", "lg", "xl"].map((size) =>
@@ -73,11 +75,7 @@ const App = defineComponent({
                         },
                         () => "Open drawer",
                       ),
-                      h(
-                        Button,
-                        { id: "modal-action" },
-                        () => "Modal action",
-                      ),
+                      h(Button, { id: "modal-action" }, () => "Modal action"),
                       h(
                         Drawer,
                         {
