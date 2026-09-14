@@ -28,7 +28,6 @@ const NestedInteractionDemo = defineComponent({
           Popover,
           {
             modelValue: popoverOpen.value,
-            ariaLabel: "Workspace actions",
             "onUpdate:modelValue": (value: boolean) => {
               popoverOpen.value = value;
               if (!value) menuOpen.value = false;
