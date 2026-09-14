@@ -1,0 +1,1 @@
+import{c as e,l as t,n}from"./iframe-BOJzHdrz.js";import{D as r,u as i}from"./dist-CNmFblyk.js";import{t as a}from"./rolldown-runtime-Dh6celcD.js";function o(n){return e({setup(){return()=>t(i,null,{default:n})}})}function s(){return(s=a((()=>{r(),n()})))()}export{o as n,s as t};
