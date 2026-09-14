@@ -1,5 +1,6 @@
-import { defineComponent, h, type PropType, useId } from "vue";
-import { type DateValue, describedBy, parseDate } from "./date-utils";
+import { TextInput, type Radius, type Size } from "@doctui/core";
+import { defineComponent, h, type PropType } from "vue";
+import { type DateValue, parseDate } from "./date-utils";
 
 export const DateInput = defineComponent({
   name: "DuiDateInput",
@@ -14,92 +15,34 @@ export const DateInput = defineComponent({
     maxDate: { type: String, default: undefined },
     disabled: Boolean,
     clearable: Boolean,
+    size: { type: String as PropType<Size>, default: "md" },
+    radius: { type: String as PropType<Radius>, default: "md" },
   },
   emits: ["update:modelValue", "blur", "clear"],
   setup(props, { emit }) {
-    const uid = useId();
-    const inputId = props.id ?? `dui-date-${uid}`;
-    const descriptionId = `${inputId}-description`;
-    const errorId = `${inputId}-error`;
-
     return () =>
-      h(
-        "div",
-        {
-          class: "dui-DateInput",
-          "data-disabled": props.disabled || undefined,
+      h(TextInput, {
+        class: "dui-DateInput",
+        ...(props.id !== undefined ? { id: props.id } : {}),
+        modelValue: props.modelValue ?? "",
+        ...(props.label !== undefined ? { label: props.label } : {}),
+        ...(props.description !== undefined
+          ? { description: props.description }
+          : {}),
+        ...(props.error !== undefined ? { error: props.error } : {}),
+        type: "date",
+        size: props.size,
+        radius: props.radius,
+        disabled: props.disabled,
+        clearable: props.clearable,
+        ...(props.minDate !== undefined ? { min: props.minDate } : {}),
+        ...(props.maxDate !== undefined ? { max: props.maxDate } : {}),
+        "aria-label": props.label ? undefined : (props.ariaLabel ?? "Date"),
+        "onUpdate:modelValue": (value: string) => {
+          emit("update:modelValue", value && parseDate(value) ? value : null);
         },
-        [
-          props.label
-            ? h(
-                "label",
-                { class: "dui-DateInput__label", for: inputId },
-                props.label,
-              )
-            : null,
-          props.description
-            ? h(
-                "div",
-                { id: descriptionId, class: "dui-DateInput__description" },
-                props.description,
-              )
-            : null,
-          h("div", { class: "dui-DateInput__control" }, [
-            h("input", {
-              id: inputId,
-              class: "dui-DateInput__input",
-              type: "date",
-              value: props.modelValue ?? "",
-              min: props.minDate,
-              max: props.maxDate,
-              disabled: props.disabled,
-              "aria-label": props.label
-                ? undefined
-                : (props.ariaLabel ?? "Date"),
-              "aria-describedby": describedBy(
-                props.description ? descriptionId : undefined,
-                props.error ? errorId : undefined,
-              ),
-              "aria-invalid": props.error ? "true" : undefined,
-              onInput: (event: Event) => {
-                const value = (event.target as HTMLInputElement).value;
-                emit(
-                  "update:modelValue",
-                  value && parseDate(value) ? value : null,
-                );
-              },
-              onBlur: (event: FocusEvent) => emit("blur", event),
-            }),
-            props.clearable && props.modelValue
-              ? h(
-                  "button",
-                  {
-                    type: "button",
-                    class: "dui-DateInput__clear",
-                    "aria-label": "Clear date",
-                    disabled: props.disabled,
-                    onClick: () => {
-                      if (props.disabled) return;
-                      emit("update:modelValue", null);
-                      emit("clear");
-                    },
-                  },
-                  "×",
-                )
-              : null,
-          ]),
-          props.error
-            ? h(
-                "div",
-                {
-                  id: errorId,
-                  class: "dui-DateInput__error",
-                  role: "alert",
-                },
-                props.error,
-              )
-            : null,
-        ],
-      );
+        onBlur: (event: FocusEvent) => emit("blur", event),
+        onClear: () => emit("clear"),
+      });
   },
 });
