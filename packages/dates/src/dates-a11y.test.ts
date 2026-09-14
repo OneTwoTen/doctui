@@ -56,7 +56,7 @@ describe("@doctui/dates SSR and field accessibility", () => {
       },
     });
 
-    const clear = wrapper.get(".dui-DateInput__clear");
+    const clear = wrapper.get('button[aria-label="Clear input"]');
     expect(clear.attributes("disabled")).toBeDefined();
     await clear.trigger("click");
     expect(wrapper.emitted("clear")).toBeUndefined();
@@ -77,14 +77,14 @@ describe("@doctui/dates SSR and field accessibility", () => {
     const input = wrapper.get('input[type="datetime-local"]');
     const describedBy = input.attributes("aria-describedby");
     expect(describedBy).toBeTruthy();
-    expect(wrapper.get(".dui-DateInput__description").attributes("id")).toBe(
+    expect(wrapper.get(".dui-InputWrapper-description").attributes("id")).toBe(
       describedBy?.split(" ")[0],
     );
-    expect(wrapper.get(".dui-DateInput__error").attributes("role")).toBe(
+    expect(wrapper.get(".dui-InputWrapper-error").attributes("role")).toBe(
       "alert",
     );
 
-    await wrapper.get(".dui-DateInput__clear").trigger("click");
+    await wrapper.get('button[aria-label="Clear input"]').trigger("click");
     expect(wrapper.emitted("update:modelValue")?.[0]).toEqual([""]);
     expect(wrapper.emitted("clear")?.[0]).toEqual([]);
   });
@@ -101,7 +101,7 @@ describe("@doctui/dates popup accessibility", () => {
     });
 
     expect(
-      wrapper.get('input[type="date"]').attributes("disabled"),
+      wrapper.get('input[type="text"]').attributes("disabled"),
     ).toBeDefined();
     const toggle = wrapper.get(".dui-DatePicker__toggle");
     expect(toggle.attributes("disabled")).toBeDefined();
@@ -144,7 +144,7 @@ describe("@doctui/dates keyboard selection models", () => {
 
     const grid = wrapper.get('[role="grid"]');
     expect(grid.attributes("aria-label")).toContain("September");
-    expect(wrapper.findAll('[role="row"]')).toHaveLength(6);
+    expect(wrapper.findAll(".dui-Calendar__row")).toHaveLength(6);
 
     const selected = wrapper.get('button[aria-label="2026-09-14"]');
     expect(selected.attributes("role")).toBe("gridcell");
