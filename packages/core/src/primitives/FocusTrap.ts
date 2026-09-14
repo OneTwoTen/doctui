@@ -66,7 +66,6 @@ export const FocusTrap = defineComponent({
           ? lastFocusedInside
           : (focusable[0] ?? root.value);
 
-      if (document.activeElement === target) return;
       redirectingFocus = true;
       target.focus({ preventScroll: true });
       redirectingFocus = false;
@@ -140,7 +139,17 @@ export const FocusTrap = defineComponent({
         return;
       }
 
-      focusInside(true);
+      queueMicrotask(() => {
+        if (
+          props.active &&
+          props.trapped &&
+          isTopTrap() &&
+          root.value &&
+          !root.value.contains(document.activeElement)
+        ) {
+          focusInside(true);
+        }
+      });
     };
 
     onMounted(() => {
