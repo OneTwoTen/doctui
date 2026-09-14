@@ -10,8 +10,8 @@ import {
   watch,
 } from "vue";
 import { Calendar } from "./Calendar";
-import type { DateValue } from "./date-utils";
 import { DateInput } from "./DateInput";
+import type { DateValue } from "./date-utils";
 
 export const DatePicker = defineComponent({
   name: "DuiDatePicker",
