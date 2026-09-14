@@ -62,8 +62,11 @@ export const Playground: Story = {
           {
             default: () =>
               h(Stack, { gap: "md" }, () => [
-                h(Text, null, () =>
-                  "Use Controls to change side, size, radius and dismissal behavior.",
+                h(
+                  Text,
+                  null,
+                  () =>
+                    "Use Controls to change side, size, radius and dismissal behavior.",
                 ),
                 h(
                   Button,
@@ -94,8 +97,11 @@ export const Open: Story = {
         },
         {
           default: () =>
-            h(Text, null, () =>
-              "This story starts open so geometry changes are visible immediately.",
+            h(
+              Text,
+              null,
+              () =>
+                "This story starts open so geometry changes are visible immediately.",
             ),
         },
       ),
