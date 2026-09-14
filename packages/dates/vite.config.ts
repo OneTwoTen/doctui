@@ -11,7 +11,7 @@ export default defineConfig({
       fileName: "index",
       cssFileName: "styles",
     },
-    rollupOptions: { external: ["vue"] },
+    rollupOptions: { external: ["vue", "@doctui/core"] },
     sourcemap: true,
   },
 });

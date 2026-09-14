@@ -9,6 +9,7 @@ import {
   DateTimePicker,
   dateValue,
   MonthPicker,
+  NativeDateInput,
   YearPicker,
 } from "./index";
 
@@ -56,11 +57,34 @@ describe("@doctui/dates SSR and field accessibility", () => {
       },
     });
 
-    const clear = wrapper.get(".dui-DateInput__clear");
+    const clear = wrapper.get('button[aria-label="Clear date"]');
     expect(clear.attributes("disabled")).toBeDefined();
     await clear.trigger("click");
     expect(wrapper.emitted("clear")).toBeUndefined();
     expect(wrapper.emitted("update:modelValue")).toBeUndefined();
+  });
+
+  it("parses localized DateInput typing back to strict ISO values", async () => {
+    const wrapper = mount(DateInput, {
+      props: {
+        modelValue: null,
+        locale: "en-GB",
+      },
+    });
+    const input = wrapper.get('input[type="text"]');
+
+    await input.setValue("14/09/2026");
+    expect(wrapper.emitted("update:modelValue")?.at(-1)).toEqual([
+      "2026-09-14",
+    ]);
+  });
+
+  it("keeps browser native date semantics isolated to NativeDateInput", () => {
+    const wrapper = mount(NativeDateInput, {
+      props: { modelValue: "2026-09-14", label: "Native date" },
+    });
+
+    expect(wrapper.get('input[type="date"]').element.value).toBe("2026-09-14");
   });
 
   it("gives DateTimePicker the same description, error and clear contract", async () => {
@@ -74,24 +98,26 @@ describe("@doctui/dates SSR and field accessibility", () => {
       },
     });
 
-    const input = wrapper.get('input[type="datetime-local"]');
+    const input = wrapper.get('input[type="text"]');
     const describedBy = input.attributes("aria-describedby");
     expect(describedBy).toBeTruthy();
-    expect(wrapper.get(".dui-DateInput__description").attributes("id")).toBe(
+    expect(wrapper.get(".dui-InputWrapper-description").attributes("id")).toBe(
       describedBy?.split(" ")[0],
     );
-    expect(wrapper.get(".dui-DateInput__error").attributes("role")).toBe(
+    expect(wrapper.get(".dui-InputWrapper-error").attributes("role")).toBe(
       "alert",
     );
 
-    await wrapper.get(".dui-DateInput__clear").trigger("click");
+    await wrapper
+      .get('button[aria-label="Clear date and time"]')
+      .trigger("click");
     expect(wrapper.emitted("update:modelValue")?.[0]).toEqual([""]);
     expect(wrapper.emitted("clear")?.[0]).toEqual([]);
   });
 });
 
 describe("@doctui/dates popup accessibility", () => {
-  it("connects the trigger to the calendar and forwards disabled state", async () => {
+  it("connects the trigger to the picker dialog and forwards disabled state", async () => {
     const wrapper = mount(DatePicker, {
       props: {
         modelValue: null,
@@ -101,12 +127,12 @@ describe("@doctui/dates popup accessibility", () => {
     });
 
     expect(
-      wrapper.get('input[type="date"]').attributes("disabled"),
+      wrapper.get('input[type="text"]').attributes("disabled"),
     ).toBeDefined();
     const toggle = wrapper.get(".dui-DatePicker__toggle");
     expect(toggle.attributes("disabled")).toBeDefined();
     await toggle.trigger("click");
-    expect(wrapper.findComponent(Calendar).exists()).toBe(false);
+    expect(wrapper.find(".dui-DatePickerPanel").exists()).toBe(false);
   });
 
   it("closes on Escape and outside pointer input, restoring trigger focus for Escape", async () => {
@@ -117,19 +143,20 @@ describe("@doctui/dates popup accessibility", () => {
     const toggle = wrapper.get(".dui-DatePicker__toggle");
 
     await toggle.trigger("click");
-    const calendar = wrapper.get(".dui-Calendar");
-    expect(toggle.attributes("aria-controls")).toBe(calendar.attributes("id"));
-    expect(toggle.attributes("aria-haspopup")).toBe("grid");
+    const panel = wrapper.get(".dui-DatePickerPanel");
+    expect(toggle.attributes("aria-controls")).toBe(panel.attributes("id"));
+    expect(toggle.attributes("aria-haspopup")).toBe("dialog");
+    expect(panel.attributes("role")).toBe("dialog");
 
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
     await nextTick();
-    expect(wrapper.find(".dui-Calendar").exists()).toBe(false);
+    expect(wrapper.find(".dui-DatePickerPanel").exists()).toBe(false);
     expect(document.activeElement).toBe(toggle.element);
 
     await toggle.trigger("click");
     document.body.dispatchEvent(new Event("pointerdown", { bubbles: true }));
     await nextTick();
-    expect(wrapper.find(".dui-Calendar").exists()).toBe(false);
+    expect(wrapper.find(".dui-DatePickerPanel").exists()).toBe(false);
 
     wrapper.unmount();
   });
@@ -144,7 +171,7 @@ describe("@doctui/dates keyboard selection models", () => {
 
     const grid = wrapper.get('[role="grid"]');
     expect(grid.attributes("aria-label")).toContain("September");
-    expect(wrapper.findAll('[role="row"]')).toHaveLength(6);
+    expect(wrapper.findAll(".dui-Calendar__row")).toHaveLength(6);
 
     const selected = wrapper.get('button[aria-label="2026-09-14"]');
     expect(selected.attributes("role")).toBe("gridcell");

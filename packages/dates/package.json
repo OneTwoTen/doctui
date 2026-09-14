@@ -28,6 +28,7 @@
     "test": "vitest run src/dates.test.ts"
   },
   "peerDependencies": {
+    "@doctui/core": ">=0.0.0 <1",
     "vue": ">=3.5.0 <4"
   }
 }
