@@ -108,6 +108,7 @@ export const Drawer = defineComponent({
                               ? undefined
                               : (props.ariaLabel ?? "Drawer"),
                             "data-dui-component": "Drawer",
+                            "data-dui-dismissable-boundary": "",
                             class: ["dui-Drawer", attrs.class],
                             "data-position": props.position,
                             "data-size": String(props.size),
