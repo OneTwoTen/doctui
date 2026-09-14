@@ -57,6 +57,18 @@ const full = [
     component.description,
     "",
     `Props: ${component.props.map((prop) => `\`${prop}\``).join(", ") || "none"}.`,
+    ...(component.events
+      ? [
+          "",
+          `Events: ${component.events.map((event) => `\`${event}\``).join(", ") || "none"}.`,
+        ]
+      : []),
+    ...(component.slots
+      ? [
+          "",
+          `Slots: ${component.slots.map((slot) => `\`${slot}\``).join(", ") || "none"}.`,
+        ]
+      : []),
     "",
     ...("accessibility" in component
       ? component.accessibility.map((note) => `Accessibility: ${note}`)
