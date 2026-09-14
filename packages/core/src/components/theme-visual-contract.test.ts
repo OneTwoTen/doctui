@@ -7,6 +7,12 @@ import { Divider, Loader, VisuallyHidden } from "../index";
 const readCoreStyles = () =>
   readFile(resolve(process.cwd(), "packages/core/src/styles.css"), "utf8");
 
+const readVisuallyHiddenStyles = () =>
+  readFile(
+    resolve(process.cwd(), "packages/core/src/primitives/visually-hidden.css"),
+    "utf8",
+  );
+
 const readOverlayStyles = () =>
   readFile(
     resolve(
@@ -48,12 +54,12 @@ describe("semantic theme visual contract", () => {
       props: { focusable: true },
       slots: { default: "Skip to content" },
     });
-    const css = await readCoreStyles();
+    const css = await readVisuallyHiddenStyles();
 
     expect(hidden.attributes("data-focusable")).toBe("false");
     expect(focusable.attributes("data-focusable")).toBe("true");
     expect(css).toMatch(
-      /\.dui-VisuallyHidden\[data-focusable="true"\]:(?:focus|focus-visible)[\s\S]*clip:\s*auto/,
+      /\.dui-VisuallyHidden\[data-focusable="true"\]:focus[\s\S]*clip:\s*auto/,
     );
   });
 
