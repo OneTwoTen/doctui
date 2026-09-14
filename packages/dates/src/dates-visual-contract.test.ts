@@ -101,8 +101,12 @@ describe("@doctui/dates visual contracts", () => {
       const path = `apps/storybook/stories/${storyFile}`;
       expect(existsSync(path), `${storyFile} should exist`).toBe(true);
       const story = readFileSync(path, "utf8");
-      expect(story, `${storyFile} should define argTypes`).toContain("argTypes:");
-      expect(story, `${storyFile} should define default args`).toContain("args:");
+      expect(story, `${storyFile} should define argTypes`).toContain(
+        "argTypes:",
+      );
+      expect(story, `${storyFile} should define default args`).toContain(
+        "args:",
+      );
       expect(story, `${storyFile} should expose a Playground`).toContain(
         "export const Playground",
       );
