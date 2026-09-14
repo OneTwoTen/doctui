@@ -15,11 +15,13 @@ export const DOCTUI_DATES_METADATA = [
       "firstDayOfWeek",
       "disabled",
       "ariaLabel",
+      "headerInteractive",
     ],
     accessibility: [
       "Uses grid/row/gridcell semantics with one roving tab stop.",
       "Arrow keys move by day/week, Home and End move within the week, and PageUp/PageDown move across months.",
       "The current date uses aria-current=date and the selected date uses aria-selected.",
+      "When headerInteractive is enabled, the month/year title becomes a keyboard-accessible view switch trigger.",
     ],
   },
   {
@@ -53,7 +55,7 @@ export const DOCTUI_DATES_METADATA = [
     package: "@doctui/dates",
     category: "inputs",
     description:
-      "Doctui-styled readonly date field with formatted display value and an accessible calendar popup.",
+      "Doctui-styled readonly date field with day, month and year picker views in one accessible dialog surface.",
     props: [
       "id",
       "modelValue",
@@ -73,9 +75,10 @@ export const DOCTUI_DATES_METADATA = [
     ],
     accessibility: [
       "Uses a readonly text field rather than browser-native date chrome for the custom picker surface.",
-      "The popup trigger exposes aria-expanded, aria-controls and aria-haspopup=grid.",
+      "The trigger exposes aria-expanded, aria-controls and aria-haspopup=dialog.",
+      "The dialog switches between grid-based day selection and listbox-based month/year selection without leaving the picker.",
       "Escape closes the popup and restores trigger focus; pointer input outside closes it without stealing focus.",
-      "Disabled state is forwarded to the field, actions and calendar.",
+      "Disabled state is forwarded to the field, actions and picker views.",
     ],
   },
   {
@@ -83,7 +86,7 @@ export const DOCTUI_DATES_METADATA = [
     package: "@doctui/dates",
     category: "inputs",
     description:
-      "Native date-time field that reuses doctui core field geometry, sizing and validation states.",
+      "Custom doctui date-time field combining the shared day/month/year picker with explicit hour and minute controls.",
     props: [
       "id",
       "modelValue",
@@ -91,13 +94,21 @@ export const DOCTUI_DATES_METADATA = [
       "description",
       "error",
       "ariaLabel",
+      "placeholder",
+      "minDate",
+      "maxDate",
+      "locale",
+      "firstDayOfWeek",
       "disabled",
       "clearable",
       "size",
       "radius",
     ],
     accessibility: [
-      "Uses the same core field relationships and native control semantics as DateInput.",
+      "Uses the core field label, description and error relationships with a readonly text trigger.",
+      "The custom picker opens as a dialog instead of invoking browser-native datetime chrome.",
+      "Hour and minute controls have explicit accessible names, and Apply commits the draft date and time.",
+      "Escape closes the dialog and restores trigger focus.",
     ],
   },
   {
@@ -106,9 +117,17 @@ export const DOCTUI_DATES_METADATA = [
     category: "inputs",
     description:
       "Keyboard-navigable month listbox rendered in the shared doctui date surface.",
-    props: ["modelValue", "year", "locale", "disabled", "ariaLabel"],
+    props: [
+      "modelValue",
+      "year",
+      "locale",
+      "disabled",
+      "ariaLabel",
+      "headerInteractive",
+    ],
     accessibility: [
       "Uses listbox/option semantics with aria-selected and roving keyboard focus.",
+      "When headerInteractive is enabled, the year title becomes a keyboard-accessible switch to year selection.",
     ],
   },
   {
@@ -116,10 +135,19 @@ export const DOCTUI_DATES_METADATA = [
     package: "@doctui/dates",
     category: "inputs",
     description:
-      "Keyboard-navigable year listbox rendered in the shared doctui date surface.",
-    props: ["modelValue", "minYear", "maxYear", "disabled", "ariaLabel"],
+      "Keyboard-navigable paged year listbox with previous/next range navigation in the shared doctui date surface.",
+    props: [
+      "modelValue",
+      "minYear",
+      "maxYear",
+      "pageSize",
+      "disabled",
+      "ariaLabel",
+    ],
     accessibility: [
       "Uses listbox/option semantics with aria-selected and roving keyboard focus.",
+      "Previous years and Next years buttons expose bounded range navigation without requiring a long scroll.",
+      "The current year uses aria-current=date when visible.",
     ],
   },
 ] as const;
