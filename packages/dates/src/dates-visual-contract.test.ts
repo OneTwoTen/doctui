@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { TextInput } from "@doctui/core";
 import { mount } from "@vue/test-utils";
 import { describe, expect, it } from "vitest";
@@ -68,5 +69,21 @@ describe("@doctui/dates visual contracts", () => {
     );
     expect(wrapper.text()).not.toContain("‹");
     expect(wrapper.text()).not.toContain("›");
+  });
+
+  it("loads the extracted dates stylesheet in the Storybook visual review surface", () => {
+    const preview = readFileSync(
+      "apps/storybook/.storybook/preview.ts",
+      "utf8",
+    );
+
+    expect(preview).toContain('import "@doctui/dates/styles.css";');
+  });
+
+  it("only references theme color tokens that exist in core", () => {
+    const styles = readFileSync("packages/dates/src/styles.css", "utf8");
+
+    expect(styles).not.toContain("--dui-color-surface-muted");
+    expect(styles).toContain("--dui-color-neutral-subtle-hover");
   });
 });
