@@ -4,7 +4,7 @@
   gap: 0.75rem;
   max-width: min(24rem, calc(100vw - 2rem));
   position: fixed;
-  z-index: 700;
+  z-index: var(--dui-z-index-toast);
 }
 .dui-Notifications--top-end {
   right: 1rem;
