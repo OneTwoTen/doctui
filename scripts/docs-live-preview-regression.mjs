@@ -73,7 +73,9 @@ function runSourceCheck() {
 
   for (const component of registered) {
     if (!excluded.has(component) && !manifestComponents.has(component)) {
-      errors.push(`${component}: registered in docs theme but missing from live preview manifest`);
+      errors.push(
+        `${component}: registered in docs theme but missing from live preview manifest`,
+      );
     }
   }
 
@@ -86,7 +88,9 @@ function runSourceCheck() {
 
     const source = readFileSync(guidePath, "utf8");
     if (!hasLiveTag(source, entry.component)) {
-      errors.push(`${entry.component}: ${entry.guide} has no live tag outside fenced code`);
+      errors.push(
+        `${entry.component}: ${entry.guide} has no live tag outside fenced code`,
+      );
     }
 
     const globallyRegistered = new RegExp(
@@ -101,14 +105,21 @@ function runSourceCheck() {
   }
 
   if (errors.length) {
-    throw new Error(`Docs live-preview source regression:\n- ${errors.join("\n- ")}`);
+    throw new Error(
+      `Docs live-preview source regression:\n- ${errors.join("\n- ")}`,
+    );
   }
 
-  console.log(`Docs live-preview source coverage: ${livePreviewManifest.length} components`);
+  console.log(
+    `Docs live-preview source coverage: ${livePreviewManifest.length} components`,
+  );
 }
 
 function builtGuidePath(slug) {
-  const candidates = [join(distDir, `${slug}.html`), join(distDir, slug, "index.html")];
+  const candidates = [
+    join(distDir, `${slug}.html`),
+    join(distDir, slug, "index.html"),
+  ];
   return candidates.find((candidate) => existsSync(candidate));
 }
 
@@ -133,10 +144,14 @@ function runRenderCheck() {
   }
 
   if (errors.length) {
-    throw new Error(`Docs live-preview render regression:\n- ${errors.join("\n- ")}`);
+    throw new Error(
+      `Docs live-preview render regression:\n- ${errors.join("\n- ")}`,
+    );
   }
 
-  console.log(`Docs live-preview render smoke: ${renderSmokeCases.length} guides`);
+  console.log(
+    `Docs live-preview render smoke: ${renderSmokeCases.length} guides`,
+  );
 }
 
 const mode = process.argv[2] ?? "--source";
