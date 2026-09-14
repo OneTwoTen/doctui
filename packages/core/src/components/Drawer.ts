@@ -65,8 +65,12 @@ export const Drawer = defineComponent({
         Overlay,
         {
           modelValue: true,
-          color: props.overlayProps.color,
-          opacity: props.overlayProps.opacity,
+          ...(props.overlayProps.color !== undefined
+            ? { color: props.overlayProps.color }
+            : {}),
+          ...(props.overlayProps.opacity !== undefined
+            ? { opacity: props.overlayProps.opacity }
+            : {}),
           withBackdrop: props.withOverlay,
           closeOnClick: false,
           portalTarget: props.portalTarget,
