@@ -20,7 +20,7 @@ const drawerOpen = ref(false)
   Review the article before publishing. The body can scroll independently while the footer stays available.
 
   <template #footer>
-    <Group justify="end">
+    <Group justify="flex-end">
       <Button variant="default" @click="modalOpen = false">Cancel</Button>
       <Button @click="modalOpen = false">Publish</Button>
     </Group>
@@ -31,7 +31,7 @@ const drawerOpen = ref(false)
   Change filter criteria without moving the action row out of view.
 
   <template #footer>
-    <Group justify="end">
+    <Group justify="flex-end">
       <Button variant="transparent">Clear all</Button>
       <Button variant="default" @click="drawerOpen = false">Cancel</Button>
       <Button @click="drawerOpen = false">Apply</Button>
@@ -48,7 +48,7 @@ Use ordinary doctui components inside the footer. Modal and Drawer intentionally
   Review the pending changes before saving.
 
   <template #footer>
-    <Group justify="end">
+    <Group justify="flex-end">
       <Button variant="default" @click="open = false">Cancel</Button>
       <Button @click="save">Save changes</Button>
     </Group>
@@ -64,7 +64,7 @@ Keep the safe action visually neutral and make the destructive action explicit.
 
 ```vue
 <template #footer>
-  <Group justify="end">
+  <Group justify="flex-end">
     <Button variant="default" @click="open = false">Cancel</Button>
     <Button color="danger" @click="removeWorkspace">Delete permanently</Button>
   </Group>
@@ -79,7 +79,7 @@ Do not make a destructive button the only obvious way to leave the dialog.
 
 ```vue
 <template #footer>
-  <Group justify="end">
+  <Group justify="flex-end">
     <Button variant="default" :disabled="saving" @click="open = false">
       Cancel
     </Button>
@@ -104,7 +104,7 @@ The footer itself supports wrapping. Use `Group` with its default `wrap=true` wh
 
 ```vue
 <template #footer>
-  <Group justify="end" wrap>
+  <Group justify="flex-end" wrap>
     <Button variant="transparent">Back</Button>
     <Button variant="default">Save draft</Button>
     <Button>Continue</Button>
@@ -122,7 +122,7 @@ The slot can contain status text and actions together. Keep the full-width layou
 <template #footer>
   <div class="publish-footer">
     <Text size="sm" muted>Saved 2 minutes ago</Text>
-    <Group justify="end">
+    <Group justify="flex-end">
       <Button variant="default">Preview</Button>
       <Button>Publish</Button>
     </Group>
