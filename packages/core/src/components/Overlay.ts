@@ -1,8 +1,8 @@
 import type { PropType } from "vue";
 import { computed, defineComponent, h } from "vue";
 import { Portal } from "../primitives";
-import { getThemeCssVariables } from "../theme/css-variables";
 import { useDoctuiColorScheme, useDoctuiTheme } from "../theme/context";
+import { getThemeCssVariables } from "../theme/css-variables";
 import type { Color } from "../theme/types";
 
 export interface OverlayVisualProps {
@@ -20,7 +20,8 @@ export const Overlay = defineComponent({
     opacity: {
       type: Number,
       default: 0.55,
-      validator: (value: number) => Number.isFinite(value) && value >= 0 && value <= 1,
+      validator: (value: number) =>
+        Number.isFinite(value) && value >= 0 && value <= 1,
     },
     closeOnClick: { type: Boolean, default: true },
     withBackdrop: { type: Boolean, default: true },
