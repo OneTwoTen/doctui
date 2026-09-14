@@ -2,9 +2,9 @@
   "number": "26",
   "title": "fix(storybook): repair contextual overlay visuals and controls",
   "branch": "codex/issue-13-storybook-visual-fix",
-  "sha": "afc550de2838f7961af4c01c7c08e040354f9e44",
+  "sha": "25304fcaac554f28cf741072df954ffba2ce3bb6",
   "repository": "OneTwoTen/doctui",
   "prUrl": "https://github.com/OneTwoTen/doctui/pull/26",
-  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/34800118407",
-  "generatedAt": "2026-09-14T02:43:29.094Z"
+  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/34800167040",
+  "generatedAt": "2026-09-14T02:44:20.290Z"
 }
