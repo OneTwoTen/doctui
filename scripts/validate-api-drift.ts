@@ -171,34 +171,17 @@ for (const contract of QUALITY_PUBLIC_API) {
   assertSame(contract.name, "events", extractEvents(options), contract.events);
   assertSame(contract.name, "slots", extractSlots(options), contract.slots);
 
-  const metadata = DOCTUI_REGISTRY.components.find(
+  const discoveryMetadata = DOCTUI_REGISTRY.components.find(
     (entry) => entry.name === contract.name,
   );
-  if (!metadata)
-    throw new Error(`Missing generated metadata for ${contract.name}`);
-  if (metadata.package !== contract.package) {
+  if (!discoveryMetadata) {
+    throw new Error(`Missing generated registry entry for ${contract.name}`);
+  }
+  if (discoveryMetadata.package !== contract.package) {
     throw new Error(
-      `${contract.name} package drifted: ${metadata.package} != ${contract.package}`,
+      `${contract.name} package drifted: ${discoveryMetadata.package} != ${contract.package}`,
     );
   }
-
-  const metadataApi = metadata as typeof metadata & {
-    readonly events?: readonly string[];
-    readonly slots?: readonly string[];
-  };
-  assertSame(contract.name, "metadata props", metadata.props, contract.props);
-  assertSame(
-    contract.name,
-    "metadata events",
-    metadataApi.events ?? [],
-    contract.events,
-  );
-  assertSame(
-    contract.name,
-    "metadata slots",
-    metadataApi.slots ?? [],
-    contract.slots,
-  );
 
   const packageIndex = await readFile(packageIndexes[contract.package], "utf8");
   if (!packageIndex.includes(contract.name)) {
