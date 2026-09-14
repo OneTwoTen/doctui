@@ -285,7 +285,11 @@ export const DateTimePicker = defineComponent({
                   footer: () =>
                     h("div", { class: "dui-DateTimePicker__footer" }, [
                       h("div", { class: "dui-DateTimePicker__time" }, [
-                        h("span", { class: "dui-DateTimePicker__timeLabel" }, "Time"),
+                        h(
+                          "span",
+                          { class: "dui-DateTimePicker__timeLabel" },
+                          "Time",
+                        ),
                         h("div", { class: "dui-DateTimePicker__timeFields" }, [
                           h("input", {
                             class: "dui-DateTimePicker__timeInput",
