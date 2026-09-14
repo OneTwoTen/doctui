@@ -14,6 +14,15 @@ import { preview } from "./story-helpers";
 const meta = {
   title: "Dates/Date system",
   component: DatePicker,
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        component:
+          "Visual state and composition examples. Use the individual Dates/* Playground stories for interactive Controls.",
+      },
+    },
+  },
 } satisfies Meta<typeof DatePicker>;
 
 export default meta;
