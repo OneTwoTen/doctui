@@ -19,7 +19,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Visual state and composition examples. Use the individual Dates/* Playground stories for interactive Controls.",
+          "Visual state and composition examples. Use Dates/DatePicker, DateInput, DateTimePicker, Calendar, MonthPicker, or YearPicker Playground stories for interactive Controls.",
       },
     },
   },
