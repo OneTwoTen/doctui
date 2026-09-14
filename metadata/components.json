@@ -534,10 +534,11 @@
       "name": "Notifications",
       "package": "@doctui/notifications",
       "category": "feedback",
-      "description": "Accessible renderer for notifications managed by a store.",
-      "props": ["store", "position"],
+      "description": "Accessible notification renderer with explicit shared-store lifecycle ownership.",
+      "props": ["store", "position", "cleanOnUnmount"],
       "accessibility": [
-        "Uses a polite live region, status items, and explicit dismiss buttons."
+        "Each notification uses its own polite, atomic status live region so simultaneous messages and updates are announced independently.",
+        "Dismiss controls are native buttons outside the live region, and renderer cleanup is opt-in with cleanOnUnmount for stores owned by that renderer."
       ]
     },
     {

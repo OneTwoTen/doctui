@@ -40,7 +40,7 @@ Generated component and package reference for doctui 0.0.0.
 - MonthPicker (@doctui/dates): Keyboard-navigable month listbox rendered in the shared doctui date surface.
 - MultiSelect (@doctui/core): Searchable multi-value selection control backed by the shared Combobox engine.
 - NativeDateInput (@doctui/dates): Explicit browser-native date input wrapper that keeps OS date picker semantics while sharing doctui core field geometry.
-- Notifications (@doctui/notifications): Accessible renderer for notifications managed by a store.
+- Notifications (@doctui/notifications): Accessible notification renderer with explicit shared-store lifecycle ownership.
 - NumberInput (@doctui/core): Native numeric input with numeric v-model values and range constraints.
 - Overlay (@doctui/core): Portal-backed semantic-color backdrop with controlled visibility and dismissal.
 - Paper (@doctui/core): Surface container with optional border, radius and shadow.
@@ -368,11 +368,12 @@ Accessibility: Use DateInput when editable text and a visually consistent doctui
 
 Package: `@doctui/notifications`
 
-Accessible renderer for notifications managed by a store.
+Accessible notification renderer with explicit shared-store lifecycle ownership.
 
-Props: `store`, `position`.
+Props: `store`, `position`, `cleanOnUnmount`.
 
-Accessibility: Uses a polite live region, status items, and explicit dismiss buttons.
+Accessibility: Each notification uses its own polite, atomic status live region so simultaneous messages and updates are announced independently.
+Accessibility: Dismiss controls are native buttons outside the live region, and renderer cleanup is opt-in with cleanOnUnmount for stores owned by that renderer.
 
 ### NumberInput
 
