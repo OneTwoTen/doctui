@@ -132,8 +132,8 @@ export function createNotifications(options: NotificationsOptions = {}) {
       ...patch,
       autoClose: updatesAutoClose
         ? (patch.autoClose ?? DEFAULT_AUTO_CLOSE)
-        : current.autoClose,
-      paused: updatesPaused ? Boolean(patch.paused) : current.paused,
+        : (current.autoClose ?? DEFAULT_AUTO_CLOSE),
+      paused: updatesPaused ? Boolean(patch.paused) : Boolean(current.paused),
     };
 
     if (updatesAutoClose) {
