@@ -37,35 +37,31 @@ export const ControlledPicker: Story = {
 export const FieldStates: Story = {
   render: () =>
     preview(() =>
-      h(
-        "div",
-        { style: { display: "grid", gap: "1rem", maxWidth: "28rem" } },
-        [
-          h(DateInput, {
-            label: "Start date",
-            description: "Native date input with SSR-safe relationships.",
-            modelValue: "2026-09-14",
-            clearable: true,
-          }),
-          h(DateInput, {
-            label: "End date",
-            modelValue: null,
-            error: "End date is required",
-          }),
-          h(DateTimePicker, {
-            label: "Publish at",
-            description: "Uses your local date and time.",
-            modelValue: "2026-09-14T08:30",
-            clearable: true,
-          }),
-          h(DatePicker, {
-            label: "Disabled date picker",
-            modelValue: "2026-09-14",
-            disabled: true,
-            clearable: true,
-          }),
-        ],
-      ),
+      h("div", { style: { display: "grid", gap: "1rem", maxWidth: "28rem" } }, [
+        h(DateInput, {
+          label: "Start date",
+          description: "Native date input with SSR-safe relationships.",
+          modelValue: "2026-09-14",
+          clearable: true,
+        }),
+        h(DateInput, {
+          label: "End date",
+          modelValue: null,
+          error: "End date is required",
+        }),
+        h(DateTimePicker, {
+          label: "Publish at",
+          description: "Uses your local date and time.",
+          modelValue: "2026-09-14T08:30",
+          clearable: true,
+        }),
+        h(DatePicker, {
+          label: "Disabled date picker",
+          modelValue: "2026-09-14",
+          disabled: true,
+          clearable: true,
+        }),
+      ]),
     ),
 };
 
@@ -144,7 +140,8 @@ export const AdvancedComposition: Story = {
           h("strong", null, "Schedule a release"),
           h(DatePicker, {
             label: "Release date",
-            description: "Calendar popup closes on Escape and outside pointer input.",
+            description:
+              "Calendar popup closes on Escape and outside pointer input.",
             modelValue: date.value,
             clearable: true,
             "onUpdate:modelValue": (value: string | null) =>
