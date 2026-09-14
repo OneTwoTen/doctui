@@ -50,6 +50,7 @@ export const TagsInput = defineComponent({
   setup(props, { attrs, emit, slots }) {
     const draft = ref("");
     const input = ref<HTMLInputElement>();
+    let isComposing = false;
     const canMutate = computed(() => !props.disabled && !props.readonly);
     const maxTags = computed(() =>
       props.maxTags === undefined
@@ -80,9 +81,14 @@ export const TagsInput = defineComponent({
       return added;
     };
 
+    const resetDraft = () => {
+      draft.value = "";
+      if (input.value) input.value.value = "";
+    };
+
     const addDraft = () => {
       const added = commitTags([draft.value]);
-      if (added.length > 0) draft.value = "";
+      if (added.length > 0) resetDraft();
     };
 
     const focusInput = () => {
@@ -103,11 +109,23 @@ export const TagsInput = defineComponent({
       if (!canMutate.value || !props.modelValue.length) return;
       emit("update:modelValue", []);
       emit("clear");
-      draft.value = "";
+      resetDraft();
       focusInput();
     };
 
+    const onCompositionStart = () => {
+      isComposing = true;
+    };
+
+    const onCompositionEnd = (event: CompositionEvent) => {
+      isComposing = false;
+      if (!canMutate.value) return;
+      draft.value = (event.target as HTMLInputElement).value;
+    };
+
     const onKeydown = (event: KeyboardEvent) => {
+      if (isComposing || event.isComposing || event.keyCode === 229) return;
+
       const isSingleCharacterSeparator =
         props.separator.length === 1 && event.key === props.separator;
 
@@ -137,6 +155,14 @@ export const TagsInput = defineComponent({
       }
     };
 
+    const onControlClick = (event: MouseEvent) => {
+      if (props.disabled) return;
+
+      const target = event.target as HTMLElement | null;
+      if (target === input.value || target?.closest("button")) return;
+      input.value?.focus();
+    };
+
     return () => {
       const { rootAttrs, controlAttrs } = splitFieldAttrs(attrs);
       const explicitAriaLabel =
@@ -145,6 +171,8 @@ export const TagsInput = defineComponent({
           ? controlAttrs["aria-label"]
           : undefined);
       const selectedTagsLabel = `${props.label ?? explicitAriaLabel ?? "Tags"} selected tags`;
+      const formAttribute =
+        typeof controlAttrs.form === "string" ? controlAttrs.form : undefined;
 
       return h(
         InputWrapper,
@@ -190,6 +218,7 @@ export const TagsInput = defineComponent({
                       borderRadius: radiusToken(props.radius),
                       fontSize: fontSizeToken(props.size),
                     },
+                    onClick: onControlClick,
                   },
                   [
                     props.modelValue.length > 0
@@ -237,7 +266,7 @@ export const TagsInput = defineComponent({
                       mergeProps(controlAttrs, {
                         ref: input,
                         id,
-                        name: props.name,
+                        name: undefined,
                         value: draft.value,
                         disabled: props.disabled,
                         readonly: props.readonly,
@@ -254,6 +283,8 @@ export const TagsInput = defineComponent({
                         class: "dui-TagsInput-input",
                         onInput,
                         onKeydown,
+                        onCompositionstart: onCompositionStart,
+                        onCompositionend: onCompositionEnd,
                       }),
                     ),
                     props.clearable && props.modelValue.length
@@ -271,6 +302,19 @@ export const TagsInput = defineComponent({
                       : null,
                   ],
                 ),
+                ...(props.name
+                  ? props.modelValue.map((value, index) =>
+                      h("input", {
+                        key: `${index}:${value}`,
+                        type: "hidden",
+                        name: props.name,
+                        value,
+                        form: formAttribute,
+                        disabled: props.disabled,
+                        "data-dui-tags-input-value": "",
+                      }),
+                    )
+                  : []),
               ],
             );
           },

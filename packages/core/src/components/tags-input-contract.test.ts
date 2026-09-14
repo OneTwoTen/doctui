@@ -1,10 +1,10 @@
 import { mount } from "@vue/test-utils";
 import { describe, expect, it } from "vitest";
-import { nextTick } from "vue";
+import { defineComponent, nextTick, ref } from "vue";
 import { TagsInput } from "../index";
 
 describe("TagsInput contract", () => {
-  it("supports a stable public id and forwards name to the native input", () => {
+  it("supports a stable public id while keeping the text editor as the labelled focus target", () => {
     const wrapper = mount(TagsInput, {
       props: {
         id: "skills",
@@ -14,8 +14,72 @@ describe("TagsInput contract", () => {
     });
 
     expect(wrapper.get("label").attributes("for")).toBe("skills");
-    expect(wrapper.get("input").attributes("id")).toBe("skills");
-    expect(wrapper.get("input").attributes("name")).toBe("skills");
+    expect(wrapper.get("input.dui-TagsInput-input").attributes("id")).toBe(
+      "skills",
+    );
+  });
+
+  it("submits selected tags as repeated form values instead of submitting the editor draft", async () => {
+    const form = document.createElement("form");
+    document.body.append(form);
+
+    const wrapper = mount(TagsInput, {
+      props: {
+        modelValue: ["Vue", "Rust"],
+        id: "skills",
+        name: "skills",
+        label: "Skills",
+      },
+      attachTo: form,
+    });
+
+    const editor = wrapper.get("input.dui-TagsInput-input");
+    await editor.setValue("unfinished draft");
+
+    expect(editor.attributes("name")).toBeUndefined();
+    expect(new FormData(form).getAll("skills")).toEqual(["Vue", "Rust"]);
+
+    wrapper.unmount();
+    form.remove();
+  });
+
+  it("keeps readonly selected tags in form submission but excludes disabled tags", () => {
+    const readonlyForm = document.createElement("form");
+    document.body.append(readonlyForm);
+    const readonly = mount(TagsInput, {
+      props: {
+        modelValue: ["Vue", "Rust"],
+        name: "skills",
+        readonly: true,
+        ariaLabel: "Skills",
+      },
+      attachTo: readonlyForm,
+    });
+
+    expect(new FormData(readonlyForm).getAll("skills")).toEqual([
+      "Vue",
+      "Rust",
+    ]);
+
+    readonly.unmount();
+    readonlyForm.remove();
+
+    const disabledForm = document.createElement("form");
+    document.body.append(disabledForm);
+    const disabled = mount(TagsInput, {
+      props: {
+        modelValue: ["Vue", "Rust"],
+        name: "skills",
+        disabled: true,
+        ariaLabel: "Skills",
+      },
+      attachTo: disabledForm,
+    });
+
+    expect(new FormData(disabledForm).getAll("skills")).toEqual([]);
+
+    disabled.unmount();
+    disabledForm.remove();
   });
 
   it("always gives the native input a reliable accessible name", () => {
@@ -71,6 +135,35 @@ describe("TagsInput contract", () => {
 
     await input.trigger("keydown", { key: "Enter" });
     expect(wrapper.emitted("update:modelValue")).toEqual([[["Vue"]]]);
+  });
+
+  it("commits Enter exactly once and clears the editor in controlled v-model usage", async () => {
+    const Host = defineComponent({
+      components: { TagsInput },
+      setup() {
+        const value = ref(["Vue", "Accessibility"]);
+        return { value };
+      },
+      template: `
+        <div>
+          <TagsInput v-model="value" label="Topics" />
+          <output data-selected>{{ value.join(",") }}</output>
+        </div>
+      `,
+    });
+
+    const wrapper = mount(Host);
+    const input = wrapper.get("input.dui-TagsInput-input");
+
+    await input.setValue("a");
+    await input.trigger("keydown", { key: "Enter" });
+    await nextTick();
+
+    expect(
+      wrapper.findAll(".dui-TagsInput-tag-label").map((tag) => tag.text()),
+    ).toEqual(["Vue", "Accessibility", "a"]);
+    expect((input.element as HTMLInputElement).value).toBe("");
+    expect(wrapper.get("[data-selected]").text()).toBe("Vue,Accessibility,a");
   });
 
   it("trims values, rejects duplicates and enforces maxTags across pasted batches", async () => {
@@ -134,6 +227,24 @@ describe("TagsInput contract", () => {
     expect(
       wrapper.get("button[aria-label='Remove Vue']").attributes("type"),
     ).toBe("button");
+  });
+
+  it("focuses the text editor when the non-interactive control surface is clicked", async () => {
+    const wrapper = mount(TagsInput, {
+      props: {
+        modelValue: ["Vue"],
+        ariaLabel: "Skills",
+      },
+      attachTo: document.body,
+    });
+
+    const input = wrapper.get("input.dui-TagsInput-input");
+    expect(document.activeElement).not.toBe(input.element);
+
+    await wrapper.get(".dui-TagsInput-control").trigger("click");
+    expect(document.activeElement).toBe(input.element);
+
+    wrapper.unmount();
   });
 
   it("returns focus to the input after removing a tag with its remove button", async () => {

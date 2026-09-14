@@ -1,0 +1,143 @@
+.dui-TagsInput {
+  color: var(--dui-color-text);
+  font-family: var(--dui-font-family);
+  font-size: var(--dui-field-font-size);
+  width: 100%;
+}
+
+.dui-TagsInput-control {
+  align-items: center;
+  background: var(--dui-color-surface);
+  border: 1px solid var(--dui-color-border);
+  box-sizing: border-box;
+  cursor: text;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dui-spacing-xs);
+  min-height: var(--dui-field-control-height);
+  padding: 0.25rem var(--dui-field-padding-inline);
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease,
+    background-color 120ms ease;
+  width: 100%;
+}
+
+.dui-TagsInput-control:focus-within {
+  border-color: var(--dui-color-primary-filled);
+  box-shadow: 0 0 0 2px var(--dui-color-focus-ring);
+}
+
+.dui-TagsInput-tags {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dui-spacing-xs);
+  min-width: 0;
+}
+
+.dui-TagsInput-tag {
+  align-items: center;
+  background: var(--dui-color-primary-light);
+  border-radius: var(--dui-radius-sm);
+  box-sizing: border-box;
+  color: var(--dui-color-text);
+  display: inline-flex;
+  flex: 0 1 auto;
+  font-size: 0.875em;
+  gap: 0.2em;
+  line-height: var(--dui-line-height-sm);
+  max-width: 100%;
+  min-height: 1.75em;
+  padding-inline: 0.55em 0.15em;
+}
+
+.dui-TagsInput-tag-label {
+  max-width: 18rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dui-TagsInput-input {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  flex: 1 1 7rem;
+  font: inherit;
+  line-height: var(--dui-line-height-md);
+  min-width: 4rem;
+  outline: 0;
+  padding: 0.2rem 0;
+}
+
+.dui-TagsInput-input::placeholder {
+  color: var(--dui-color-text-muted);
+  opacity: 1;
+}
+
+.dui-TagsInput-remove,
+.dui-TagsInput-clear {
+  align-items: center;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-radius: var(--dui-radius-sm);
+  color: var(--dui-color-text-muted);
+  cursor: pointer;
+  display: inline-flex;
+  flex: 0 0 auto;
+  font: inherit;
+  justify-content: center;
+  line-height: 1;
+  min-height: 1.5em;
+  min-width: 1.5em;
+  padding: 0;
+}
+
+.dui-TagsInput-remove:hover:not(:disabled),
+.dui-TagsInput-clear:hover:not(:disabled) {
+  background: var(--dui-color-surface-raised);
+  color: var(--dui-color-text);
+}
+
+.dui-TagsInput-remove:focus-visible,
+.dui-TagsInput-clear:focus-visible {
+  outline: 2px solid var(--dui-color-focus-ring);
+  outline-offset: 1px;
+}
+
+.dui-TagsInput-clear {
+  margin-inline-start: auto;
+}
+
+.dui-TagsInput[data-error="true"] .dui-TagsInput-control {
+  border-color: var(--dui-color-danger-filled);
+}
+
+.dui-TagsInput[data-disabled="true"] .dui-TagsInput-control {
+  background: var(--dui-field-disabled-background);
+  color: var(--dui-field-disabled-color);
+  cursor: not-allowed;
+}
+
+.dui-TagsInput[data-disabled="true"] .dui-TagsInput-tag {
+  background: var(--dui-color-surface-raised);
+  color: var(--dui-field-disabled-color);
+}
+
+.dui-TagsInput[data-disabled="true"] .dui-TagsInput-input {
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.dui-TagsInput[data-readonly="true"] .dui-TagsInput-input {
+  caret-color: transparent;
+}
+
+.dui-TagsInput-remove:disabled,
+.dui-TagsInput-clear:disabled {
+  cursor: default;
+  opacity: 0.45;
+}

@@ -1,4 +1,4 @@
-import { Group, Stack, TagsInput, Text } from "@doctui/core";
+import { Button, Group, Stack, TagsInput, Text } from "@doctui/core";
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import { ref } from "vue";
 
@@ -41,6 +41,29 @@ export const Default: Story = {
   }),
 };
 
+export const SizeMatrix: Story = {
+  render: () => ({
+    components: { Stack, TagsInput },
+    setup() {
+      const xs = ref(["Vue", "Rust"]);
+      const sm = ref(["Vue", "Rust"]);
+      const md = ref(["Vue", "Rust"]);
+      const lg = ref(["Vue", "Rust"]);
+      const xl = ref(["Vue", "Rust"]);
+      return { xs, sm, md, lg, xl };
+    },
+    template: `
+      <Stack gap="md">
+        <TagsInput v-model="xs" size="xs" label="Extra small" clearable />
+        <TagsInput v-model="sm" size="sm" label="Small" clearable />
+        <TagsInput v-model="md" size="md" label="Medium" clearable />
+        <TagsInput v-model="lg" size="lg" label="Large" clearable />
+        <TagsInput v-model="xl" size="xl" label="Extra large" clearable />
+      </Stack>
+    `,
+  }),
+};
+
 export const StateMatrix: Story = {
   render: () => ({
     components: { Stack, TagsInput, Text },
@@ -55,8 +78,44 @@ export const StateMatrix: Story = {
         <TagsInput :model-value="['Vue']" label="Read only" readonly clearable />
         <TagsInput :model-value="['Vue']" label="Disabled" disabled clearable />
         <TagsInput v-model="limited" label="Max 2 tags" :max-tags="2" error="Maximum reached" clearable />
-        <Text size="sm">Use Backspace in an empty input to remove the last tag.</Text>
+        <Text size="sm">Use Backspace in an empty input to remove the last tag. Click the control surface to return focus to the editor.</Text>
       </Stack>
+    `,
+  }),
+};
+
+export const NativeFormSubmission: Story = {
+  render: () => ({
+    components: { Button, Stack, TagsInput, Text },
+    setup() {
+      const skills = ref(["Vue", "Accessibility"]);
+      const submitted = ref<string[]>([]);
+      const submit = (event: Event) => {
+        const form = event.currentTarget as HTMLFormElement;
+        submitted.value = new FormData(form)
+          .getAll("skills")
+          .map((value) => String(value));
+      };
+      return { skills, submitted, submit };
+    },
+    template: `
+      <form @submit.prevent="submit">
+        <Stack gap="md">
+          <TagsInput
+            id="form-skills"
+            v-model="skills"
+            name="skills"
+            label="Skills"
+            description="Only committed tags are submitted"
+            placeholder="Type a draft without committing it"
+            clearable
+          />
+          <Group>
+            <Button type="submit">Read FormData</Button>
+            <Text size="sm">Submitted: {{ submitted.length ? submitted.join(', ') : 'Nothing submitted yet' }}</Text>
+          </Group>
+        </Stack>
+      </form>
     `,
   }),
 };
