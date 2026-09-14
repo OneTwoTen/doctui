@@ -198,6 +198,34 @@ async function main() {
       `Modal is not horizontally centered: ${JSON.stringify(xsGeometry)}`,
     );
 
+    const modalFooterLayout = await evaluate(`(() => {
+      const surface = document.querySelector('.dui-Modal');
+      const body = surface.querySelector('.dui-Modal-body');
+      const footer = surface.querySelector('.dui-Modal-footer');
+      const surfaceRect = surface.getBoundingClientRect();
+      const before = footer.getBoundingClientRect();
+      body.scrollTop = body.scrollHeight;
+      const after = footer.getBoundingClientRect();
+      return {
+        scrollable: body.scrollHeight > body.clientHeight,
+        footerInside:
+          after.top >= surfaceRect.top - 1 && after.bottom <= surfaceRect.bottom + 1,
+        footerStable: Math.abs(after.top - before.top) < 1,
+      };
+    })()`);
+    assert(
+      modalFooterLayout.scrollable,
+      "Long Modal content did not produce an independently scrollable body",
+    );
+    assert(
+      modalFooterLayout.footerInside,
+      "Modal footer escaped the dialog surface",
+    );
+    assert(
+      modalFooterLayout.footerStable,
+      "Modal footer moved when the body scrolled",
+    );
+
     await evaluate(`(() => {
       const select = document.querySelector('#modal-size');
       select.value = 'xl';
@@ -268,6 +296,34 @@ async function main() {
     assert(
       (await evaluate("document.body.style.overflow")) === "hidden",
       "Opening nested dialogs did not lock page scroll",
+    );
+
+    const drawerFooterLayout = await evaluate(`(() => {
+      const surface = document.querySelector('.dui-Drawer');
+      const body = surface.querySelector('.dui-Drawer-body');
+      const footer = surface.querySelector('.dui-Drawer-footer');
+      const surfaceRect = surface.getBoundingClientRect();
+      const before = footer.getBoundingClientRect();
+      body.scrollTop = body.scrollHeight;
+      const after = footer.getBoundingClientRect();
+      return {
+        scrollable: body.scrollHeight > body.clientHeight,
+        footerInside:
+          after.top >= surfaceRect.top - 1 && after.bottom <= surfaceRect.bottom + 1,
+        footerStable: Math.abs(after.top - before.top) < 1,
+      };
+    })()`);
+    assert(
+      drawerFooterLayout.scrollable,
+      "Long Drawer content did not produce an independently scrollable body",
+    );
+    assert(
+      drawerFooterLayout.footerInside,
+      "Drawer footer escaped the drawer surface",
+    );
+    assert(
+      drawerFooterLayout.footerStable,
+      "Drawer footer moved when the body scrolled",
     );
 
     const pressEscape = async () => {
