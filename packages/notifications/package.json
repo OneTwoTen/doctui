@@ -1,6 +1,6 @@
 {
   "name": "@doctui/notifications",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Accessible notification store and renderer for doctui.",
   "type": "module",
   "sideEffects": [
