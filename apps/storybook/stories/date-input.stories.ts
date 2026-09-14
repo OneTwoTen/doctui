@@ -10,8 +10,6 @@ const meta = {
     modelValue: "2026-09-14",
     label: "Native date",
     description: "Browser-native date semantics with doctui field styling.",
-    error: undefined,
-    ariaLabel: undefined,
     minDate: "2026-09-01",
     maxDate: "2026-10-31",
     disabled: false,
