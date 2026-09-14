@@ -71,11 +71,27 @@ export const TypeScale: Story = {
   render: () =>
     preview(() =>
       h(Stack, { gap: "md", style: { maxWidth: "42rem" } }, () => [
-        h(Text, { size: "xs" }, () => "xs · Metadata, helper text, compact labels"),
-        h(Text, { size: "sm" }, () => "sm · Secondary descriptions and dense controls"),
+        h(
+          Text,
+          { size: "xs" },
+          () => "xs · Metadata, helper text, compact labels",
+        ),
+        h(
+          Text,
+          { size: "sm" },
+          () => "sm · Secondary descriptions and dense controls",
+        ),
         h(Text, { size: "md" }, () => "md · Default interface and body copy"),
-        h(Text, { size: "lg", weight: 600 }, () => "lg · Dialog headings and section emphasis"),
-        h(Text, { size: "xl", weight: 700 }, () => "xl · Strong page-level emphasis"),
+        h(
+          Text,
+          { size: "lg", weight: 600 },
+          () => "lg · Dialog headings and section emphasis",
+        ),
+        h(
+          Text,
+          { size: "xl", weight: 700 },
+          () => "xl · Strong page-level emphasis",
+        ),
       ]),
     ),
 };
@@ -98,7 +114,11 @@ export const InterfaceSample: Story = {
             h(Stack, { gap: "md" }, () => [
               h(Group, { justify: "space-between" }, () => [
                 h(Title, { order: 3 }, () => "Tạo lớp học mới"),
-                h(Badge, { color: "primary", variant: "light" }, () => "Bản nháp"),
+                h(
+                  Badge,
+                  { color: "primary", variant: "light" },
+                  () => "Bản nháp",
+                ),
               ]),
               h(
                 Text,
@@ -121,7 +141,8 @@ export const InterfaceSample: Story = {
                   muted: true,
                   style: { fontFamily: fontStack },
                 },
-                () => "Showcase stack: Be Vietnam Pro → native platform fallbacks",
+                () =>
+                  "Showcase stack: Be Vietnam Pro → native platform fallbacks",
               ),
             ]),
         },
