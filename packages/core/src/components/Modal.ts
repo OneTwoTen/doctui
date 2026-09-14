@@ -106,6 +106,7 @@ export const Modal = defineComponent({
                               ? undefined
                               : (props.ariaLabel ?? "Dialog"),
                             "data-dui-component": "Modal",
+                            "data-dui-dismissable-boundary": "",
                             "data-centered": props.centered ? "true" : "false",
                             "data-size": String(props.size),
                             class: ["dui-Modal", attrs.class],
@@ -116,6 +117,7 @@ export const Modal = defineComponent({
                                   props.size,
                                 ),
                                 borderRadius: `var(--dui-radius-${props.radius})`,
+                                marginInline: "auto",
                               },
                             ],
                           },
