@@ -2,9 +2,9 @@
   "number": "32",
   "title": "fix(core): repair TagsInput UI and form behavior",
   "branch": "fix/tags-input-ui-logic",
-  "sha": "e6ee796e549b58fdc9b1f5224c283dda7dbc4680",
+  "sha": "4a112c42e409477793118180e6319985a2ca8b17",
   "repository": "OneTwoTen/doctui",
   "prUrl": "https://github.com/OneTwoTen/doctui/pull/32",
-  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/34836396946",
-  "generatedAt": "2026-09-14T11:05:53.007Z"
+  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/34836450133",
+  "generatedAt": "2026-09-14T11:06:52.931Z"
 }
