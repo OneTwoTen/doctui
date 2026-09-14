@@ -41,7 +41,10 @@ export const YearPicker = defineComponent({
         0,
         Math.min(size, props.maxYear - pageStart.value + 1),
       );
-      return Array.from({ length: count }, (_, index) => pageStart.value + index);
+      return Array.from(
+        { length: count },
+        (_, index) => pageStart.value + index,
+      );
     };
 
     const syncActiveIndex = () => {
@@ -51,7 +54,13 @@ export const YearPicker = defineComponent({
     };
 
     watch(
-      () => [props.modelValue, props.minYear, props.maxYear, props.pageSize] as const,
+      () =>
+        [
+          props.modelValue,
+          props.minYear,
+          props.maxYear,
+          props.pageSize,
+        ] as const,
       () => {
         const target = targetYear();
         const size = normalizedPageSize();
