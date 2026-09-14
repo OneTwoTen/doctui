@@ -9,7 +9,6 @@ const meta = {
   args: {
     modelValue: true,
     title: "Filters",
-    ariaLabel: undefined,
     position: "right",
     size: "md",
     radius: "md",
