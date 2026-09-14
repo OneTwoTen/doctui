@@ -2,9 +2,9 @@
   "number": "30",
   "title": "fix(dates): redesign date controls and picker surfaces",
   "branch": "codex/issue-15-dates-visual-redesign",
-  "sha": "51506cbf05a7dcf56e188b968c99ba37a52f69f5",
+  "sha": "be25f0cc06ea6d324e2a7c236a96378d366960b7",
   "repository": "OneTwoTen/doctui",
   "prUrl": "https://github.com/OneTwoTen/doctui/pull/30",
-  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/34819667923",
-  "generatedAt": "2026-09-14T07:50:35.014Z"
+  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/34819750528",
+  "generatedAt": "2026-09-14T07:51:28.691Z"
 }
