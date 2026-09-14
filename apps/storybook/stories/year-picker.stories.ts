@@ -8,8 +8,9 @@ const meta = {
   component: YearPicker,
   args: {
     modelValue: 2026,
-    minYear: 2022,
-    maxYear: 2032,
+    minYear: 1900,
+    maxYear: 2100,
+    pageSize: 12,
     disabled: false,
     ariaLabel: "Choose release year",
   },
@@ -17,6 +18,10 @@ const meta = {
     modelValue: { control: "number", table: { category: "Value" } },
     minYear: { control: "number", table: { category: "Range" } },
     maxYear: { control: "number", table: { category: "Range" } },
+    pageSize: {
+      control: { type: "number", min: 4, max: 24, step: 1 },
+      table: { category: "Range" },
+    },
     disabled: { control: "boolean", table: { category: "State" } },
     ariaLabel: { control: "text", table: { category: "Accessibility" } },
   },
