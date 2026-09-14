@@ -354,7 +354,9 @@ export const Menu = defineComponent({
     const openFromTrigger = (focus: "first" | "last") => {
       pendingFocus.value = focus;
       if (props.modelValue) {
-        focusIndex(focus === "first" ? firstEnabledIndex() : lastEnabledIndex());
+        focusIndex(
+          focus === "first" ? firstEnabledIndex() : lastEnabledIndex(),
+        );
         return;
       }
       emit("update:modelValue", true);
@@ -458,10 +460,7 @@ export const Menu = defineComponent({
                         } else if (event.key === "End") {
                           event.preventDefault();
                           focusIndex(lastEnabledIndex());
-                        } else if (
-                          event.key === "Enter" ||
-                          event.key === " "
-                        ) {
+                        } else if (event.key === "Enter" || event.key === " ") {
                           event.preventDefault();
                           activate(activeIndex.value);
                         } else if (event.key === "Escape") {
