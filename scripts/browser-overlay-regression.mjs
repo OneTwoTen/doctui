@@ -78,12 +78,22 @@ function createCdpClient(url) {
 async function main() {
   const chrome = findChrome();
   if (!chrome) {
-    throw new Error("Chrome/Chromium is required for browser overlay regressions");
+    throw new Error(
+      "Chrome/Chromium is required for browser overlay regressions",
+    );
   }
 
   const vite = spawn(
     "bun",
-    ["x", "vite", "--host", "127.0.0.1", "--port", String(vitePort), "--strictPort"],
+    [
+      "x",
+      "vite",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      String(vitePort),
+      "--strictPort",
+    ],
     { stdio: ["ignore", "pipe", "pipe"] },
   );
   const chromeProcess = spawn(
@@ -109,7 +119,10 @@ async function main() {
       `http://127.0.0.1:${chromePort}/json/list`,
     ).then((response) => response.json());
     const page = targets.find((target) => target.type === "page");
-    assert(page?.webSocketDebuggerUrl, "Chrome did not expose a debuggable page");
+    assert(
+      page?.webSocketDebuggerUrl,
+      "Chrome did not expose a debuggable page",
+    );
 
     client = createCdpClient(page.webSocketDebuggerUrl);
     await client.ready;
@@ -191,15 +204,12 @@ async function main() {
       select.dispatchEvent(new Event('change', { bubbles: true }));
       true;
     `);
-    const xlWidth = await waitFor(
-      async () => {
-        const width = await evaluate(
-          "document.querySelector('.dui-Modal').getBoundingClientRect().width",
-        );
-        return width > 800 ? width : false;
-      },
-      "xl Modal did not grow to its token width",
-    );
+    const xlWidth = await waitFor(async () => {
+      const width = await evaluate(
+        "document.querySelector('.dui-Modal').getBoundingClientRect().width",
+      );
+      return width > 800 ? width : false;
+    }, "xl Modal did not grow to its token width");
     assert(
       xlWidth > xsGeometry.width + 400,
       `Modal size control did not change real geometry: ${xsGeometry.width} -> ${xlWidth}`,
