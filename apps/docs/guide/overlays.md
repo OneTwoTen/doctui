@@ -93,7 +93,7 @@ Outside pointer interaction closes the menu when `closeOnClickOutside` is enable
 
 ## Popover
 
-`Popover` also treats the `target` slot root as the real trigger. The trigger receives `aria-haspopup="dialog"`, `aria-expanded`, and `aria-controls`, and the controlled panel receives the matching stable `id`.
+`Popover` also treats the `target` slot root as the real trigger. The trigger receives a stable `id`, `aria-haspopup="dialog"`, `aria-expanded`, and `aria-controls`; the controlled panel receives the matching stable panel `id` and uses `aria-labelledby` to take its accessible name from that real trigger. If the trigger already has an `id`, doctui preserves and reuses it.
 
 ```vue
 <Popover v-model="detailsOpen" position="right">
@@ -105,7 +105,7 @@ Outside pointer interaction closes the menu when `closeOnClickOutside` is enable
 </Popover>
 ```
 
-`closeOnEscape` and `closeOnClickOutside` are independent. Escape dismissal restores focus to the trigger. Outside-pointer dismissal keeps the user's new pointer/focus destination intact.
+Use a clear accessible name on the trigger because that same trigger names the contextual dialog. `closeOnEscape` and `closeOnClickOutside` are independent. Escape dismissal restores focus to the trigger. Outside-pointer dismissal keeps the user's new pointer/focus destination intact.
 
 ### Position and collision behavior
 
@@ -125,7 +125,7 @@ Core must not grow a custom JavaScript popper engine. If doctui promotes collisi
 
 Prefer a single focusable root in the default slot so the element users actually focus receives the description. If the root is a composite wrapper containing several focusable descendants, focus moving between descendants does not close and reopen the tooltip; it closes only when focus leaves the composite root. For important instructions, validation, or required content, render visible text instead of relying on a tooltip.
 
-Tooltip `position` uses the same deterministic CSS-side contract as Popover and does not currently auto-flip on collision.
+Tooltip text wraps within a viewport-safe maximum width rather than forcing one unbroken line. Tooltip `position` uses the same deterministic CSS-side contract as Popover and does not currently auto-flip on collision.
 
 ## Dismissal behavior
 
@@ -195,4 +195,6 @@ Override the theme z-index scale through the normal doctui theme configuration i
 
 ## Storybook
 
-Storybook includes Drawer geometry and dismissal examples plus dedicated Menu keyboard, Popover position/focus-restoration, Tooltip hover/focus, and advanced nested Popover → Menu + Tooltip compositions. Use the nested interaction story to manually verify top-layer Escape ordering and one-level-at-a-time focus restoration.
+Storybook exposes dedicated `Drawer`, `Menu`, `Popover`, and `Tooltip` modules with the actual component registered in metadata and functional Controls for their meaningful public props. Controlled open state is synchronized both ways: changing `modelValue` in Controls updates the canvas, while clicks, hover/focus, Escape, and dismissal events write the new state back to Storybook args.
+
+Composition stories are separate and intentionally disable Controls so they do not present a misleading panel for several independently controlled components. The Popover → Menu + Tooltip composition remains available for manually verifying nested Escape ordering and one-level-at-a-time focus restoration.
