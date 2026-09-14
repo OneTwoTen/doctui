@@ -10,8 +10,9 @@ export const MonthPicker = defineComponent({
     locale: { type: String, default: "en-US" },
     disabled: Boolean,
     ariaLabel: { type: String, default: "Choose month" },
+    headerInteractive: Boolean,
   },
-  emits: ["update:modelValue", "select"],
+  emits: ["update:modelValue", "select", "titleClick"],
   setup(props, { emit }) {
     const listbox = ref<HTMLElement | null>(null);
     const selectedMonth = () => {
@@ -48,11 +49,23 @@ export const MonthPicker = defineComponent({
         },
         [
           h("div", { class: "dui-DateSurface__header" }, [
-            h(
-              "strong",
-              { class: "dui-DateSurface__title" },
-              String(props.year),
-            ),
+            props.headerInteractive
+              ? h(
+                  "button",
+                  {
+                    type: "button",
+                    class: "dui-DateSurface__titleButton",
+                    "aria-label": `Choose year, current ${props.year}`,
+                    disabled: props.disabled,
+                    onClick: () => emit("titleClick"),
+                  },
+                  String(props.year),
+                )
+              : h(
+                  "strong",
+                  { class: "dui-DateSurface__title" },
+                  String(props.year),
+                ),
           ]),
           h(
             "div",
