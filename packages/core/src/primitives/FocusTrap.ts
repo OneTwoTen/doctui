@@ -26,6 +26,7 @@ export const FocusTrap = defineComponent({
   inheritAttrs: false,
   props: {
     active: { type: Boolean, default: true },
+    trapped: { type: Boolean, default: true },
     returnFocus: { type: Boolean, default: true },
   },
   setup(props, { attrs, slots }) {
@@ -66,7 +67,7 @@ export const FocusTrap = defineComponent({
           : null;
       register();
       await nextTick();
-      if (props.active && isTopTrap()) focusFirst();
+      if (props.active && props.trapped && isTopTrap()) focusFirst();
     };
 
     const deactivate = () => {
@@ -78,7 +79,14 @@ export const FocusTrap = defineComponent({
     };
 
     const onKeydown = (event: KeyboardEvent) => {
-      if (!props.active || !isTopTrap() || event.key !== "Tab") return;
+      if (
+        !props.active ||
+        !props.trapped ||
+        !isTopTrap() ||
+        event.key !== "Tab"
+      ) {
+        return;
+      }
 
       const focusable = getFocusable();
       if (focusable.length === 0) {
@@ -108,7 +116,7 @@ export const FocusTrap = defineComponent({
     };
 
     const onFocusIn = (event: FocusEvent) => {
-      if (!props.active || !isTopTrap() || !root.value) return;
+      if (!props.active || !props.trapped || !isTopTrap() || !root.value) return;
       if (root.value.contains(event.target as Node)) return;
       focusFirst();
     };
