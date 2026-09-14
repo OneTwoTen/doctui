@@ -1,223 +1,166 @@
 import { Button, Drawer, Modal, Stack, Text } from "@doctui/core";
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { defineComponent, h, ref } from "vue";
+import { defineComponent, h, ref, watch } from "vue";
 import { preview } from "./story-helpers";
 
-const meta = { title: "Overlays/Modal" } satisfies Meta;
+const meta = {
+  title: "Overlays/Modal",
+  component: Modal,
+  args: {
+    modelValue: true,
+    title: "Review changes",
+    ariaLabel: undefined,
+    size: "md",
+    radius: "md",
+    centered: true,
+    closeOnEscape: true,
+    closeOnClickOutside: true,
+    withCloseButton: true,
+    withOverlay: true,
+    overlayProps: { color: "neutral", opacity: 0.55 },
+    lockScroll: true,
+    trapFocus: true,
+    returnFocus: true,
+    portalTarget: "body",
+  },
+  argTypes: {
+    modelValue: { control: "boolean" },
+    title: { control: "text" },
+    ariaLabel: { control: "text" },
+    size: {
+      control: "select",
+      options: ["xs", "sm", "md", "lg", "xl"],
+    },
+    radius: {
+      control: "select",
+      options: ["none", "xs", "sm", "md", "lg", "xl", "full"],
+    },
+    centered: { control: "boolean" },
+    closeOnEscape: { control: "boolean" },
+    closeOnClickOutside: { control: "boolean" },
+    withCloseButton: { control: "boolean" },
+    withOverlay: { control: "boolean" },
+    overlayProps: { control: "object" },
+    lockScroll: { control: "boolean" },
+    trapFocus: { control: "boolean" },
+    returnFocus: { control: "boolean" },
+    portalTarget: { control: "text" },
+  },
+} satisfies Meta<typeof Modal>;
+
 export default meta;
 type Story = StoryObj<typeof meta>;
-type OverlaySize = "xs" | "sm" | "md" | "lg" | "xl";
 
-const ModalDemo = defineComponent({
-  setup() {
-    const open = ref(false);
-    return () =>
-      h(Stack, { gap: "md", style: { maxWidth: "24rem" } }, () => [
-        h(Button, { onClick: () => (open.value = true) }, () => "Open dialog"),
+export const Playground: Story = {
+  render: (args) =>
+    preview(() => {
+      const open = ref(args.modelValue);
+      watch(
+        () => args.modelValue,
+        (value) => (open.value = value),
+      );
+
+      return h(Stack, { gap: "md", style: { maxWidth: "28rem" } }, () => [
+        h(Button, { onClick: () => (open.value = true) }, () => "Open modal"),
         h(
           Text,
           { size: "sm", muted: true },
-          () => "Try Tab, Shift+Tab, Escape, or click the backdrop.",
+          () => "Use Controls to change every public modal behavior.",
         ),
         h(
           Modal,
           {
+            ...args,
             modelValue: open.value,
-            title: "Review changes",
             "onUpdate:modelValue": (value: boolean) => (open.value = value),
           },
           {
             default: () =>
               h(Stack, { gap: "md" }, () => [
-                h(Text, null, () => "Your changes are ready to publish."),
-                h(
-                  Button,
-                  { onClick: () => (open.value = false), color: "success" },
-                  () => "Publish",
-                ),
+                h(Text, null, () => "Resize the dialog, change its radius, backdrop, dismissal and focus behavior from Controls."),
+                h(Button, { onClick: () => (open.value = false) }, () => "Done"),
               ]),
+            footer: () => h(Text, { size: "sm", muted: true }, () => "Footer slot"),
           },
         ),
       ]);
-  },
-});
+    }),
+};
 
-const SizeAndAlignmentDemo = defineComponent({
-  setup() {
-    const open = ref(false);
-    const size = ref<OverlaySize>("md");
-    const centered = ref(true);
-    const launch = (nextSize: OverlaySize, nextCentered: boolean) => {
-      size.value = nextSize;
-      centered.value = nextCentered;
-      open.value = true;
-    };
-
-    return () =>
-      h(Stack, { gap: "md", style: { maxWidth: "48rem" } }, () => [
-        h(Text, null, () => "Each size changes real dialog width."),
+export const Sizes: Story = {
+  args: { modelValue: false },
+  render: (args) =>
+    preview(() => {
+      const open = ref(false);
+      const size = ref<"xs" | "sm" | "md" | "lg" | "xl">("md");
+      return h(Stack, { gap: "md" }, () => [
         h(
           "div",
           { style: { display: "flex", flexWrap: "wrap", gap: "0.5rem" } },
           (["xs", "sm", "md", "lg", "xl"] as const).map((value) =>
             h(
               Button,
-              { onClick: () => launch(value, true) },
+              {
+                onClick: () => {
+                  size.value = value;
+                  open.value = true;
+                },
+              },
               () => `Open ${value}`,
             ),
           ),
         ),
         h(
-          Button,
-          { onClick: () => launch("md", false) },
-          () => "Open top-aligned md",
-        ),
-        h(
           Modal,
           {
+            ...args,
             modelValue: open.value,
-            title: `${size.value.toUpperCase()} modal`,
             size: size.value,
-            centered: centered.value,
+            title: `${size.value.toUpperCase()} modal`,
             "onUpdate:modelValue": (value: boolean) => (open.value = value),
           },
-          {
-            default: () =>
-              h(Text, null, () =>
-                centered.value
-                  ? "This surface is vertically centered by the shared backdrop."
-                  : "This surface is aligned near the top of the backdrop.",
-              ),
-          },
+          { default: () => h(Text, null, () => "Each token maps to a different real width.") },
         ),
       ]);
-  },
-});
+    }),
+};
 
-const DismissalGuardDemo = defineComponent({
-  setup() {
-    const open = ref(false);
-    return () =>
-      h(Stack, { gap: "md", style: { maxWidth: "28rem" } }, () => [
-        h(
-          Button,
-          { onClick: () => (open.value = true) },
-          () => "Open guarded dialog",
-        ),
-        h(
-          Text,
-          { size: "sm", muted: true },
-          () =>
-            "Escape and backdrop dismissal are disabled; use the close button.",
-        ),
+export const AdvancedComposition: Story = {
+  args: { modelValue: false },
+  render: (args) =>
+    preview(() => {
+      const modalOpen = ref(false);
+      const drawerOpen = ref(false);
+      return h(Stack, { gap: "md" }, () => [
+        h(Button, { onClick: () => (modalOpen.value = true) }, () => "Review order"),
         h(
           Modal,
           {
-            modelValue: open.value,
-            title: "Unsaved editor",
-            closeOnEscape: false,
-            closeOnClickOutside: false,
-            "onUpdate:modelValue": (value: boolean) => (open.value = value),
-          },
-          {
-            default: () =>
-              h(
-                Text,
-                null,
-                () => "This pattern protects work from accidental dismissal.",
-              ),
-          },
-        ),
-      ]);
-  },
-});
-
-const AdvancedCompositionDemo = defineComponent({
-  setup() {
-    const reviewOpen = ref(false);
-    const drawerOpen = ref(false);
-
-    return () =>
-      h(Stack, { gap: "md", style: { maxWidth: "34rem" } }, () => [
-        h(
-          Button,
-          { onClick: () => (reviewOpen.value = true) },
-          () => "Review order",
-        ),
-        h(
-          Text,
-          { size: "sm", muted: true },
-          () =>
-            "Open the nested drawer, then press Escape: the drawer closes first and focus returns to its trigger.",
-        ),
-        h(
-          Modal,
-          {
-            modelValue: reviewOpen.value,
+            ...args,
+            modelValue: modalOpen.value,
             title: "Review order",
             size: "lg",
             centered: true,
-            "onUpdate:modelValue": (value: boolean) =>
-              (reviewOpen.value = value),
+            "onUpdate:modelValue": (value: boolean) => (modalOpen.value = value),
           },
           {
             default: () =>
               h(Stack, { gap: "md" }, () => [
                 h(Text, null, () => "3 items · Standard delivery · Total $128"),
-                h(
-                  Button,
-                  { onClick: () => (drawerOpen.value = true) },
-                  () => "Edit delivery details",
-                ),
-                h(
-                  Button,
-                  {
-                    onClick: () => (reviewOpen.value = false),
-                    color: "success",
-                  },
-                  () => "Confirm order",
-                ),
+                h(Button, { onClick: () => (drawerOpen.value = true) }, () => "Edit delivery details"),
                 h(
                   Drawer,
                   {
                     modelValue: drawerOpen.value,
                     title: "Delivery details",
                     size: "sm",
-                    position: "right",
-                    "onUpdate:modelValue": (value: boolean) =>
-                      (drawerOpen.value = value),
+                    "onUpdate:modelValue": (value: boolean) => (drawerOpen.value = value),
                   },
-                  {
-                    default: () =>
-                      h(Stack, { gap: "md" }, () => [
-                        h(Text, null, () => "Delivery window: 9:00–12:00"),
-                        h(
-                          Button,
-                          { onClick: () => (drawerOpen.value = false) },
-                          () => "Apply delivery settings",
-                        ),
-                      ]),
-                  },
+                  { default: () => h(Text, null, () => "Nested Drawer closes before its parent Modal.") },
                 ),
               ]),
           },
         ),
       ]);
-  },
-});
-
-export const Default: Story = {
-  render: () => preview(() => h(ModalDemo)),
-};
-
-export const SizeAndAlignment: Story = {
-  render: () => preview(() => h(SizeAndAlignmentDemo)),
-};
-
-export const DismissalGuard: Story = {
-  render: () => preview(() => h(DismissalGuardDemo)),
-};
-
-export const AdvancedComposition: Story = {
-  render: () => preview(() => h(AdvancedCompositionDemo)),
+    }),
 };
