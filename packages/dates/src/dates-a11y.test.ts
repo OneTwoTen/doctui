@@ -1,15 +1,15 @@
 import { mount } from "@vue/test-utils";
+import { describe, expect, it } from "vitest";
 import { createSSRApp, h, nextTick } from "vue";
 import { renderToString } from "vue/server-renderer";
-import { describe, expect, it } from "vitest";
 import {
   Calendar,
   DateInput,
   DatePicker,
   DateTimePicker,
+  dateValue,
   MonthPicker,
   YearPicker,
-  dateValue,
 } from "./index";
 
 async function renderDateInput() {
@@ -100,7 +100,9 @@ describe("@doctui/dates popup accessibility", () => {
       },
     });
 
-    expect(wrapper.get('input[type="date"]').attributes("disabled")).toBeDefined();
+    expect(
+      wrapper.get('input[type="date"]').attributes("disabled"),
+    ).toBeDefined();
     const toggle = wrapper.get(".dui-DatePicker__toggle");
     expect(toggle.attributes("disabled")).toBeDefined();
     await toggle.trigger("click");
@@ -181,13 +183,17 @@ describe("@doctui/dates keyboard selection models", () => {
     expect(september.attributes("tabindex")).toBe("0");
     september.element.focus();
     await september.trigger("keydown", { key: "ArrowRight" });
-    expect(document.activeElement).toBe(month.findAll('[role="option"]')[9]?.element);
+    expect(document.activeElement).toBe(
+      month.findAll('[role="option"]')[9]?.element,
+    );
     month.unmount();
 
     const year = mount(YearPicker, {
       props: { modelValue: 2026, minYear: 2024, maxYear: 2028 },
     });
     expect(year.findAll('[role="option"]')).toHaveLength(5);
-    expect(year.get('[role="option"][aria-selected="true"]').text()).toBe("2026");
+    expect(year.get('[role="option"][aria-selected="true"]').text()).toBe(
+      "2026",
+    );
   });
 });
