@@ -33,8 +33,11 @@
 
 .dui-DatePicker__action,
 .dui-Calendar__nav,
+.dui-Calendar__titleButton,
+.dui-DateSurface__titleButton,
 .dui-Calendar__day,
-.dui-DatePicker__option {
+.dui-DatePicker__option,
+.dui-DateTimePicker__footerButton {
   appearance: none;
   border: 0;
   box-sizing: border-box;
@@ -71,23 +74,33 @@
 
 .dui-DatePicker__action:hover:not(:disabled),
 .dui-Calendar__nav:hover:not(:disabled),
+.dui-Calendar__titleButton:hover:not(:disabled),
+.dui-DateSurface__titleButton:hover:not(:disabled),
 .dui-Calendar__day:hover:not(:disabled),
-.dui-DatePicker__option:hover:not(:disabled) {
+.dui-DatePicker__option:hover:not(:disabled),
+.dui-DateTimePicker__footerButton:hover:not(:disabled) {
   background: var(--dui-color-neutral-subtle-hover);
   color: var(--dui-color-text);
 }
 
 .dui-DatePicker__action:active:not(:disabled),
 .dui-Calendar__nav:active:not(:disabled),
+.dui-Calendar__titleButton:active:not(:disabled),
+.dui-DateSurface__titleButton:active:not(:disabled),
 .dui-Calendar__day:active:not(:disabled),
-.dui-DatePicker__option:active:not(:disabled) {
+.dui-DatePicker__option:active:not(:disabled),
+.dui-DateTimePicker__footerButton:active:not(:disabled) {
   transform: translateY(1px);
 }
 
 .dui-DatePicker__action:focus-visible,
 .dui-Calendar__nav:focus-visible,
+.dui-Calendar__titleButton:focus-visible,
+.dui-DateSurface__titleButton:focus-visible,
 .dui-Calendar__day:focus-visible,
-.dui-DatePicker__option:focus-visible {
+.dui-DatePicker__option:focus-visible,
+.dui-DateTimePicker__footerButton:focus-visible,
+.dui-DateTimePicker__timeInput:focus-visible {
   outline: 2px solid var(--dui-color-focus-ring);
   outline-offset: 1px;
   position: relative;
@@ -100,7 +113,7 @@
   opacity: 0.42;
 }
 
-.dui-DatePicker > .dui-Calendar {
+.dui-DatePicker > .dui-DatePickerPanel {
   inset-block-start: calc(100% + var(--dui-spacing-xs));
   inset-inline-start: 0;
   position: absolute;
@@ -119,32 +132,56 @@
   width: 19.5rem;
 }
 
+.dui-DatePickerPanel > .dui-DateSurface {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  width: 100%;
+}
+
 .dui-DateSurface__header,
-.dui-Calendar__header {
+.dui-Calendar__header,
+.dui-YearPicker__header {
   align-items: center;
-  display: flex;
-  justify-content: center;
   min-height: var(--dui-date-cell-size);
 }
 
 .dui-DateSurface__header {
+  display: flex;
+  justify-content: center;
   margin-bottom: var(--dui-spacing-xs);
 }
 
 .dui-DateSurface__title,
-.dui-Calendar__title {
+.dui-DateSurface__titleButton,
+.dui-Calendar__title,
+.dui-Calendar__titleButton,
+.dui-YearPicker__range {
   font-size: var(--dui-font-size-sm);
   font-weight: 600;
   line-height: var(--dui-line-height-md);
 }
 
-.dui-Calendar__header {
+.dui-DateSurface__titleButton,
+.dui-Calendar__titleButton {
+  background: transparent;
+  border-radius: var(--dui-radius-sm);
+  min-height: 2rem;
+  padding: 0 var(--dui-spacing-sm);
+}
+
+.dui-Calendar__header,
+.dui-YearPicker__header {
   display: grid;
   grid-template-columns: var(--dui-date-cell-size) 1fr var(--dui-date-cell-size);
   margin-bottom: var(--dui-spacing-xs);
 }
 
-.dui-Calendar__title {
+.dui-Calendar__title,
+.dui-Calendar__titleButton,
+.dui-YearPicker__range {
   text-align: center;
 }
 
@@ -207,7 +244,8 @@
   opacity: 0.58;
 }
 
-.dui-Calendar__day[data-current="true"]:not([data-selected="true"]) {
+.dui-Calendar__day[data-current="true"]:not([data-selected="true"]),
+.dui-DatePicker__option[data-current="true"]:not([data-selected="true"]) {
   box-shadow: inset 0 0 0 1px var(--dui-color-primary-outline);
   color: var(--dui-color-primary-outline-text);
   font-weight: 600;
@@ -244,9 +282,75 @@
 }
 
 .dui-YearPicker__options {
-  max-height: 15rem;
-  overflow-y: auto;
-  overscroll-behavior: contain;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.dui-DateTimePicker__footer {
+  border-top: 1px solid var(--dui-color-border);
+  display: grid;
+  gap: var(--dui-spacing-sm);
+  margin-top: var(--dui-spacing-sm);
+  padding-top: var(--dui-spacing-sm);
+}
+
+.dui-DateTimePicker__time,
+.dui-DateTimePicker__timeFields,
+.dui-DateTimePicker__footerActions {
+  align-items: center;
+  display: flex;
+}
+
+.dui-DateTimePicker__time {
+  justify-content: space-between;
+}
+
+.dui-DateTimePicker__timeLabel {
+  color: var(--dui-color-text-muted);
+  font-size: var(--dui-font-size-sm);
+  font-weight: 600;
+}
+
+.dui-DateTimePicker__timeFields {
+  gap: 0.35rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.dui-DateTimePicker__timeInput {
+  appearance: none;
+  background: var(--dui-color-surface);
+  border: 1px solid var(--dui-color-border);
+  border-radius: var(--dui-radius-sm);
+  box-sizing: border-box;
+  color: var(--dui-color-text);
+  font: inherit;
+  height: 2.25rem;
+  outline: 0;
+  padding: 0 var(--dui-spacing-xs);
+  text-align: center;
+  width: 2.75rem;
+}
+
+.dui-DateTimePicker__footerActions {
+  gap: var(--dui-spacing-xs);
+  justify-content: flex-end;
+}
+
+.dui-DateTimePicker__footerButton {
+  background: transparent;
+  border-radius: var(--dui-radius-sm);
+  min-height: 2.25rem;
+  padding: 0 var(--dui-spacing-sm);
+}
+
+.dui-DateTimePicker__footerButton--primary {
+  background: var(--dui-color-primary-filled);
+  color: var(--dui-color-primary-filled-text);
+  font-weight: 600;
+}
+
+.dui-DateTimePicker__footerButton--primary:hover:not(:disabled) {
+  background: var(--dui-color-primary-filled-hover);
+  color: var(--dui-color-primary-filled-text);
 }
 
 @media (max-width: 24rem) {
@@ -258,8 +362,11 @@
 @media (prefers-reduced-motion: reduce) {
   .dui-DatePicker__action,
   .dui-Calendar__nav,
+  .dui-Calendar__titleButton,
+  .dui-DateSurface__titleButton,
   .dui-Calendar__day,
-  .dui-DatePicker__option {
+  .dui-DatePicker__option,
+  .dui-DateTimePicker__footerButton {
     transition: none;
   }
 }
