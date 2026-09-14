@@ -1,3 +1,29 @@
+<script setup lang="ts">
+import {
+  Checkbox,
+  Group,
+  Radio,
+  SegmentedControl,
+  Stack,
+  Switch,
+  TextInput,
+} from "@doctui/core";
+import { ref } from "vue";
+
+const docsEmail = ref("billing@example.com");
+const accepted = ref(false);
+const plan = ref<string | number>("free");
+const alerts = ref(true);
+const view = ref<string | number | undefined>();
+
+const views = [
+  { value: "list", label: "List", disabled: true },
+  { value: "grid", label: "Grid" },
+  { value: "board", label: "Board" },
+  { value: "table", label: "Table", disabled: true },
+];
+</script>
+
 # Accessibility
 
 Accessibility is part of doctui's public contract. Prefer the native HTML
@@ -23,6 +49,24 @@ and `Switch` share one field relationship contract through `InputWrapper`.
   context.
 - The required marker is visual only (`aria-hidden`); the native control still
   receives the real `required` attribute.
+
+<div class="docs-preview docs-preview--compare" data-docs-preview="a11y-field-relationships">
+  <TextInput
+    id="docs-billing-email"
+    v-model="docsEmail"
+    label="Billing email"
+    description="Invoices are sent to this address."
+    required
+  />
+  <TextInput
+    id="docs-invalid-email"
+    model-value="not-an-email"
+    label="Billing email with error"
+    description="Company policy requires a shared billing inbox."
+    error="Enter a valid email address."
+    required
+  />
+</div>
 
 ```vue
 <template>
@@ -78,6 +122,13 @@ Text-like fields expose error, disabled and read-only state consistently.
 Read-only inputs remain keyboard focusable and can still be copied. Disabled
 controls use native `disabled` semantics and do not receive focus.
 
+<div class="docs-preview docs-preview--compare" data-docs-preview="a11y-field-states">
+  <TextInput label="Normal" model-value="Editable value" />
+  <TextInput label="Read-only" model-value="Copyable value" readonly />
+  <TextInput label="Disabled" model-value="Unavailable value" disabled />
+  <TextInput label="Error" model-value="Invalid value" error="Check this value." />
+</div>
+
 Checkbox, Radio and Switch use custom visual indicators, but their real native
 inputs remain in the DOM and continue to own keyboard focus, form submission,
 `required`, `disabled`, checked state and native events. Focus-visible state is
@@ -132,6 +183,22 @@ radios in one native group share the same `name`. Use a visible `label` whenever
 possible, and keep disabled controls actually disabled rather than only styling
 them as unavailable.
 
+<div class="docs-preview docs-preview--compare" data-docs-preview="a11y-native-choice-controls">
+  <Stack gap="sm">
+    <Checkbox v-model="accepted" label="Accept terms" />
+    <Group gap="sm">
+      <Radio v-model="plan" name="docs-a11y-plan" value="free" label="Free" />
+      <Radio v-model="plan" name="docs-a11y-plan" value="team" label="Team" disabled />
+      <Radio v-model="plan" name="docs-a11y-plan" value="pro" label="Pro" />
+    </Group>
+    <Switch v-model="alerts" label="Product alerts" />
+  </Stack>
+  <Stack gap="sm">
+    <Checkbox model-value label="Disabled checked" disabled />
+    <Switch model-value label="Disabled switch" disabled />
+  </Stack>
+</div>
+
 ```vue
 <script setup lang="ts">
 import { ref } from "vue";
@@ -169,6 +236,14 @@ Once focus is inside the group:
 - Enter and Space select the focused enabled segment.
 - Disabled segments are skipped. A disabled group has no tabbable segment.
 
+<div class="docs-preview docs-preview--narrow" data-docs-preview="a11y-segmented-keyboard">
+  <SegmentedControl
+    v-model="view"
+    aria-label="View"
+    :data="views"
+  />
+</div>
+
 ```vue
 <script setup lang="ts">
 import { ref } from "vue";
@@ -202,11 +277,13 @@ is enabled and contains at least one enabled option.
 
 `Modal` and `Drawer` use dialog semantics, trap focus while open, restore focus
 to the trigger when closed, and close on Escape by default. Provide `title` or
-`ariaLabel`; do not put critical information in a tooltip.
+`ariaLabel`; do not put critical information in a tooltip. Test those behaviors
+against the live triggers in [Overlays](/guide/overlays).
 
 `Select`, `Autocomplete`, `MultiSelect` and `Combobox` expose combobox/listbox
 relationships and support keyboard navigation. Keep option labels meaningful,
-mark unavailable options with `disabled`, and test the complete keyboard flow.
+mark unavailable options with `disabled`, and test the complete keyboard flow in
+[Selection controls](/guide/selection-controls).
 
 Tooltips appear on both hover and focus, but their content is supplemental.
 Every important action must remain understandable without a pointer or hover.
