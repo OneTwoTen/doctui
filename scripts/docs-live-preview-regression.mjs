@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
+  guidePreviewCoverage,
   livePreviewManifest,
   nonVisualDocsComponents,
   renderSmokeCases,
@@ -61,6 +62,11 @@ function hasLocalPublicImport(source, component) {
   return expression.test(clean);
 }
 
+function countSourcePreviews(source) {
+  const clean = stripFencedCode(source);
+  return [...clean.matchAll(/class=(?:"[^"]*\bdocs-preview\b[^"]*"|'[^']*\bdocs-preview\b[^']*')/g)].length;
+}
+
 function runSourceCheck() {
   const errors = [];
   const themeSource = readFileSync(themePath, "utf8");
@@ -70,6 +76,10 @@ function runSourceCheck() {
   const manifestComponents = new Set(
     livePreviewManifest.map((entry) => entry.component),
   );
+
+  if (!themeSource.includes("Layout: DocsLayout")) {
+    errors.push("docs theme must render the VitePress layout inside DoctuiProvider");
+  }
 
   for (const component of registered) {
     if (!excluded.has(component) && !manifestComponents.has(component)) {
@@ -104,6 +114,22 @@ function runSourceCheck() {
     }
   }
 
+  for (const coverage of guidePreviewCoverage) {
+    const guidePath = join(guidesDir, coverage.guide);
+    if (!existsSync(guidePath)) {
+      errors.push(`${coverage.guide}: guide-level preview coverage file does not exist`);
+      continue;
+    }
+
+    const source = readFileSync(guidePath, "utf8");
+    const previewCount = countSourcePreviews(source);
+    if (previewCount < coverage.minPreviews) {
+      errors.push(
+        `${coverage.guide}: expected at least ${coverage.minPreviews} live preview boundaries, found ${previewCount}`,
+      );
+    }
+  }
+
   if (errors.length) {
     throw new Error(
       `Docs live-preview source regression:\n- ${errors.join("\n- ")}`,
@@ -111,7 +137,7 @@ function runSourceCheck() {
   }
 
   console.log(
-    `Docs live-preview source coverage: ${livePreviewManifest.length} components`,
+    `Docs live-preview source coverage: ${livePreviewManifest.length} components across ${guidePreviewCoverage.length} audited guides`,
   );
 }
 
@@ -123,8 +149,36 @@ function builtGuidePath(slug) {
   return candidates.find((candidate) => existsSync(candidate));
 }
 
+function assertThemeProvider(html, guide, errors) {
+  if (!html.includes("data-dui-provider")) {
+    errors.push(`${guide}: rendered page is missing DoctuiProvider`);
+  }
+  if (!html.includes("--dui-color-text:") || !html.includes("--dui-spacing-md:")) {
+    errors.push(`${guide}: rendered provider is missing doctui theme CSS variables`);
+  }
+}
+
 function runRenderCheck() {
   const errors = [];
+
+  for (const coverage of guidePreviewCoverage) {
+    const slug = coverage.guide.replace(/\.md$/, "");
+    const pagePath = builtGuidePath(slug);
+    if (!pagePath) {
+      errors.push(`${slug}: built VitePress page not found`);
+      continue;
+    }
+
+    const html = readFileSync(pagePath, "utf8");
+    assertThemeProvider(html, slug, errors);
+
+    const renderedPreviews = (html.match(/\bdocs-preview\b/g) ?? []).length;
+    if (renderedPreviews < coverage.minPreviews) {
+      errors.push(
+        `${slug}: expected at least ${coverage.minPreviews} rendered preview boundaries, found ${renderedPreviews}`,
+      );
+    }
+  }
 
   for (const smokeCase of renderSmokeCases) {
     const pagePath = builtGuidePath(smokeCase.guide);
@@ -150,7 +204,7 @@ function runRenderCheck() {
   }
 
   console.log(
-    `Docs live-preview render smoke: ${renderSmokeCases.length} guides`,
+    `Docs live-preview render smoke: ${guidePreviewCoverage.length} themed guides + ${renderSmokeCases.length} component marker cases`,
   );
 }
 
