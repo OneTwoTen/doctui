@@ -1,7 +1,7 @@
 import { defineComponent, h, nextTick, type PropType, ref, watch } from "vue";
 import {
-  dayLabels,
   type DateValue,
+  dayLabels,
   isOutsideRange,
   monthLabel,
   parseDate,
@@ -272,8 +272,7 @@ export const Calendar = defineComponent({
                 onFocus: () => {
                   if (!disabled) activeValue.value = value;
                 },
-                onKeydown: (event: KeyboardEvent) =>
-                  onDayKeydown(event, value),
+                onKeydown: (event: KeyboardEvent) => onDayKeydown(event, value),
               },
               String(day),
             );
@@ -324,9 +323,7 @@ export const Calendar = defineComponent({
             {
               class: "dui-Calendar__grid",
               role: "grid",
-              "aria-label":
-                props.ariaLabel ??
-                monthLabel(visibleMonth.value, props.locale),
+              "aria-label": props.ariaLabel ?? monthLabel(visibleMonth.value, props.locale),
               "aria-disabled": props.disabled ? "true" : undefined,
             },
             [
