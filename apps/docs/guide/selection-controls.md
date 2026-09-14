@@ -4,8 +4,16 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { Autocomplete, MultiSelect, Select, Stack } from "@doctui/core";
+import {
+  Autocomplete,
+  Combobox,
+  MultiSelect,
+  Select,
+  Stack,
+  Text,
+} from "@doctui/core";
 
+const rawFramework = ref<string | number | null>("vue");
 const framework = ref<string | number | null>("vue");
 const search = ref("");
 const compare = ref<readonly (string | number)[]>(["vue", "svelte"]);
@@ -20,32 +28,71 @@ const frameworks = [
 
 ## Live example
 
-<Stack gap="md" style="max-width: 32rem">
-  <Select
-    id="docs-framework"
-    v-model="framework"
-    label="Framework"
-    description="React is disabled in this example."
-    :data="frameworks"
-    clearable
-  />
+<div class="docs-preview docs-preview--narrow">
+  <Stack gap="md">
+    <Combobox
+      id="docs-raw-framework"
+      v-model="rawFramework"
+      label="Combobox engine"
+      description="Searchable public Combobox; React is disabled."
+      :data="frameworks"
+      searchable
+      clearable
+    />
 
-  <Autocomplete
-    id="docs-framework-search"
-    v-model="search"
-    label="Search framework"
-    :data="frameworks"
-    nothing-found="No matching framework"
-  />
+    <Select
+      id="docs-framework"
+      v-model="framework"
+      label="Framework"
+      description="React is disabled in this example."
+      :data="frameworks"
+      clearable
+    />
 
-  <MultiSelect
-    id="docs-framework-compare"
-    v-model="compare"
-    label="Compare with"
-    :data="frameworks"
-    clearable
-  />
-</Stack>
+    <Autocomplete
+      id="docs-framework-search"
+      v-model="search"
+      label="Search framework"
+      :data="frameworks"
+      nothing-found="No matching framework"
+    />
+
+    <MultiSelect
+      id="docs-framework-compare"
+      v-model="compare"
+      label="Compare with"
+      :data="frameworks"
+      clearable
+    />
+
+    <Text size="sm" muted>Combobox value: {{ rawFramework ?? "none" }}</Text>
+  </Stack>
+</div>
+
+```vue
+<script setup lang="ts">
+import { ref } from "vue";
+import { Autocomplete, Combobox, MultiSelect, Select } from "@doctui/core";
+
+const frameworks = [
+  { value: "vue", label: "Vue" },
+  { value: "react", label: "React", disabled: true },
+  { value: "svelte", label: "Svelte" },
+];
+
+const raw = ref<string | number | null>("vue");
+const selected = ref<string | number | null>("vue");
+const query = ref("");
+const compare = ref<readonly (string | number)[]>([]);
+</script>
+
+<template>
+  <Combobox v-model="raw" label="Combobox" :data="frameworks" searchable clearable />
+  <Select v-model="selected" label="Framework" :data="frameworks" clearable />
+  <Autocomplete v-model="query" label="Search" :data="frameworks" />
+  <MultiSelect v-model="compare" label="Compare" :data="frameworks" clearable />
+</template>
+```
 
 ## Shared public contract
 

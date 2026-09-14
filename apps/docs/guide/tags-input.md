@@ -1,8 +1,33 @@
+<script setup lang="ts">
+import { Stack, TagsInput, Text } from "@doctui/core";
+import { ref } from "vue";
+
+const skills = ref(["Vue", "Accessibility"]);
+</script>
+
 # TagsInput
 
 `TagsInput` is a free-form token field for collecting string values while keeping a native text input as the keyboard and focus entry point.
 
 ## Basic usage
+
+<div class="docs-preview docs-preview--narrow">
+  <Stack gap="sm">
+    <TagsInput
+      id="docs-skills"
+      name="skills"
+      v-model="skills"
+      label="Skills"
+      description="Press Enter or comma to add a skill"
+      placeholder="Add a skill"
+      :max-tags="5"
+      clearable
+    />
+    <Text size="sm" muted>Current tags: {{ skills.length ? skills.join(", ") : "none" }}</Text>
+  </Stack>
+</div>
+
+The preview above is fully interactive: add tags with Enter or comma, remove individual tags, use Backspace on an empty editor, or clear the complete value.
 
 ```vue
 <script setup lang="ts">
