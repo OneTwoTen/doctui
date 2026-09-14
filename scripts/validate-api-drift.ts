@@ -1,6 +1,6 @@
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
-import ts from "typescript";
+import ts from "@typescript/typescript6";
 import { QUALITY_PUBLIC_API } from "../metadata/quality-contract";
 import { DOCTUI_REGISTRY } from "../metadata/registry";
 
