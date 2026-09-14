@@ -89,7 +89,8 @@ export const Drawer = defineComponent({
                   h(
                     FocusTrap,
                     {
-                      active: props.trapFocus,
+                      active: true,
+                      trapped: props.trapFocus,
                       returnFocus: props.returnFocus,
                     },
                     {
