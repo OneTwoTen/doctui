@@ -1,5 +1,5 @@
 import { defineComponent, h, type PropType, useId } from "vue";
-import { describedBy, type DateValue, parseDate } from "./date-utils";
+import { type DateValue, describedBy, parseDate } from "./date-utils";
 
 export const DateInput = defineComponent({
   name: "DuiDateInput",
