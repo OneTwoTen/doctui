@@ -103,7 +103,9 @@ describe("Menu interaction contract", () => {
     });
     await nextTick();
 
-    document.body.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+    document.body.dispatchEvent(
+      new PointerEvent("pointerdown", { bubbles: true }),
+    );
     await nextTick();
 
     expect(wrapper.emitted("update:modelValue")?.at(-1)).toEqual([false]);
@@ -149,7 +151,9 @@ describe("Popover interaction contract", () => {
       attachTo: document.body,
     });
     await nextTick();
-    document.body.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+    document.body.dispatchEvent(
+      new PointerEvent("pointerdown", { bubbles: true }),
+    );
     await nextTick();
     expect(enabled.emitted("update:modelValue")?.at(-1)).toEqual([false]);
     enabled.unmount();
@@ -163,7 +167,9 @@ describe("Popover interaction contract", () => {
       attachTo: document.body,
     });
     await nextTick();
-    document.body.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+    document.body.dispatchEvent(
+      new PointerEvent("pointerdown", { bubbles: true }),
+    );
     await nextTick();
     expect(disabled.emitted("update:modelValue")).toBeUndefined();
     disabled.unmount();
@@ -183,7 +189,9 @@ describe("Tooltip interaction contract", () => {
     await nextTick();
 
     const tooltip = wrapper.get("[role='tooltip']");
-    expect(trigger.attributes("aria-describedby")).toBe(tooltip.attributes("id"));
+    expect(trigger.attributes("aria-describedby")).toBe(
+      tooltip.attributes("id"),
+    );
     expect(wrapper.attributes("aria-describedby")).toBeUndefined();
 
     wrapper.unmount();
@@ -208,7 +216,9 @@ describe("Tooltip interaction contract", () => {
     await nextTick();
     expect(wrapper.find("[role='tooltip']").exists()).toBe(true);
 
-    await buttons[0]?.trigger("focusout", { relatedTarget: buttons[1]?.element });
+    await buttons[0]?.trigger("focusout", {
+      relatedTarget: buttons[1]?.element,
+    });
     await buttons[1]?.trigger("focusin");
     await nextTick();
     expect(wrapper.find("[role='tooltip']").exists()).toBe(true);
