@@ -1,3 +1,4 @@
+import { TextInput, type Radius, type Size } from "@doctui/core";
 import {
   defineComponent,
   h,
@@ -10,8 +11,19 @@ import {
   watch,
 } from "vue";
 import { Calendar } from "./Calendar";
-import { DateInput } from "./DateInput";
-import type { DateValue } from "./date-utils";
+import { type DateValue, parseDate } from "./date-utils";
+import { calendarIcon, xIcon } from "./icons";
+
+function displayDate(value: DateValue, locale: string) {
+  const date = parseDate(value);
+  if (!date) return "";
+
+  return new Intl.DateTimeFormat(locale, {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  }).format(date);
+}
 
 export const DatePicker = defineComponent({
   name: "DuiDatePicker",
@@ -22,12 +34,15 @@ export const DatePicker = defineComponent({
     description: { type: String, default: undefined },
     error: { type: String, default: undefined },
     ariaLabel: { type: String, default: undefined },
+    placeholder: { type: String, default: "Select date" },
     minDate: { type: String, default: undefined },
     maxDate: { type: String, default: undefined },
     disabled: Boolean,
     clearable: Boolean,
     locale: { type: String, default: "en-US" },
     firstDayOfWeek: { type: Number, default: 0 },
+    size: { type: String as PropType<Size>, default: "md" },
+    radius: { type: String as PropType<Radius>, default: "md" },
   },
   emits: ["update:modelValue", "select", "blur", "clear"],
   setup(props, { emit }) {
@@ -53,10 +68,19 @@ export const DatePicker = defineComponent({
       }
     };
 
+    const open = async () => {
+      if (props.disabled || opened.value) return;
+      opened.value = true;
+      await focusActiveDay();
+    };
+
     const toggleCalendar = async () => {
       if (props.disabled) return;
-      opened.value = !opened.value;
-      if (opened.value) await focusActiveDay();
+      if (opened.value) {
+        await close(false);
+        return;
+      }
+      await open();
     };
 
     const onDocumentPointerDown = (event: Event) => {
@@ -88,52 +112,90 @@ export const DatePicker = defineComponent({
       },
     );
 
-    return () => {
-      const inputProps = {
-        ...(props.id !== undefined ? { id: props.id } : {}),
-        ...(props.label !== undefined ? { label: props.label } : {}),
-        ...(props.description !== undefined
-          ? { description: props.description }
-          : {}),
-        ...(props.error !== undefined ? { error: props.error } : {}),
-        ...(props.ariaLabel !== undefined
-          ? { ariaLabel: props.ariaLabel }
-          : {}),
-        modelValue: props.modelValue,
-        ...(props.minDate !== undefined ? { minDate: props.minDate } : {}),
-        ...(props.maxDate !== undefined ? { maxDate: props.maxDate } : {}),
-        disabled: props.disabled,
-        clearable: props.clearable,
-        "onUpdate:modelValue": (value: DateValue) =>
-          emit("update:modelValue", value),
-        onBlur: (event: FocusEvent) => emit("blur", event),
-        onClear: () => emit("clear"),
-      };
-
-      return h(
+    return () =>
+      h(
         "div",
         {
           ref: root,
           class: "dui-DatePicker",
-          "data-has-label": Boolean(props.label),
-          "data-disabled": props.disabled || undefined,
+          "data-disabled": props.disabled ? "true" : undefined,
+          "data-opened": opened.value ? "true" : undefined,
+          "data-size": props.size,
         },
         [
-          h(DateInput, inputProps),
           h(
-            "button",
+            TextInput,
             {
-              ref: toggle,
-              type: "button",
-              class: "dui-DatePicker__toggle",
-              "aria-label": opened.value ? "Close calendar" : "Open calendar",
-              "aria-expanded": opened.value,
+              class: "dui-DatePicker__field",
+              ...(props.id !== undefined ? { id: props.id } : {}),
+              modelValue: displayDate(props.modelValue, props.locale),
+              ...(props.label !== undefined ? { label: props.label } : {}),
+              ...(props.description !== undefined
+                ? { description: props.description }
+                : {}),
+              ...(props.error !== undefined ? { error: props.error } : {}),
+              placeholder: props.placeholder,
+              size: props.size,
+              radius: props.radius,
+              disabled: props.disabled,
+              readonly: true,
+              type: "text",
+              "aria-label": props.label
+                ? undefined
+                : (props.ariaLabel ?? "Date"),
+              "aria-expanded": opened.value ? "true" : "false",
               "aria-controls": calendarId,
               "aria-haspopup": "grid",
-              disabled: props.disabled,
-              onClick: toggleCalendar,
+              onClick: () => void open(),
+              onKeydown: (event: KeyboardEvent) => {
+                if (["ArrowDown", "Enter", " "].includes(event.key)) {
+                  event.preventDefault();
+                  void open();
+                }
+              },
+              onBlur: (event: FocusEvent) => emit("blur", event),
             },
-            "▣",
+            {
+              rightSection: () =>
+                h("div", { class: "dui-DatePicker__actions" }, [
+                  props.clearable && props.modelValue
+                    ? h(
+                        "button",
+                        {
+                          type: "button",
+                          class:
+                            "dui-DatePicker__action dui-DatePicker__clear",
+                          "aria-label": "Clear date",
+                          disabled: props.disabled,
+                          onClick: () => {
+                            if (props.disabled) return;
+                            emit("update:modelValue", null);
+                            emit("clear");
+                          },
+                        },
+                        xIcon(),
+                      )
+                    : null,
+                  h(
+                    "button",
+                    {
+                      ref: toggle,
+                      type: "button",
+                      class:
+                        "dui-DatePicker__action dui-DatePicker__toggle",
+                      "aria-label": opened.value
+                        ? "Close calendar"
+                        : "Open calendar",
+                      "aria-expanded": opened.value ? "true" : "false",
+                      "aria-controls": calendarId,
+                      "aria-haspopup": "grid",
+                      disabled: props.disabled,
+                      onClick: () => void toggleCalendar(),
+                    },
+                    calendarIcon(),
+                  ),
+                ]),
+            },
           ),
           opened.value
             ? h(Calendar, {
@@ -157,6 +219,5 @@ export const DatePicker = defineComponent({
             : null,
         ],
       );
-    };
   },
 });
