@@ -32,14 +32,10 @@ describe("contextual overlay visual contract", () => {
     expect(css).toMatch(
       /\.dui-Popover-panel,[\s\S]*\.dui-Menu-dropdown[\s\S]*background:\s*var\(--dui-color-surface-raised\)/,
     );
-    expect(css).toMatch(
-      /\.dui-Tooltip-content[\s\S]*white-space:\s*normal/,
-    );
+    expect(css).toMatch(/\.dui-Tooltip-content[\s\S]*white-space:\s*normal/);
     expect(css).toMatch(
       /\.dui-Tooltip-content[\s\S]*overflow-wrap:\s*anywhere/,
     );
-    expect(css).toMatch(
-      /\.dui-Tooltip-content[\s\S]*pointer-events:\s*none/,
-    );
+    expect(css).toMatch(/\.dui-Tooltip-content[\s\S]*pointer-events:\s*none/);
   });
 });
