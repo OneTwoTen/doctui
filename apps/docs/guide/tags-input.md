@@ -3,6 +3,8 @@ import { Stack, TagsInput, Text } from "@doctui/core";
 import { ref } from "vue";
 
 const skills = ref(["Vue", "Accessibility"]);
+const topics = ref(["Vue", "Rust"]);
+const maxed = ref(["Vue", "Rust", "Accessibility"]);
 </script>
 
 # TagsInput
@@ -50,6 +52,48 @@ const skills = ref(["Vue", "Accessibility"]);
 </template>
 ```
 
+## State comparison
+
+Read-only, disabled, error, and max-capacity states are visually meaningful for a token field, so the guide keeps them next to the normal interactive example rather than leaving them only in Storybook.
+
+<div class="docs-preview docs-preview--compare">
+  <TagsInput
+    :model-value="['Vue', 'TypeScript']"
+    label="Read-only"
+    description="Tokens remain readable and focusable."
+    readonly
+    clearable
+  />
+  <TagsInput
+    :model-value="['Vue', 'TypeScript']"
+    label="Disabled"
+    description="Disabled values are not submitted."
+    disabled
+    clearable
+  />
+  <TagsInput
+    :model-value="['Vue']"
+    label="Validation error"
+    description="Add at least two skills."
+    error="At least two skills are required."
+    clearable
+  />
+  <TagsInput
+    v-model="maxed"
+    label="At maximum"
+    description="This field accepts at most three tags."
+    :max-tags="3"
+    clearable
+  />
+</div>
+
+```vue
+<TagsInput :model-value="['Vue']" label="Read-only" readonly />
+<TagsInput :model-value="['Vue']" label="Disabled" disabled />
+<TagsInput :model-value="['Vue']" label="Skills" error="Add another skill" />
+<TagsInput v-model="skills" label="Skills" :max-tags="3" />
+```
+
 ## Field relationships and accessible naming
 
 - `id` is optional. When omitted, `InputWrapper` generates the same SSR-safe ID contract used by other doctui fields.
@@ -83,6 +127,20 @@ Every committed token is trimmed. Empty strings and exact duplicates are ignored
 
 For a one-character separator, pressing that key commits the current draft. Enter always commits the draft. Multi-character separators such as `||` are parsed from typed or pasted input instead of being treated as a synthetic keyboard key.
 
+<div class="docs-preview docs-preview--narrow">
+  <Stack gap="sm">
+    <TagsInput
+      v-model="topics"
+      label="Topics"
+      description="Type or paste values separated with ||"
+      separator="||"
+      placeholder="Vue || Rust || Accessibility"
+      clearable
+    />
+    <Text size="sm" muted>Topics: {{ topics.join(" · ") }}</Text>
+  </Stack>
+</div>
+
 ```vue
 <TagsInput
   v-model="topics"
@@ -105,7 +163,7 @@ Selected tokens are exposed as an accessible list and each removable token conta
 
 ## Disabled and read-only
 
-`disabled` disables the native input and mutation buttons. `readonly` keeps the text input readable/focusable but prevents add, remove, clear, and Backspace mutation. Both states preserve the current token list.
+`disabled` disables the native input and mutation buttons. `readonly` keeps the text input readable/focusable but prevents add, remove, clear, and Backspace mutation. Both states preserve the current token list. The state comparison above is the canonical docs preview for these visual states.
 
 ## Visual contract
 
