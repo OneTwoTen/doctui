@@ -1,6 +1,6 @@
 import { mount } from "@vue/test-utils";
 import { afterEach, describe, expect, it } from "vitest";
-import { h } from "vue";
+import { defineComponent, h, nextTick, ref } from "vue";
 import { DoctuiProvider, Modal, Overlay } from "../index";
 
 afterEach(() => {
@@ -95,5 +95,62 @@ describe("overlay visual regressions", () => {
     );
 
     wrapper.unmount();
+  });
+
+  it("restores focus when returnFocus is enabled even if trapFocus is disabled", async () => {
+    const Host = defineComponent({
+      setup() {
+        const open = ref(false);
+        return () =>
+          h("div", [
+            h(
+              "button",
+              {
+                id: "return-focus-trigger",
+                type: "button",
+                onClick: () => (open.value = true),
+              },
+              "Open",
+            ),
+            h(
+              Modal,
+              {
+                modelValue: open.value,
+                title: "No trap",
+                trapFocus: false,
+                returnFocus: true,
+                "onUpdate:modelValue": (value: boolean) => (open.value = value),
+              },
+              {
+                default: () =>
+                  h(
+                    "button",
+                    {
+                      id: "close-no-trap",
+                      type: "button",
+                      onClick: () => (open.value = false),
+                    },
+                    "Close",
+                  ),
+              },
+            ),
+          ]);
+      },
+    });
+
+    const host = mount(Host, { attachTo: document.body });
+    const trigger = document.querySelector<HTMLButtonElement>(
+      "#return-focus-trigger",
+    );
+    trigger?.focus();
+    trigger?.click();
+    await nextTick();
+    await nextTick();
+
+    document.querySelector<HTMLButtonElement>("#close-no-trap")?.click();
+    await nextTick();
+
+    expect(document.activeElement).toBe(trigger);
+    host.unmount();
   });
 });
