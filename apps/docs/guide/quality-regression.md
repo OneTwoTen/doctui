@@ -10,7 +10,7 @@ bun run test:browser
 bun run quality:check
 ```
 
-`api:check` đọc trực tiếp source TypeScript của các component trọng yếu, so sánh `props`, events và slots với contract đã xác minh trong `metadata/quality-contract.ts`, đồng thời kiểm tra component vẫn được export và có tài liệu VitePress + Storybook tương ứng.
+`api:check` đọc trực tiếp source TypeScript của các component trọng yếu, so sánh `props`, events và slots với contract đã xác minh trong `metadata/quality-contract.ts`, đồng thời kiểm tra component vẫn được export, vẫn có entry trong generated registry đúng package và có tài liệu VitePress + Storybook tương ứng.
 
 `test:browser` chạy hai nhóm regression bằng Chrome/Chromium headless qua Chrome DevTools Protocol:
 
@@ -43,7 +43,7 @@ Matrix khóa các contract đã từng có regression trong issues #8–#16:
 - events;
 - slots.
 
-`api:check` parse AST của `defineComponent()` thay vì dựa trên regex đơn giản. Nếu implementation thêm/xóa/đổi tên public prop, event hoặc slot mà contract chưa được update, CI sẽ fail. Registry generated sử dụng cùng contract cho các component này để `metadata/components.json` và `llms-full.txt` không bị lệch khỏi implementation.
+`api:check` parse AST của `defineComponent()` thay vì dựa trên regex đơn giản. Nếu implementation thêm/xóa/đổi tên public prop, event hoặc slot mà contract chưa được update, CI sẽ fail. Generated registry tiếp tục đóng vai trò discovery metadata; `api:check` xác nhận component vẫn xuất hiện ở đúng package, còn `quality-contract.ts` là lớp metadata chính xác dùng để khóa API public của nhóm component PR #7.
 
 ## Giới hạn
 
