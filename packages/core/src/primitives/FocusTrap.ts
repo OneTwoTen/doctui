@@ -32,7 +32,9 @@ export const FocusTrap = defineComponent({
   setup(props, { attrs, slots }) {
     const root = ref<HTMLElement>();
     let restoreElement: HTMLElement | null = null;
+    let lastFocusedInside: HTMLElement | null = null;
     let registered = false;
+    let redirectingFocus = false;
 
     const getFocusable = () =>
       Array.from(
@@ -54,9 +56,20 @@ export const FocusTrap = defineComponent({
       registered = false;
     };
 
-    const focusFirst = () => {
+    const focusInside = (preferLast = false) => {
+      if (!root.value || redirectingFocus) return;
       const focusable = getFocusable();
-      (focusable[0] ?? root.value)?.focus();
+      const target =
+        preferLast &&
+        lastFocusedInside?.isConnected &&
+        root.value.contains(lastFocusedInside)
+          ? lastFocusedInside
+          : (focusable[0] ?? root.value);
+
+      if (document.activeElement === target) return;
+      redirectingFocus = true;
+      target.focus({ preventScroll: true });
+      redirectingFocus = false;
     };
 
     const activate = async () => {
@@ -67,15 +80,16 @@ export const FocusTrap = defineComponent({
           : null;
       register();
       await nextTick();
-      if (props.active && props.trapped && isTopTrap()) focusFirst();
+      if (props.active && props.trapped && isTopTrap()) focusInside();
     };
 
     const deactivate = () => {
       unregister();
       if (props.returnFocus && restoreElement?.isConnected) {
-        restoreElement.focus();
+        restoreElement.focus({ preventScroll: true });
       }
       restoreElement = null;
+      lastFocusedInside = null;
     };
 
     const onKeydown = (event: KeyboardEvent) => {
@@ -91,7 +105,7 @@ export const FocusTrap = defineComponent({
       const focusable = getFocusable();
       if (focusable.length === 0) {
         event.preventDefault();
-        root.value?.focus();
+        root.value?.focus({ preventScroll: true });
         return;
       }
 
@@ -102,30 +116,37 @@ export const FocusTrap = defineComponent({
       const activeElement = document.activeElement;
       if (!root.value?.contains(activeElement)) {
         event.preventDefault();
-        (event.shiftKey ? last : first).focus();
+        (event.shiftKey ? last : first).focus({ preventScroll: true });
         return;
       }
 
       if (event.shiftKey && activeElement === first) {
         event.preventDefault();
-        last.focus();
+        last.focus({ preventScroll: true });
       } else if (!event.shiftKey && activeElement === last) {
         event.preventDefault();
-        first.focus();
+        first.focus({ preventScroll: true });
       }
     };
 
     const onFocusIn = (event: FocusEvent) => {
-      if (!props.active || !props.trapped || !isTopTrap() || !root.value)
+      if (!props.active || !props.trapped || !isTopTrap() || !root.value) {
         return;
-      if (root.value.contains(event.target as Node)) return;
-      focusFirst();
+      }
+
+      const target = event.target;
+      if (target instanceof HTMLElement && root.value.contains(target)) {
+        lastFocusedInside = target;
+        return;
+      }
+
+      focusInside(true);
     };
 
     onMounted(() => {
       if (typeof document === "undefined") return;
-      document.addEventListener("keydown", onKeydown);
-      document.addEventListener("focusin", onFocusIn);
+      document.addEventListener("keydown", onKeydown, true);
+      document.addEventListener("focusin", onFocusIn, true);
       if (props.active) void activate();
     });
 
@@ -137,10 +158,25 @@ export const FocusTrap = defineComponent({
       },
     );
 
+    watch(
+      () => props.trapped,
+      async (trapped, previous) => {
+        if (!trapped || previous || !props.active) return;
+        await nextTick();
+        if (
+          isTopTrap() &&
+          root.value &&
+          !root.value.contains(document.activeElement)
+        ) {
+          focusInside(true);
+        }
+      },
+    );
+
     onBeforeUnmount(() => {
       if (typeof document !== "undefined") {
-        document.removeEventListener("keydown", onKeydown);
-        document.removeEventListener("focusin", onFocusIn);
+        document.removeEventListener("keydown", onKeydown, true);
+        document.removeEventListener("focusin", onFocusIn, true);
       }
       deactivate();
     });
