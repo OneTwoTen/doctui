@@ -96,8 +96,7 @@ export const DOCTUI_DATES_METADATA = [
     name: "MonthPicker",
     package: "@doctui/dates",
     category: "inputs",
-    description:
-      "Keyboard-navigable month listbox that emits YYYY-MM values.",
+    description: "Keyboard-navigable month listbox that emits YYYY-MM values.",
     props: ["modelValue", "year", "locale", "disabled", "ariaLabel"],
     accessibility: [
       "Uses listbox/option semantics with aria-selected and roving keyboard focus.",
@@ -107,15 +106,8 @@ export const DOCTUI_DATES_METADATA = [
     name: "YearPicker",
     package: "@doctui/dates",
     category: "inputs",
-    description:
-      "Keyboard-navigable year listbox over a configurable range.",
-    props: [
-      "modelValue",
-      "minYear",
-      "maxYear",
-      "disabled",
-      "ariaLabel",
-    ],
+    description: "Keyboard-navigable year listbox over a configurable range.",
+    props: ["modelValue", "minYear", "maxYear", "disabled", "ariaLabel"],
     accessibility: [
       "Uses listbox/option semantics with aria-selected and roving keyboard focus.",
     ],
