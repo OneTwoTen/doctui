@@ -96,7 +96,9 @@ export const Drawer = defineComponent({
                             ...attrs,
                             role: "dialog",
                             "aria-modal": "true",
-                            "aria-labelledby": props.title ? titleId : undefined,
+                            "aria-labelledby": props.title
+                              ? titleId
+                              : undefined,
                             "aria-label": props.title
                               ? undefined
                               : (props.ariaLabel ?? "Drawer"),
@@ -107,7 +109,9 @@ export const Drawer = defineComponent({
                             style: [
                               attrs.style,
                               {
-                                "--dui-drawer-width": resolveDrawerWidth(props.size),
+                                "--dui-drawer-width": resolveDrawerWidth(
+                                  props.size,
+                                ),
                                 borderRadius: `var(--dui-radius-${props.radius})`,
                               },
                             ],
