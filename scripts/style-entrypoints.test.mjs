@@ -9,12 +9,8 @@ describe("documentation style entrypoints", () => {
     );
 
     expect(preview).toContain('import "@doctui/core/styles.css";');
-    expect(preview).toContain(
-      'import { DoctuiProvider } from "@doctui/core";',
-    );
-    expect(preview).toContain(
-      "<DoctuiProvider><story /></DoctuiProvider>",
-    );
+    expect(preview).toContain('import { DoctuiProvider } from "@doctui/core";');
+    expect(preview).toContain("<DoctuiProvider><story /></DoctuiProvider>");
   });
 
   it("loads the published doctui stylesheet in VitePress", async () => {
