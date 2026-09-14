@@ -112,7 +112,7 @@ async function main() {
 
   let client;
   try {
-    await waitForHttp(`http://127.0.0.1:${vitePort}/`);
+    await waitForHttp(fixtureUrl);
     await waitForHttp(`http://127.0.0.1:${chromePort}/json/version`);
 
     const targets = await fetch(
