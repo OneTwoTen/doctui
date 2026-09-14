@@ -60,8 +60,11 @@ export const Playground: Story = {
               default: () =>
                 h(Stack, { gap: "xs" }, () => [
                   h(Text, { weight: 600 }, () => "Contextual details"),
-                  h(Text, { muted: true }, () =>
-                    "Change position and dismissal behavior from Controls.",
+                  h(
+                    Text,
+                    { muted: true },
+                    () =>
+                      "Change position and dismissal behavior from Controls.",
                   ),
                 ]),
             },
@@ -104,8 +107,11 @@ export const LongContent: Story = {
             {
               target: () => h(Button, null, () => "Details"),
               default: () =>
-                h(Text, null, () =>
-                  "This longer content verifies that the surface remains readable and constrained instead of stretching beyond the Storybook canvas.",
+                h(
+                  Text,
+                  null,
+                  () =>
+                    "This longer content verifies that the surface remains readable and constrained instead of stretching beyond the Storybook canvas.",
                 ),
             },
           ),
