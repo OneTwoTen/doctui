@@ -69,9 +69,17 @@ describe("semantic theme visual contract", () => {
       readOverlayStyles(),
     ]);
 
-    expect(coreCss).toMatch(/\.dui-Overlay[\s\S]*z-index:\s*var\(--dui-z-index-overlay\)/);
-    expect(coreCss).toMatch(/\.dui-Drawer[\s\S]*z-index:\s*var\(--dui-z-index-modal\)/);
-    expect(overlayCss).toMatch(/\.dui-Popover-panel[\s\S]*z-index:\s*var\(--dui-z-index-popover\)/);
-    expect(overlayCss).toMatch(/\.dui-Tooltip-content[\s\S]*z-index:\s*var\(--dui-z-index-tooltip\)/);
+    expect(coreCss).toMatch(
+      /\.dui-Overlay[\s\S]*z-index:\s*var\(--dui-z-index-overlay\)/,
+    );
+    expect(coreCss).toMatch(
+      /\.dui-Drawer[\s\S]*z-index:\s*var\(--dui-z-index-modal\)/,
+    );
+    expect(overlayCss).toMatch(
+      /\.dui-Popover-panel[\s\S]*z-index:\s*var\(--dui-z-index-popover\)/,
+    );
+    expect(overlayCss).toMatch(
+      /\.dui-Tooltip-content[\s\S]*z-index:\s*var\(--dui-z-index-tooltip\)/,
+    );
   });
 });
