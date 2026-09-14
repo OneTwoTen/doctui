@@ -1,3 +1,6 @@
+import "../../packages/core/src/styles.css";
+import "../../packages/dates/src/styles.css";
+import "../../packages/notifications/src/styles.css";
 import { createApp, defineComponent, h, nextTick, ref } from "vue";
 import {
   Button,
