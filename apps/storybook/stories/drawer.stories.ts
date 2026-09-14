@@ -89,7 +89,7 @@ export const Playground: Story = {
                     ),
                   ]),
                 footer: () =>
-                  h(Group, { justify: "end" }, () => [
+                  h(Group, { justify: "flex-end" }, () => [
                     h(
                       Button,
                       {
@@ -139,7 +139,7 @@ export const ApplyFilters: Story = {
             ]),
           ]),
         footer: () =>
-          h(Group, { justify: "end" }, () => [
+          h(Group, { justify: "flex-end" }, () => [
             h(Button, { variant: "transparent" }, () => "Clear all"),
             h(Button, { variant: "default" }, () => "Cancel"),
             h(Button, null, () => "Show 128 items"),
@@ -161,7 +161,7 @@ export const LoadingAction: Story = {
               "Saving state stays in the persistent footer while content remains scrollable.",
           ),
         footer: () =>
-          h(Group, { justify: "end" }, () => [
+          h(Group, { justify: "flex-end" }, () => [
             h(Button, { variant: "default", disabled: true }, () => "Cancel"),
             h(Button, { loading: true }, () => "Saving"),
           ]),
@@ -186,7 +186,7 @@ export const LongContentFixedFooter: Story = {
             ),
           ),
         footer: () =>
-          h(Group, { justify: "end" }, () => [
+          h(Group, { justify: "flex-end" }, () => [
             h(Button, { variant: "default" }, () => "Export"),
             h(Button, null, () => "Done"),
           ]),
@@ -207,7 +207,7 @@ export const ResponsiveActions: Story = {
               "Several footer actions wrap in a narrow drawer instead of overflowing.",
           ),
         footer: () =>
-          h(Group, { justify: "end", wrap: true }, () => [
+          h(Group, { justify: "flex-end", wrap: true }, () => [
             h(Button, { variant: "transparent" }, () => "Copy link"),
             h(Button, { variant: "default" }, () => "Cancel"),
             h(Button, null, () => "Send invite"),
@@ -252,7 +252,7 @@ export const LeftPosition: Story = {
               "Footer actions use the same layout contract on left-positioned drawers.",
           ),
         footer: () =>
-          h(Group, { justify: "end" }, () => [
+          h(Group, { justify: "flex-end" }, () => [
             h(Button, { variant: "default" }, () => "Close"),
             h(Button, null, () => "Open section"),
           ]),
@@ -277,7 +277,7 @@ export const CustomBackdrop: Story = {
             () => "Backdrop props are forwarded to the shared Overlay.",
           ),
         footer: () =>
-          h(Group, { justify: "end" }, () => [
+          h(Group, { justify: "flex-end" }, () => [
             h(Button, { variant: "default" }, () => "Cancel"),
             h(Button, null, () => "Confirm"),
           ]),
@@ -298,7 +298,7 @@ export const DestructiveAction: Story = {
               "Removing this integration stops future synchronization jobs.",
           ),
         footer: () =>
-          h(Group, { justify: "end" }, () => [
+          h(Group, { justify: "flex-end" }, () => [
             h(Button, { variant: "default" }, () => "Keep integration"),
             h(Button, { color: "danger" }, () => "Remove"),
           ]),
