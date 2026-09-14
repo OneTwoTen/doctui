@@ -323,7 +323,8 @@ export const Calendar = defineComponent({
             {
               class: "dui-Calendar__grid",
               role: "grid",
-              "aria-label": props.ariaLabel ?? monthLabel(visibleMonth.value, props.locale),
+              "aria-label":
+                props.ariaLabel ?? monthLabel(visibleMonth.value, props.locale),
               "aria-disabled": props.disabled ? "true" : undefined,
             },
             [
