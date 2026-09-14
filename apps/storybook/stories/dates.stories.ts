@@ -47,7 +47,8 @@ export const PickerStates: Story = {
         }),
         h(DatePicker, {
           label: "Selected",
-          description: "Custom picker chrome, formatted from an ISO value.",
+          description:
+            "Open the picker and click the month/year header to move through day, month, and year views.",
           modelValue: "2026-09-14",
           clearable: true,
         }),
@@ -95,19 +96,21 @@ export const SizesAndRadii: Story = {
     ),
 };
 
-export const NativeFields: Story = {
+export const DateAndTimeFields: Story = {
   render: () =>
     preview(() =>
       h("div", { style: canvasStyle }, [
         h(DateInput, {
-          label: "Native date",
+          label: "Native DateInput",
           description:
-            "Keeps browser-native date semantics with doctui field geometry.",
+            "DateInput intentionally keeps the browser-native date surface while sharing doctui field geometry.",
           modelValue: "2026-09-14",
           clearable: true,
         }),
         h(DateTimePicker, {
-          label: "Native date and time",
+          label: "Custom DateTimePicker",
+          description:
+            "DateTimePicker uses the doctui date views and custom hour/minute controls instead of browser datetime chrome.",
           modelValue: "2026-09-14T09:00",
           clearable: true,
         }),
@@ -163,8 +166,9 @@ export const MonthAndYearSurfaces: Story = {
           }),
           h(YearPicker, {
             modelValue: year.value,
-            minYear: 2023,
-            maxYear: 2031,
+            minYear: 1900,
+            maxYear: 2100,
+            pageSize: 12,
             "onUpdate:modelValue": (value: number) => (year.value = value),
           }),
         ],
@@ -196,7 +200,7 @@ export const SchedulingComposition: Story = {
               Text,
               { muted: true, size: "sm" },
               () =>
-                "A realistic composition using the same field geometry as core inputs.",
+                "A realistic composition using the same field geometry and picker surfaces across date and datetime controls.",
             ),
             h(DatePicker, {
               label: "Release date",
@@ -245,9 +249,10 @@ export const DarkMode: Story = {
                       clearable: true,
                     }),
                     h("div", { style: { marginTop: "1rem" } }, [
-                      h(Calendar, {
-                        modelValue: "2026-09-14",
-                        month: "2026-09",
+                      h(DateTimePicker, {
+                        label: "Publish at",
+                        modelValue: "2026-09-14T09:30",
+                        clearable: true,
                       }),
                     ]),
                   ],
