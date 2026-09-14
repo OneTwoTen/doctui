@@ -2,6 +2,7 @@ import "./styles.css";
 import "./components/field-styles.css";
 import "./components/control-styles.css";
 import "./components/overlay-extras-styles.css";
+import "./overlay-footer.css";
 
 export * from "./component-metadata";
 export * from "./components/index";

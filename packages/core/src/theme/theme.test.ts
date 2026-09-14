@@ -33,6 +33,14 @@ describe("theme foundation", () => {
     expect(DEFAULT_THEME.spacing.md).toBe("1rem");
   });
 
+  it("uses the doctui typography stack as a public theme token", () => {
+    const variables = getThemeCssVariables(DEFAULT_THEME, "light");
+
+    expect(DEFAULT_THEME.fontFamily).toContain('"Be Vietnam Pro"');
+    expect(DEFAULT_THEME.fontFamily).toContain('"Segoe UI Variable"');
+    expect(variables["--dui-font-family"]).toBe(DEFAULT_THEME.fontFamily);
+  });
+
   it("maps the active color scheme and scales to --dui-* variables", () => {
     const theme = mergeTheme(DEFAULT_THEME, customTheme);
     const variables = getThemeCssVariables(theme, "dark");
@@ -57,7 +65,7 @@ describe("theme foundation", () => {
     expect(Object.isFrozen(theme.colors.dark.primary)).toBe(true);
   });
 
-  it("scopes theme variables and color scheme on the provider", () => {
+  it("scopes theme variables, typography and color scheme on the provider", () => {
     const wrapper = mount(DoctuiProvider, {
       props: {
         theme: customTheme,
@@ -67,6 +75,7 @@ describe("theme foundation", () => {
     });
 
     expect(wrapper.attributes("data-dui-color-scheme")).toBe("dark");
+    expect(wrapper.element.style.fontFamily).toBe("var(--dui-font-family)");
     expect(wrapper.element.style.getPropertyValue("--dui-spacing-md")).toBe(
       "2rem",
     );

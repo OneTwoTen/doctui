@@ -13,12 +13,17 @@ export const DismissableLayer = defineComponent({
   setup(props, { attrs, emit, slots }) {
     const root = ref<HTMLElement>();
     const isTopLayer = () => root.value === layerStack.at(-1);
+    const getBoundary = () =>
+      root.value?.querySelector<HTMLElement>(
+        "[data-dui-dismissable-boundary]",
+      ) ?? root.value;
     const onPointerDown = (event: PointerEvent) => {
+      const boundary = getBoundary();
       if (
         !props.disabled &&
         isTopLayer() &&
-        root.value &&
-        !root.value.contains(event.target as Node)
+        boundary &&
+        !boundary.contains(event.target as Node)
       ) {
         emit("outside", event);
       }

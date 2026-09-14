@@ -4,35 +4,39 @@ import { useScrollLock } from "../primitives/useScrollLock";
 import type { Radius, Size } from "../theme/types";
 import { Overlay, type OverlayVisualProps } from "./Overlay";
 
-const MODAL_WIDTHS: Record<Size, string> = {
-  xs: "20rem",
-  sm: "26rem",
-  md: "32rem",
-  lg: "42rem",
-  xl: "56rem",
+const DRAWER_WIDTHS: Record<Size, string> = {
+  xs: "16rem",
+  sm: "20rem",
+  md: "28rem",
+  lg: "36rem",
+  xl: "48rem",
 };
 
-export type ModalSize = Size | number | string;
+export type DrawerSize = Size | number | string;
+export type DrawerPosition = "left" | "right";
 
-function resolveModalWidth(size: ModalSize): string {
+function resolveDrawerWidth(size: DrawerSize): string {
   if (typeof size === "number") return `${size}px`;
-  return MODAL_WIDTHS[size as Size] ?? size;
+  return DRAWER_WIDTHS[size as Size] ?? size;
 }
 
-export const Modal = defineComponent({
-  name: "DuiModal",
+export const Drawer = defineComponent({
+  name: "DuiDrawer",
   inheritAttrs: false,
   emits: { "update:modelValue": (_value: boolean) => true },
   props: {
     modelValue: Boolean,
     title: String,
     ariaLabel: String,
+    position: {
+      type: String as PropType<DrawerPosition>,
+      default: "right",
+    },
     size: {
-      type: [String, Number] as PropType<ModalSize>,
+      type: [String, Number] as PropType<DrawerSize>,
       default: "md",
     },
     radius: { type: String as PropType<Radius>, default: "md" },
-    centered: Boolean,
     closeOnEscape: { type: Boolean, default: true },
     closeOnClickOutside: { type: Boolean, default: true },
     withCloseButton: { type: Boolean, default: true },
@@ -50,7 +54,7 @@ export const Modal = defineComponent({
     },
   },
   setup(props, { attrs, emit, slots }) {
-    const titleId = `dui-modal-title-${useId()}`;
+    const titleId = `dui-drawer-title-${useId()}`;
     useScrollLock(computed(() => props.modelValue && props.lockScroll));
     const close = () => emit("update:modelValue", false);
 
@@ -70,14 +74,12 @@ export const Modal = defineComponent({
           withBackdrop: props.withOverlay,
           closeOnClick: false,
           portalTarget: props.portalTarget,
-          "data-align": props.centered ? "center" : "start",
         },
         {
           default: () =>
             h(
               DismissableLayer,
               {
-                disabled: false,
                 closeOnEscape: props.closeOnEscape,
                 onEscape: close,
                 ...(props.closeOnClickOutside ? { onOutside: close } : {}),
@@ -94,7 +96,7 @@ export const Modal = defineComponent({
                     {
                       default: () =>
                         h(
-                          "section",
+                          "aside",
                           {
                             ...attrs,
                             role: "dialog",
@@ -104,43 +106,35 @@ export const Modal = defineComponent({
                               : undefined,
                             "aria-label": props.title
                               ? undefined
-                              : (props.ariaLabel ?? "Dialog"),
-                            "data-dui-component": "Modal",
+                              : (props.ariaLabel ?? "Drawer"),
+                            "data-dui-component": "Drawer",
                             "data-dui-dismissable-boundary": "",
-                            "data-centered": props.centered ? "true" : "false",
+                            class: ["dui-Drawer", attrs.class],
+                            "data-position": props.position,
                             "data-size": String(props.size),
-                            class: ["dui-Modal", attrs.class],
                             style: [
                               attrs.style,
                               {
-                                "--dui-modal-width": resolveModalWidth(
+                                "--dui-drawer-width": resolveDrawerWidth(
                                   props.size,
                                 ),
                                 borderRadius: `var(--dui-radius-${props.radius})`,
-                                marginInline: "auto",
                               },
                             ],
                           },
                           [
                             props.title || props.withCloseButton
-                              ? h("header", { class: "dui-Modal-header" }, [
+                              ? h("header", { class: "dui-Drawer-header" }, [
                                   props.title
-                                    ? h(
-                                        "h2",
-                                        {
-                                          id: titleId,
-                                          class: "dui-Modal-title",
-                                        },
-                                        props.title,
-                                      )
+                                    ? h("h2", { id: titleId }, props.title)
                                     : null,
                                   props.withCloseButton
                                     ? h(
                                         "button",
                                         {
-                                          "aria-label": "Close dialog",
-                                          class: "dui-Modal-close",
                                           type: "button",
+                                          "aria-label": "Close drawer",
+                                          class: "dui-Drawer-close",
                                           onClick: close,
                                         },
                                         "×",
@@ -150,13 +144,13 @@ export const Modal = defineComponent({
                               : null,
                             h(
                               "div",
-                              { class: "dui-Modal-body" },
+                              { class: "dui-Drawer-body" },
                               slots.default?.(),
                             ),
                             slots.footer
                               ? h(
                                   "footer",
-                                  { class: "dui-Modal-footer" },
+                                  { class: "dui-Drawer-footer" },
                                   slots.footer(),
                                 )
                               : null,

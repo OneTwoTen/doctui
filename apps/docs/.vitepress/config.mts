@@ -37,6 +37,7 @@ export default defineConfig({
           { text: "Selection controls", link: "/guide/selection-controls" },
           { text: "TagsInput", link: "/guide/tags-input" },
           { text: "Overlays", link: "/guide/overlays" },
+          { text: "Dialog footer actions", link: "/guide/dialog-actions" },
           { text: "Component taxonomy", link: "/guide/component-taxonomy" },
           { text: "Hooks", link: "/guide/hooks" },
           { text: "Form", link: "/guide/form" },

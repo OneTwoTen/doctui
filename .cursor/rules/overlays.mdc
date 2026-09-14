@@ -1,16 +1,29 @@
 ---
 description: Shared contract for doctui overlay, dialog, menu, popover, tooltip, focus and dismissal behavior
-globs: "packages/core/src/components/{Overlay,Modal,OverlayExtras}*.ts,packages/core/src/primitives/{DismissableLayer,FocusTrap,useScrollLock}*.ts,apps/storybook/stories/{modal,overlay-extras}.stories.ts,apps/docs/guide/overlays.md"
+globs: "packages/core/src/components/{Overlay,Modal,Drawer,OverlayExtras}*.ts,packages/core/src/primitives/{DismissableLayer,FocusTrap,useScrollLock}*.ts,apps/storybook/stories/{overlay,modal,drawer,overlay-extras}.stories.ts,apps/docs/guide/overlays.md"
 alwaysApply: false
 ---
 # Overlay and contextual interaction contract
 
 Apply these rules to Modal, Drawer, Overlay, Popover, Menu, Tooltip and the primitives they share.
 
+## Test-first requirement
+
+- Start interaction and overlay regressions with failing tests before implementation when practical.
+- Browser-visible regressions must not be closed by source-string assertions alone.
+- A green jsdom suite is not sufficient evidence for focus, pointer, geometry, portal/theme inheritance or stacking behavior. Add browser-level coverage whenever the contract depends on real layout or browser focus.
+
+## Portal and theme inheritance
+
+- Components rendered through Teleport/Portal must continue to receive the active doctui theme. Never assume CSS custom properties placed only on the provider DOM ancestor will survive a teleport to `body`.
+- Overlay roots must carry the resolved theme variables needed by teleported descendants, including semantic colors, spacing, radius, shadows and z-index tokens.
+- Modal and Drawer must use one portal path. Do not wrap a component in Portal when its shared Overlay already portals the layer.
+
 ## Dismissal stack
 
 - Escape and outside-pointer dismissal must be coordinated through the shared dismissable-layer stack. Only the top active layer may dismiss in response to a global interaction.
 - `closeOnEscape` and `closeOnClickOutside` are independent public behaviors. Wire the matching callback as well as the flag; a boolean prop that never reaches a dismissal handler is incomplete.
+- Use one outside-dismissal source per interaction. Do not wire both document `pointerdown` dismissal and backdrop `click` dismissal for the same Modal/Drawer interaction.
 - Nested overlay tests must verify that the child closes first and the parent remains open.
 - Escape dismissal for Menu and Popover restores focus to the real trigger. Outside-pointer dismissal must not steal focus back from the user's pointer destination.
 
@@ -32,16 +45,18 @@ Apply these rules to Modal, Drawer, Overlay, Popover, Menu, Tooltip and the prim
 ## Focus
 
 - Modal-like surfaces must trap focus while active and restore focus to the element that opened that specific layer when they close.
-- Menu and Popover do not trap focus; they preserve document tab order and restore trigger focus only on dismissal paths that require restoration.
+- Focus containment must be stack-aware: only the top focus trap may redirect focus or cycle Tab/Shift+Tab.
 - Nested layers restore focus one level at a time: child trigger first, then parent trigger when the parent closes.
+- Clicking or programmatically focusing outside the top dialog must not permanently escape an enabled trap.
+- Menu and Popover do not trap focus; they preserve document tab order and restore trigger focus only on dismissal paths that require restoration.
 - Tooltip must remain visible when focus moves between descendants of one composite trigger root and close only when focus leaves that root.
-- Prefer native focusable controls. Never solve focus trapping by making the entire page inert without proving the nested restoration behavior.
 
 ## Scroll locking
 
 - Scroll locking is reference-counted globally but acquisition/release ownership is per hook instance.
 - One instance may acquire at most once and release at most once. A false transition followed by unmount must not decrement twice.
 - Preserve the body's original inline overflow value when the first lock starts and restore it only after the final lock releases.
+- Public `lockScroll` behavior must be observable; disabling it must not mutate body overflow.
 
 ## Accessible naming
 
@@ -54,14 +69,23 @@ Apply these rules to Modal, Drawer, Overlay, Popover, Menu, Tooltip and the prim
 
 - Public `size`, `position`, `radius`, `centered`, `color`, and `opacity` props must map to observable geometry/state or semantic theme variables.
 - Backdrop opacity must affect only the backdrop color, never the overlay's child content.
+- `withOverlay=false` must disable the visual backdrop without breaking the layer, focus or dismissal contract.
+- `overlayProps` must be forwarded to the shared Overlay rather than copied into unrelated surface attributes.
+- Modal and Drawer size scales must cover `xs`, `sm`, `md`, `lg`, and `xl` with real width changes. If custom CSS sizes are accepted, map them directly to the public width variable.
 - Overlay-family layering must use `--dui-z-index-*` theme variables. Do not add literal z-index numbers in component styles.
-- Modal and Drawer size scales must cover `xs`, `sm`, `md`, `lg`, and `xl` with real width changes.
 - Document whether a floating component's `position` is a deterministic side or a preferred side with collision flipping/shifting. Never imply collision handling that the implementation does not provide.
 - Do not build a custom JavaScript popper or geometry engine. When collision-aware positioning becomes part of the contract, use the project-approved low-level floating-positioning dependency and keep the abstraction doctui-owned.
 
+## Storybook Controls
+
+- Every public Overlay, Modal and Drawer prop that can be represented safely in Storybook must have a functional Control in a dedicated component story.
+- Each component story meta must declare `component`, `args`, and `argTypes`; the primary story must render from `args` instead of hard-coding the props being documented.
+- Keep basic playground stories separate from advanced compositions. Advanced stories must include realistic nested Modal → Drawer behavior.
+- A Storybook story that only provides custom launcher buttons does not satisfy Controls coverage for public props.
+- For Menu/Popover/Tooltip work, include keyboard/focus examples rather than visual-only snapshots.
+
 ## Tests and documentation
 
-- Start interaction fixes with failing regression tests before implementation when practical.
-- Cover Escape enabled/disabled, outside click enabled/disabled, nested ordering, focus restoration, trigger relationships, menu roving focus, disabled-item skipping, Tooltip hover/focus transitions, reference-counted scroll lock, accessible names, sizing, backdrop tokens and z-index tokens.
-- Storybook must include interaction-oriented states and at least one realistic nested composition when multiple overlay surfaces interact. For Menu/Popover/Tooltip work, include keyboard/focus examples rather than visual-only snapshots.
-- VitePress and metadata must document the same naming, dismissal, focus, positioning, scroll-lock, sizing and layering contract.
+- Cover Escape enabled/disabled, outside click enabled/disabled, nested ordering, focus containment/restoration, trigger relationships, menu roving focus, disabled-item skipping, Tooltip hover/focus transitions, reference-counted scroll lock, accessible names, sizing, backdrop tokens, portal/theme inheritance and z-index tokens.
+- Storybook must include interaction-oriented states and at least one realistic nested composition when multiple overlay surfaces interact.
+- VitePress and metadata must document the same naming, dismissal, focus, positioning, scroll-lock, sizing, backdrop and layering contract.
