@@ -48,7 +48,11 @@ export const MonthPicker = defineComponent({
         },
         [
           h("div", { class: "dui-DateSurface__header" }, [
-            h("strong", { class: "dui-DateSurface__title" }, String(props.year)),
+            h(
+              "strong",
+              { class: "dui-DateSurface__title" },
+              String(props.year),
+            ),
           ]),
           h(
             "div",
@@ -85,9 +89,9 @@ export const MonthPicker = defineComponent({
                     emit("select", value);
                   },
                 },
-                new Intl.DateTimeFormat(props.locale, { month: "short" }).format(
-                  date,
-                ),
+                new Intl.DateTimeFormat(props.locale, {
+                  month: "short",
+                }).format(date),
               );
             }),
           ),
