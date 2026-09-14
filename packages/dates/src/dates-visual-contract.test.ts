@@ -2,10 +2,16 @@ import { existsSync, readFileSync } from "node:fs";
 import { TextInput } from "@doctui/core";
 import { mount } from "@vue/test-utils";
 import { describe, expect, it } from "vitest";
-import { Calendar, DateInput, DatePicker, DateTimePicker } from "./index";
+import {
+  Calendar,
+  DateInput,
+  DatePicker,
+  DateTimePicker,
+  YearPicker,
+} from "./index";
 
 describe("@doctui/dates visual contracts", () => {
-  it("reuses the core TextInput geometry for native date fields", () => {
+  it("reuses the core TextInput geometry for the native DateInput field", () => {
     const date = mount(DateInput, {
       props: {
         modelValue: "2026-09-14",
@@ -16,19 +22,9 @@ describe("@doctui/dates visual contracts", () => {
         clearable: true,
       },
     });
-    const datetime = mount(DateTimePicker, {
-      props: {
-        modelValue: "2026-09-14T09:30",
-        label: "Publish at",
-        size: "sm",
-        radius: "md",
-      },
-    });
 
     expect(date.findComponent(TextInput).exists()).toBe(true);
-    expect(datetime.findComponent(TextInput).exists()).toBe(true);
     expect(date.get('input[type="date"]').exists()).toBe(true);
-    expect(datetime.get('input[type="datetime-local"]').exists()).toBe(true);
   });
 
   it("renders DatePicker as a doctui text control instead of browser-native date chrome", () => {
@@ -54,6 +50,66 @@ describe("@doctui/dates visual contracts", () => {
     expect(
       wrapper.get(".dui-DatePicker__clear svg").attributes("data-dui-icon"),
     ).toBe("x");
+  });
+
+  it("switches DatePicker from day to month to year views", async () => {
+    const wrapper = mount(DatePicker, {
+      attachTo: document.body,
+      props: {
+        modelValue: "2026-09-14",
+        locale: "en-US",
+      },
+    });
+
+    await wrapper.get('input[type="text"]').trigger("click");
+    expect(wrapper.find(".dui-Calendar").exists()).toBe(true);
+
+    await wrapper.get(".dui-Calendar__titleButton").trigger("click");
+    expect(wrapper.find(".dui-MonthPicker").exists()).toBe(true);
+
+    await wrapper.get(".dui-DateSurface__titleButton").trigger("click");
+    expect(wrapper.find(".dui-YearPicker").exists()).toBe(true);
+
+    wrapper.unmount();
+  });
+
+  it("renders DateTimePicker with custom date and time controls", async () => {
+    const wrapper = mount(DateTimePicker, {
+      attachTo: document.body,
+      props: {
+        modelValue: "2026-09-14T09:30",
+        label: "Publish at",
+        locale: "en-US",
+      },
+    });
+
+    expect(wrapper.find('input[type="datetime-local"]').exists()).toBe(false);
+    const trigger = wrapper.get('input[type="text"]');
+    expect(trigger.attributes("readonly")).toBeDefined();
+
+    await trigger.trigger("click");
+    expect(wrapper.find(".dui-DateTimePicker__panel").exists()).toBe(true);
+    expect(wrapper.get('[aria-label="Hour"]').exists()).toBe(true);
+    expect(wrapper.get('[aria-label="Minute"]').exists()).toBe(true);
+
+    wrapper.unmount();
+  });
+
+  it("pages YearPicker through year ranges", async () => {
+    const wrapper = mount(YearPicker, {
+      props: {
+        modelValue: 2026,
+        minYear: 1900,
+        maxYear: 2100,
+      },
+    });
+
+    const before = wrapper.get(".dui-YearPicker__range").text();
+    await wrapper.get('[aria-label="Next years"]').trigger("click");
+    const after = wrapper.get(".dui-YearPicker__range").text();
+
+    expect(after).not.toBe(before);
+    expect(wrapper.findAll('[role="option"]').length).toBeGreaterThan(0);
   });
 
   it("uses SVG navigation icons and keeps Calendar visually token-driven", async () => {
