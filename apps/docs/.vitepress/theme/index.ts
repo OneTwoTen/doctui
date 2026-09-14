@@ -1,6 +1,7 @@
 import "@doctui/core/styles.css";
 import "@doctui/dates/styles.css";
 import "@doctui/notifications/styles.css";
+import "./typography.css";
 import {
   ActionIcon,
   Autocomplete,
