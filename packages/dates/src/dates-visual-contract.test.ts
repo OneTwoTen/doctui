@@ -47,12 +47,12 @@ describe("@doctui/dates visual contracts", () => {
     const input = wrapper.get('input[type="text"]');
     expect(input.attributes("readonly")).toBeDefined();
     expect(input.element.value).toContain("Sep");
-    expect(wrapper.get(".dui-DatePicker__toggle svg").attributes("data-dui-icon")).toBe(
-      "calendar",
-    );
-    expect(wrapper.get(".dui-DatePicker__clear svg").attributes("data-dui-icon")).toBe(
-      "x",
-    );
+    expect(
+      wrapper.get(".dui-DatePicker__toggle svg").attributes("data-dui-icon"),
+    ).toBe("calendar");
+    expect(
+      wrapper.get(".dui-DatePicker__clear svg").attributes("data-dui-icon"),
+    ).toBe("x");
   });
 
   it("uses SVG navigation icons and keeps Calendar visually token-driven", async () => {
@@ -63,7 +63,9 @@ describe("@doctui/dates visual contracts", () => {
     const nav = wrapper.findAll(".dui-Calendar__nav");
     expect(nav).toHaveLength(2);
     expect(nav[0]?.get("svg").attributes("data-dui-icon")).toBe("chevron-left");
-    expect(nav[1]?.get("svg").attributes("data-dui-icon")).toBe("chevron-right");
+    expect(nav[1]?.get("svg").attributes("data-dui-icon")).toBe(
+      "chevron-right",
+    );
     expect(wrapper.text()).not.toContain("‹");
     expect(wrapper.text()).not.toContain("›");
   });
