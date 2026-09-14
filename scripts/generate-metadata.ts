@@ -49,43 +49,22 @@ const full = [
   ...lines,
   "## API details",
   "",
-  ...components.flatMap((component) => {
-    const events =
-      "events" in component
-        ? (component.events as readonly string[])
-        : undefined;
-    const slots =
-      "slots" in component ? (component.slots as readonly string[]) : undefined;
-
-    return [
-      `### ${component.name}`,
-      "",
-      `Package: \`${component.package}\``,
-      "",
-      component.description,
-      "",
-      `Props: ${component.props.map((prop) => `\`${prop}\``).join(", ") || "none"}.`,
-      ...(events
-        ? [
-            "",
-            `Events: ${events.map((event) => `\`${event}\``).join(", ") || "none"}.`,
-          ]
-        : []),
-      ...(slots
-        ? [
-            "",
-            `Slots: ${slots.map((slot) => `\`${slot}\``).join(", ") || "none"}.`,
-          ]
-        : []),
-      "",
-      ...("accessibility" in component
-        ? component.accessibility.map((note) => `Accessibility: ${note}`)
-        : []),
-      ...("examples" in component
-        ? component.examples.map((example) => `Example: ${example}`)
-        : []),
-      "",
-    ];
-  }),
+  ...components.flatMap((component) => [
+    `### ${component.name}`,
+    "",
+    `Package: \`${component.package}\``,
+    "",
+    component.description,
+    "",
+    `Props: ${component.props.map((prop) => `\`${prop}\``).join(", ") || "none"}.`,
+    "",
+    ...("accessibility" in component
+      ? component.accessibility.map((note) => `Accessibility: ${note}`)
+      : []),
+    ...("examples" in component
+      ? component.examples.map((example) => `Example: ${example}`)
+      : []),
+    "",
+  ]),
 ];
 await writeFile("llms-full.txt", `${full.join("\n").trimEnd()}\n`);
