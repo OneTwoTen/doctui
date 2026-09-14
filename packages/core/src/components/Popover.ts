@@ -30,7 +30,6 @@ export const Popover = defineComponent({
   inheritAttrs: false,
   props: {
     modelValue: Boolean,
-    ariaLabel: { type: String, default: "Popover" },
     position: {
       type: String as PropType<"top" | "bottom" | "left" | "right">,
       default: "bottom",
@@ -41,6 +40,7 @@ export const Popover = defineComponent({
   emits: { "update:modelValue": (_value: boolean) => true },
   setup(props, { attrs, emit, slots }) {
     const panelId = `dui-popover-${useId()}`;
+    const defaultTriggerId = `dui-popover-trigger-${useId()}`;
     const triggerElement = ref<HTMLElement>();
 
     const setOpen = (value: boolean, restoreFocus = false) => {
@@ -52,6 +52,11 @@ export const Popover = defineComponent({
 
     return () => {
       const targetNodes = slots.target?.() ?? [];
+      const existingTriggerId = targetNodes[0]?.props?.id;
+      const triggerId =
+        typeof existingTriggerId === "string" && existingTriggerId.length > 0
+          ? existingTriggerId
+          : defaultTriggerId;
       const target = targetNodes[0]
         ? cloneVNode(
             targetNodes[0],
@@ -59,6 +64,7 @@ export const Popover = defineComponent({
               ref: (value: unknown) => {
                 triggerElement.value = resolveElement(value);
               },
+              id: triggerId,
               "aria-haspopup": "dialog",
               "aria-expanded": String(props.modelValue),
               "aria-controls": panelId,
@@ -98,7 +104,7 @@ export const Popover = defineComponent({
                         id: panelId,
                         class: "dui-Popover-panel",
                         role: "dialog",
-                        "aria-label": props.ariaLabel,
+                        "aria-labelledby": triggerId,
                         "data-position": props.position,
                       },
                       slots.default?.(),
