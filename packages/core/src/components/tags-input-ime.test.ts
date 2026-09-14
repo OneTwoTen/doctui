@@ -23,7 +23,9 @@ describe("TagsInput IME regression", () => {
     const input = wrapper.get("input.dui-TagsInput-input");
     const element = input.element as HTMLInputElement;
 
-    element.dispatchEvent(new CompositionEvent("compositionstart", { bubbles: true }));
+    element.dispatchEvent(
+      new CompositionEvent("compositionstart", { bubbles: true }),
+    );
     await input.setValue("a");
     element.dispatchEvent(
       new KeyboardEvent("keydown", {
