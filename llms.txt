@@ -25,8 +25,8 @@ Generated component and package reference for doctui 0.0.0.
 - Combobox (@doctui/core): Focus-managed listbox engine used by doctui selection controls.
 - Container (@doctui/core): Centered responsive container constrained by theme breakpoints.
 - DateInput (@doctui/dates): Native date field that reuses doctui core field geometry, sizing and validation states.
-- DatePicker (@doctui/dates): Doctui-styled readonly date field with formatted display value and an accessible calendar popup.
-- DateTimePicker (@doctui/dates): Native date-time field that reuses doctui core field geometry, sizing and validation states.
+- DatePicker (@doctui/dates): Doctui-styled readonly date field with day, month and year picker views in one accessible dialog surface.
+- DateTimePicker (@doctui/dates): Custom doctui date-time field combining the shared day/month/year picker with explicit hour and minute controls.
 - Divider (@doctui/core): Separator for related content with optional label content.
 - Drawer (@doctui/core): Accessible side dialog with shared overlay, nested-layer dismissal and focus restoration.
 - Flex (@doctui/core): Flexbox layout primitive with theme-token gaps.
@@ -59,4 +59,4 @@ Generated component and package reference for doctui 0.0.0.
 - Title (@doctui/core): Semantic h1-h6 heading primitive.
 - Tooltip (@doctui/core): Non-essential contextual text revealed on hover or focus.
 - UnstyledButton (@doctui/core): Native button reset for building custom action surfaces.
-- YearPicker (@doctui/dates): Keyboard-navigable year listbox rendered in the shared doctui date surface.
+- YearPicker (@doctui/dates): Keyboard-navigable paged year listbox with previous/next range navigation in the shared doctui date surface.

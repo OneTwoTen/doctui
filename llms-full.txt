@@ -25,8 +25,8 @@ Generated component and package reference for doctui 0.0.0.
 - Combobox (@doctui/core): Focus-managed listbox engine used by doctui selection controls.
 - Container (@doctui/core): Centered responsive container constrained by theme breakpoints.
 - DateInput (@doctui/dates): Native date field that reuses doctui core field geometry, sizing and validation states.
-- DatePicker (@doctui/dates): Doctui-styled readonly date field with formatted display value and an accessible calendar popup.
-- DateTimePicker (@doctui/dates): Native date-time field that reuses doctui core field geometry, sizing and validation states.
+- DatePicker (@doctui/dates): Doctui-styled readonly date field with day, month and year picker views in one accessible dialog surface.
+- DateTimePicker (@doctui/dates): Custom doctui date-time field combining the shared day/month/year picker with explicit hour and minute controls.
 - Divider (@doctui/core): Separator for related content with optional label content.
 - Drawer (@doctui/core): Accessible side dialog with shared overlay, nested-layer dismissal and focus restoration.
 - Flex (@doctui/core): Flexbox layout primitive with theme-token gaps.
@@ -59,7 +59,7 @@ Generated component and package reference for doctui 0.0.0.
 - Title (@doctui/core): Semantic h1-h6 heading primitive.
 - Tooltip (@doctui/core): Non-essential contextual text revealed on hover or focus.
 - UnstyledButton (@doctui/core): Native button reset for building custom action surfaces.
-- YearPicker (@doctui/dates): Keyboard-navigable year listbox rendered in the shared doctui date surface.
+- YearPicker (@doctui/dates): Keyboard-navigable paged year listbox with previous/next range navigation in the shared doctui date surface.
 
 ## API details
 
@@ -122,11 +122,12 @@ Package: `@doctui/dates`
 
 Accessible token-driven month grid with adjacent-month days, range constraints and keyboard navigation.
 
-Props: `id`, `modelValue`, `month`, `minDate`, `maxDate`, `locale`, `firstDayOfWeek`, `disabled`, `ariaLabel`.
+Props: `id`, `modelValue`, `month`, `minDate`, `maxDate`, `locale`, `firstDayOfWeek`, `disabled`, `ariaLabel`, `headerInteractive`.
 
 Accessibility: Uses grid/row/gridcell semantics with one roving tab stop.
 Accessibility: Arrow keys move by day/week, Home and End move within the week, and PageUp/PageDown move across months.
 Accessibility: The current date uses aria-current=date and the selected date uses aria-selected.
+Accessibility: When headerInteractive is enabled, the month/year title becomes a keyboard-accessible view switch trigger.
 
 ### Center
 
@@ -197,24 +198,28 @@ Accessibility: When no visible label is supplied, ariaLabel or the default Date 
 
 Package: `@doctui/dates`
 
-Doctui-styled readonly date field with formatted display value and an accessible calendar popup.
+Doctui-styled readonly date field with day, month and year picker views in one accessible dialog surface.
 
 Props: `id`, `modelValue`, `label`, `description`, `error`, `ariaLabel`, `placeholder`, `minDate`, `maxDate`, `disabled`, `clearable`, `locale`, `firstDayOfWeek`, `size`, `radius`.
 
 Accessibility: Uses a readonly text field rather than browser-native date chrome for the custom picker surface.
-Accessibility: The popup trigger exposes aria-expanded, aria-controls and aria-haspopup=grid.
+Accessibility: The trigger exposes aria-expanded, aria-controls and aria-haspopup=dialog.
+Accessibility: The dialog switches between grid-based day selection and listbox-based month/year selection without leaving the picker.
 Accessibility: Escape closes the popup and restores trigger focus; pointer input outside closes it without stealing focus.
-Accessibility: Disabled state is forwarded to the field, actions and calendar.
+Accessibility: Disabled state is forwarded to the field, actions and picker views.
 
 ### DateTimePicker
 
 Package: `@doctui/dates`
 
-Native date-time field that reuses doctui core field geometry, sizing and validation states.
+Custom doctui date-time field combining the shared day/month/year picker with explicit hour and minute controls.
 
-Props: `id`, `modelValue`, `label`, `description`, `error`, `ariaLabel`, `disabled`, `clearable`, `size`, `radius`.
+Props: `id`, `modelValue`, `label`, `description`, `error`, `ariaLabel`, `placeholder`, `minDate`, `maxDate`, `locale`, `firstDayOfWeek`, `disabled`, `clearable`, `size`, `radius`.
 
-Accessibility: Uses the same core field relationships and native control semantics as DateInput.
+Accessibility: Uses the core field label, description and error relationships with a readonly text trigger.
+Accessibility: The custom picker opens as a dialog instead of invoking browser-native datetime chrome.
+Accessibility: Hour and minute controls have explicit accessible names, and Apply commits the draft date and time.
+Accessibility: Escape closes the dialog and restores trigger focus.
 
 ### Divider
 
@@ -327,9 +332,10 @@ Package: `@doctui/dates`
 
 Keyboard-navigable month listbox rendered in the shared doctui date surface.
 
-Props: `modelValue`, `year`, `locale`, `disabled`, `ariaLabel`.
+Props: `modelValue`, `year`, `locale`, `disabled`, `ariaLabel`, `headerInteractive`.
 
 Accessibility: Uses listbox/option semantics with aria-selected and roving keyboard focus.
+Accessibility: When headerInteractive is enabled, the year title becomes a keyboard-accessible switch to year selection.
 
 ### MultiSelect
 
@@ -566,8 +572,10 @@ Accessibility: Preserves native button keyboard and disabled behavior.
 
 Package: `@doctui/dates`
 
-Keyboard-navigable year listbox rendered in the shared doctui date surface.
+Keyboard-navigable paged year listbox with previous/next range navigation in the shared doctui date surface.
 
-Props: `modelValue`, `minYear`, `maxYear`, `disabled`, `ariaLabel`.
+Props: `modelValue`, `minYear`, `maxYear`, `pageSize`, `disabled`, `ariaLabel`.
 
 Accessibility: Uses listbox/option semantics with aria-selected and roving keyboard focus.
+Accessibility: Previous years and Next years buttons expose bounded range navigation without requiring a long scroll.
+Accessibility: The current year uses aria-current=date when visible.
