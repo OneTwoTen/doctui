@@ -1,0 +1,47 @@
+name: Issue 16 generated-file sync
+
+on:
+  push:
+    branches:
+      - fix/issue-16-notifications-lifecycle
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v5
+        with:
+          ref: fix/issue-16-notifications-lifecycle
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Format changed sources and generate metadata
+        run: |
+          bun run format
+          bun run metadata:generate
+          rm .github/workflows/issue-16-sync.yml
+
+      - name: Commit generated files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          git commit -m "chore(notifications): sync generated metadata"
+          git push origin HEAD:fix/issue-16-notifications-lifecycle
