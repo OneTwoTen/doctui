@@ -137,6 +137,14 @@ export const TagsInput = defineComponent({
       }
     };
 
+    const onControlClick = (event: MouseEvent) => {
+      if (props.disabled) return;
+
+      const target = event.target as HTMLElement | null;
+      if (target === input.value || target?.closest("button")) return;
+      input.value?.focus();
+    };
+
     return () => {
       const { rootAttrs, controlAttrs } = splitFieldAttrs(attrs);
       const explicitAriaLabel =
@@ -145,6 +153,8 @@ export const TagsInput = defineComponent({
           ? controlAttrs["aria-label"]
           : undefined);
       const selectedTagsLabel = `${props.label ?? explicitAriaLabel ?? "Tags"} selected tags`;
+      const formAttribute =
+        typeof controlAttrs.form === "string" ? controlAttrs.form : undefined;
 
       return h(
         InputWrapper,
@@ -190,6 +200,7 @@ export const TagsInput = defineComponent({
                       borderRadius: radiusToken(props.radius),
                       fontSize: fontSizeToken(props.size),
                     },
+                    onClick: onControlClick,
                   },
                   [
                     props.modelValue.length > 0
@@ -237,7 +248,7 @@ export const TagsInput = defineComponent({
                       mergeProps(controlAttrs, {
                         ref: input,
                         id,
-                        name: props.name,
+                        name: undefined,
                         value: draft.value,
                         disabled: props.disabled,
                         readonly: props.readonly,
@@ -271,6 +282,19 @@ export const TagsInput = defineComponent({
                       : null,
                   ],
                 ),
+                ...(props.name
+                  ? props.modelValue.map((value, index) =>
+                      h("input", {
+                        key: `${index}:${value}`,
+                        type: "hidden",
+                        name: props.name,
+                        value,
+                        form: formAttribute,
+                        disabled: props.disabled,
+                        "data-dui-tags-input-value": "",
+                      }),
+                    )
+                  : []),
               ],
             );
           },
