@@ -65,7 +65,7 @@ describe("theme foundation", () => {
     expect(Object.isFrozen(theme.colors.dark.primary)).toBe(true);
   });
 
-  it("scopes theme variables and color scheme on the provider", () => {
+  it("scopes theme variables, typography and color scheme on the provider", () => {
     const wrapper = mount(DoctuiProvider, {
       props: {
         theme: customTheme,
@@ -75,6 +75,7 @@ describe("theme foundation", () => {
     });
 
     expect(wrapper.attributes("data-dui-color-scheme")).toBe("dark");
+    expect(wrapper.element.style.fontFamily).toBe("var(--dui-font-family)");
     expect(wrapper.element.style.getPropertyValue("--dui-spacing-md")).toBe(
       "2rem",
     );
