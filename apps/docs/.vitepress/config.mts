@@ -43,6 +43,7 @@ export default defineConfig({
           { text: "Form", link: "/guide/form" },
           { text: "Notifications", link: "/guide/notifications" },
           { text: "Dates", link: "/guide/dates" },
+          { text: "Quality regression matrix", link: "/guide/quality-regression" },
           { text: "MCP server", link: "/guide/mcp" },
           { text: "Versioning", link: "/guide/versioning" },
           { text: "Contributing", link: "/guide/contributing" },
