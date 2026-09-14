@@ -5,6 +5,7 @@ import {
   DatePicker,
   DateTimePicker,
   MonthPicker,
+  NativeDateInput,
   YearPicker,
 } from "@doctui/dates";
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
@@ -19,7 +20,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Visual state and composition examples. Use Dates/DatePicker, DateInput, DateTimePicker, Calendar, MonthPicker, or YearPicker Playground stories for interactive Controls.",
+          "Visual state and composition examples. Use Dates/DatePicker, DateInput, NativeDateInput, DateTimePicker, Calendar, MonthPicker, or YearPicker Playground stories for interactive Controls.",
       },
     },
   },
@@ -96,21 +97,29 @@ export const SizesAndRadii: Story = {
     ),
 };
 
-export const DateAndTimeFields: Story = {
+export const DateInputVariants: Story = {
   render: () =>
     preview(() =>
       h("div", { style: canvasStyle }, [
         h(DateInput, {
-          label: "Native DateInput",
+          label: "Custom editable DateInput",
           description:
-            "DateInput intentionally keeps the browser-native date surface while sharing doctui field geometry.",
+            "Type a localized date directly or open the same doctui day/month/year picker used by DatePicker.",
+          modelValue: "2026-09-14",
+          locale: "en-GB",
+          clearable: true,
+        }),
+        h(NativeDateInput, {
+          label: "NativeDateInput",
+          description:
+            "Use this explicit native variant only when browser/OS date picker semantics are preferred over visual consistency.",
           modelValue: "2026-09-14",
           clearable: true,
         }),
         h(DateTimePicker, {
           label: "Custom DateTimePicker",
           description:
-            "DateTimePicker uses the doctui date views and custom hour/minute controls instead of browser datetime chrome.",
+            "DateTimePicker uses doctui date views and custom hour/minute controls instead of browser datetime chrome.",
           modelValue: "2026-09-14T09:00",
           clearable: true,
         }),
@@ -202,9 +211,10 @@ export const SchedulingComposition: Story = {
               () =>
                 "A realistic composition using the same field geometry and picker surfaces across date and datetime controls.",
             ),
-            h(DatePicker, {
+            h(DateInput, {
               label: "Release date",
               modelValue: date.value,
+              locale: "en-GB",
               clearable: true,
               "onUpdate:modelValue": (value: string | null) =>
                 (date.value = value),
@@ -242,10 +252,11 @@ export const DarkMode: Story = {
                     },
                   },
                   [
-                    h(DatePicker, {
-                      label: "Release date",
+                    h(DateInput, {
+                      label: "Editable release date",
                       description: "Dark mode is entirely token driven.",
                       modelValue: "2026-09-14",
+                      locale: "en-GB",
                       clearable: true,
                     }),
                     h("div", { style: { marginTop: "1rem" } }, [
