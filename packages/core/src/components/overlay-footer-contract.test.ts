@@ -1,4 +1,5 @@
 import { readFile } from "node:fs/promises";
+import { resolve } from "node:path";
 import { mount } from "@vue/test-utils";
 import { afterEach, describe, expect, it } from "vitest";
 import { h } from "vue";
@@ -58,7 +59,7 @@ describe("overlay footer contract", () => {
 
   it("keeps overlay chrome stable while body content scrolls", async () => {
     const css = await readFile(
-      new URL("../overlay-footer.css", import.meta.url),
+      resolve(process.cwd(), "packages/core/src/overlay-footer.css"),
       "utf8",
     );
 
