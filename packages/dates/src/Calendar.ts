@@ -9,6 +9,7 @@ import {
   toDateValue,
   toMonthValue,
 } from "./date-utils";
+import { chevronLeftIcon, chevronRightIcon } from "./icons";
 
 export const Calendar = defineComponent({
   name: "DuiCalendar",
@@ -131,6 +132,10 @@ export const Calendar = defineComponent({
         return;
       }
 
+      const date = parseDate(value);
+      if (date && toMonthValue(date) !== toMonthValue(visibleMonth.value)) {
+        setVisibleMonth(date);
+      }
       activeValue.value = value;
       emit("update:modelValue", value);
       emit("select", value);
@@ -231,26 +236,23 @@ export const Calendar = defineComponent({
       const normalizedFirstDay = ((props.firstDayOfWeek % 7) + 7) % 7;
       const offset =
         (new Date(year, month, 1).getDay() - normalizedFirstDay + 7) % 7;
-      const days = new Date(year, month + 1, 0).getDate();
-      const weekCount = Math.ceil((offset + days) / 7);
+      const gridStart = new Date(year, month, 1 - offset);
       const today = toDateValue(new Date());
-      const rows = Array.from({ length: weekCount }, (_, rowIndex) =>
+      const currentMonth = toMonthValue(visibleMonth.value);
+      const rows = Array.from({ length: 6 }, (_, rowIndex) =>
         h(
           "div",
           { class: "dui-Calendar__row", role: "row" },
           Array.from({ length: 7 }, (_, columnIndex) => {
             const cellIndex = rowIndex * 7 + columnIndex;
-            const day = cellIndex - offset + 1;
-
-            if (day < 1 || day > days) {
-              return h("span", {
-                class: "dui-Calendar__empty",
-                role: "gridcell",
-              });
-            }
-
-            const value = toDateValue(new Date(year, month, day));
+            const date = new Date(
+              gridStart.getFullYear(),
+              gridStart.getMonth(),
+              gridStart.getDate() + cellIndex,
+            );
+            const value = toDateValue(date);
             const selected = props.modelValue === value;
+            const outside = toMonthValue(date) !== currentMonth;
             const disabled =
               props.disabled ||
               isOutsideRange(value, props.minDate, props.maxDate);
@@ -267,14 +269,16 @@ export const Calendar = defineComponent({
                 disabled,
                 tabindex: !disabled && activeValue.value === value ? 0 : -1,
                 "data-date": value,
-                "data-selected": selected || undefined,
+                "data-selected": selected ? "true" : undefined,
+                "data-current": value === today ? "true" : undefined,
+                "data-outside": outside ? "true" : undefined,
                 onClick: () => select(value),
                 onFocus: () => {
                   if (!disabled) activeValue.value = value;
                 },
                 onKeydown: (event: KeyboardEvent) => onDayKeydown(event, value),
               },
-              String(day),
+              String(date.getDate()),
             );
           }),
         ),
@@ -285,8 +289,8 @@ export const Calendar = defineComponent({
         {
           id: props.id,
           ref: root,
-          class: "dui-Calendar",
-          "data-disabled": props.disabled || undefined,
+          class: "dui-Calendar dui-DateSurface",
+          "data-disabled": props.disabled ? "true" : undefined,
         },
         [
           h("div", { class: "dui-Calendar__header" }, [
@@ -299,11 +303,11 @@ export const Calendar = defineComponent({
                 disabled: props.disabled,
                 onClick: () => setMonth(-1),
               },
-              "‹",
+              chevronLeftIcon(),
             ),
             h(
               "strong",
-              { "aria-live": "polite" },
+              { class: "dui-Calendar__title", "aria-live": "polite" },
               monthLabel(visibleMonth.value, props.locale),
             ),
             h(
@@ -315,7 +319,7 @@ export const Calendar = defineComponent({
                 disabled: props.disabled,
                 onClick: () => setMonth(1),
               },
-              "›",
+              chevronRightIcon(),
             ),
           ]),
           h(
