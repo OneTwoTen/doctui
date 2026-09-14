@@ -38,21 +38,17 @@ export const Playground: Story = {
     const liveArgs = currentArgs as typeof args;
 
     return preview(() =>
-      h(
-        "div",
-        { style: { minHeight: "14rem", minWidth: "18rem" } },
-        [
-          h(
-            Menu,
-            {
-              ...liveArgs,
-              "onUpdate:modelValue": (value: boolean) =>
-                updateArgs({ modelValue: value }),
-            },
-            { target: () => h(Button, null, () => "Actions") },
-          ),
-        ],
-      ),
+      h("div", { style: { minHeight: "14rem", minWidth: "18rem" } }, [
+        h(
+          Menu,
+          {
+            ...liveArgs,
+            "onUpdate:modelValue": (value: boolean) =>
+              updateArgs({ modelValue: value }),
+          },
+          { target: () => h(Button, null, () => "Actions") },
+        ),
+      ]),
     );
   },
 };
@@ -65,8 +61,11 @@ export const KeyboardAndDisabled: Story = {
 
     return preview(() =>
       h("div", { style: { minHeight: "16rem", minWidth: "22rem" } }, [
-        h(Text, { muted: true }, () =>
-          "Use ArrowUp/ArrowDown, Home/End, Enter/Space and Escape. Disabled items are skipped.",
+        h(
+          Text,
+          { muted: true },
+          () =>
+            "Use ArrowUp/ArrowDown, Home/End, Enter/Space and Escape. Disabled items are skipped.",
         ),
         h(
           "div",
