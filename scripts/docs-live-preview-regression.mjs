@@ -64,7 +64,11 @@ function hasLocalPublicImport(source, component) {
 
 function countSourcePreviews(source) {
   const clean = stripFencedCode(source);
-  return [...clean.matchAll(/class=(?:"[^"]*\bdocs-preview\b[^"]*"|'[^']*\bdocs-preview\b[^']*')/g)].length;
+  return [
+    ...clean.matchAll(
+      /class=(?:"[^"]*\bdocs-preview\b[^"]*"|'[^']*\bdocs-preview\b[^']*')/g,
+    ),
+  ].length;
 }
 
 function runSourceCheck() {
@@ -78,7 +82,9 @@ function runSourceCheck() {
   );
 
   if (!themeSource.includes("Layout: DocsLayout")) {
-    errors.push("docs theme must render the VitePress layout inside DoctuiProvider");
+    errors.push(
+      "docs theme must render the VitePress layout inside DoctuiProvider",
+    );
   }
 
   for (const component of registered) {
@@ -117,7 +123,9 @@ function runSourceCheck() {
   for (const coverage of guidePreviewCoverage) {
     const guidePath = join(guidesDir, coverage.guide);
     if (!existsSync(guidePath)) {
-      errors.push(`${coverage.guide}: guide-level preview coverage file does not exist`);
+      errors.push(
+        `${coverage.guide}: guide-level preview coverage file does not exist`,
+      );
       continue;
     }
 
@@ -153,8 +161,13 @@ function assertThemeProvider(html, guide, errors) {
   if (!html.includes("data-dui-provider")) {
     errors.push(`${guide}: rendered page is missing DoctuiProvider`);
   }
-  if (!html.includes("--dui-color-text:") || !html.includes("--dui-spacing-md:")) {
-    errors.push(`${guide}: rendered provider is missing doctui theme CSS variables`);
+  if (
+    !html.includes("--dui-color-text:") ||
+    !html.includes("--dui-spacing-md:")
+  ) {
+    errors.push(
+      `${guide}: rendered provider is missing doctui theme CSS variables`,
+    );
   }
 }
 
