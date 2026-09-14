@@ -1,13 +1,14 @@
 import { Button, Drawer, Group, Modal, Stack, Text } from "@doctui/core";
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { defineComponent, h, ref, watch } from "vue";
+import { useArgs } from "storybook/preview-api";
+import { defineComponent, h, ref } from "vue";
 import { preview } from "./story-helpers";
 
 const meta = {
   title: "Overlays/Modal",
   component: Modal,
   args: {
-    modelValue: true,
+    modelValue: false,
     title: "Review changes",
     size: "md",
     radius: "md",
@@ -51,65 +52,57 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
-  render: (args) => {
-    const Demo = defineComponent({
-      setup() {
-        const open = ref(args.modelValue ?? true);
-        watch(
-          () => args.modelValue,
-          (value) => (open.value = value ?? false),
-        );
+  render: function Render(args) {
+    const [currentArgs, updateArgs] = useArgs();
+    const liveArgs = currentArgs as typeof args;
 
-        return () =>
-          h(Stack, { gap: "md", style: { maxWidth: "28rem" } }, () => [
-            h(
-              Button,
-              { onClick: () => (open.value = true) },
-              () => "Open modal",
-            ),
-            h(
-              Text,
-              { size: "sm", muted: true },
-              () => "Use Controls to change every public modal behavior.",
-            ),
-            h(
-              Modal,
-              {
-                ...args,
-                modelValue: open.value,
-                "onUpdate:modelValue": (value: boolean) => (open.value = value),
-              },
-              {
-                default: () =>
-                  h(
-                    Text,
-                    null,
-                    () =>
-                      "Actions belong in the footer slot so body content and action chrome stay independent.",
-                  ),
-                footer: () =>
-                  h(Group, { justify: "flex-end" }, () => [
-                    h(
-                      Button,
-                      {
-                        variant: "default",
-                        onClick: () => (open.value = false),
-                      },
-                      () => "Cancel",
-                    ),
-                    h(
-                      Button,
-                      { onClick: () => (open.value = false) },
-                      () => "Save changes",
-                    ),
-                  ]),
-              },
-            ),
-          ]);
-      },
-    });
-
-    return preview(() => h(Demo));
+    return preview(() =>
+      h(Stack, { gap: "md", style: { maxWidth: "28rem" } }, () => [
+        h(
+          Button,
+          { onClick: () => updateArgs({ modelValue: true }) },
+          () => "Open modal",
+        ),
+        h(
+          Text,
+          { size: "sm", muted: true },
+          () => "Use Controls to change every public modal behavior.",
+        ),
+        h(
+          Modal,
+          {
+            ...liveArgs,
+            "onUpdate:modelValue": (value: boolean) =>
+              updateArgs({ modelValue: value }),
+          },
+          {
+            default: () =>
+              h(
+                Text,
+                null,
+                () =>
+                  "Actions belong in the footer slot so body content and action chrome stay independent.",
+              ),
+            footer: () =>
+              h(Group, { justify: "flex-end" }, () => [
+                h(
+                  Button,
+                  {
+                    variant: "default",
+                    onClick: () => updateArgs({ modelValue: false }),
+                  },
+                  () => "Cancel",
+                ),
+                h(
+                  Button,
+                  { onClick: () => updateArgs({ modelValue: false }) },
+                  () => "Save changes",
+                ),
+              ]),
+          },
+        ),
+      ]),
+    );
   },
 };
 
