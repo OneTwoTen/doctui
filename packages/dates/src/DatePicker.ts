@@ -10,9 +10,9 @@ import {
   useId,
   watch,
 } from "vue";
-import { Calendar } from "./Calendar";
 import { type DateValue, parseDate } from "./date-utils";
 import { calendarIcon, xIcon } from "./icons";
+import { PickerDatePanel } from "./PickerDatePanel";
 
 function displayDate(value: DateValue, locale: string) {
   const date = parseDate(value);
@@ -47,15 +47,17 @@ export const DatePicker = defineComponent({
   emits: ["update:modelValue", "select", "blur", "clear"],
   setup(props, { emit }) {
     const uid = useId();
-    const calendarId = `dui-date-picker-calendar-${uid}`;
+    const panelId = `dui-date-picker-panel-${uid}`;
     const opened = ref(false);
     const root = ref<HTMLElement | null>(null);
     const toggle = ref<HTMLButtonElement | null>(null);
 
-    const focusActiveDay = async () => {
+    const focusActiveOption = async () => {
       await nextTick();
       root.value
-        ?.querySelector<HTMLButtonElement>('[role="gridcell"][tabindex="0"]')
+        ?.querySelector<HTMLButtonElement>(
+          '[role="gridcell"][tabindex="0"], [role="option"][tabindex="0"]',
+        )
         ?.focus();
     };
 
@@ -71,7 +73,7 @@ export const DatePicker = defineComponent({
     const open = async () => {
       if (props.disabled || opened.value) return;
       opened.value = true;
-      await focusActiveDay();
+      await focusActiveOption();
     };
 
     const toggleCalendar = async () => {
@@ -144,8 +146,8 @@ export const DatePicker = defineComponent({
                 ? undefined
                 : (props.ariaLabel ?? "Date"),
               "aria-expanded": opened.value ? "true" : "false",
-              "aria-controls": calendarId,
-              "aria-haspopup": "grid",
+              "aria-controls": panelId,
+              "aria-haspopup": "dialog",
               onClick: () => void open(),
               onKeydown: (event: KeyboardEvent) => {
                 if (["ArrowDown", "Enter", " "].includes(event.key)) {
@@ -166,7 +168,8 @@ export const DatePicker = defineComponent({
                           class: "dui-DatePicker__action dui-DatePicker__clear",
                           "aria-label": "Clear date",
                           disabled: props.disabled,
-                          onClick: () => {
+                          onClick: (event: Event) => {
+                            event.stopPropagation();
                             if (props.disabled) return;
                             emit("update:modelValue", null);
                             emit("clear");
@@ -182,13 +185,16 @@ export const DatePicker = defineComponent({
                       type: "button",
                       class: "dui-DatePicker__action dui-DatePicker__toggle",
                       "aria-label": opened.value
-                        ? "Close calendar"
-                        : "Open calendar",
+                        ? "Close date picker"
+                        : "Open date picker",
                       "aria-expanded": opened.value ? "true" : "false",
-                      "aria-controls": calendarId,
-                      "aria-haspopup": "grid",
+                      "aria-controls": panelId,
+                      "aria-haspopup": "dialog",
                       disabled: props.disabled,
-                      onClick: () => void toggleCalendar(),
+                      onClick: (event: Event) => {
+                        event.stopPropagation();
+                        void toggleCalendar();
+                      },
                     },
                     calendarIcon(),
                   ),
@@ -196,8 +202,8 @@ export const DatePicker = defineComponent({
             },
           ),
           opened.value
-            ? h(Calendar, {
-                id: calendarId,
+            ? h(PickerDatePanel, {
+                id: panelId,
                 modelValue: props.modelValue,
                 ...(props.minDate !== undefined
                   ? { minDate: props.minDate }
@@ -208,8 +214,11 @@ export const DatePicker = defineComponent({
                 locale: props.locale,
                 firstDayOfWeek: props.firstDayOfWeek,
                 disabled: props.disabled,
+                ariaLabel: props.ariaLabel ?? "Choose date",
                 "onUpdate:modelValue": (value: DateValue) => {
                   emit("update:modelValue", value);
+                },
+                onSelect: (value: DateValue) => {
                   emit("select", value);
                   void close(true);
                 },
