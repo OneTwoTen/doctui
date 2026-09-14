@@ -56,8 +56,10 @@ function renderThemeContract(
             [
               h(Container, { size: "md" }, () =>
                 h(Stack, { gap: "lg" }, () => [
-                  h(Text, { as: "strong" }, () =>
-                    `${colorScheme} semantic component tokens`,
+                  h(
+                    Text,
+                    { as: "strong" },
+                    () => `${colorScheme} semantic component tokens`,
                   ),
                   h(
                     Text,
