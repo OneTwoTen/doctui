@@ -4,19 +4,6 @@ import {
 } from "../packages/core/src/component-metadata";
 import { DOCTUI_DATES_METADATA } from "../packages/dates/src/component-metadata";
 import { DOCTUI_NOTIFICATIONS_METADATA } from "../packages/notifications/src/component-metadata";
-import { getQualityPublicApi } from "./quality-contract";
-
-function withVerifiedPublicApi<T extends { readonly name: string }>(entry: T) {
-  const contract = getQualityPublicApi(entry.name);
-  if (!contract) return entry;
-
-  return {
-    ...entry,
-    props: contract.props,
-    events: contract.events,
-    slots: contract.slots,
-  };
-}
 
 export const DOCTUI_REGISTRY = {
   schemaVersion: 1,
@@ -24,11 +11,11 @@ export const DOCTUI_REGISTRY = {
   categories: DOCTUI_COMPONENT_CATEGORIES,
   components: [
     ...DOCTUI_COMPONENT_METADATA.map((entry) => ({
-      ...withVerifiedPublicApi(entry),
+      ...entry,
       package: "@doctui/core",
     })),
-    ...DOCTUI_DATES_METADATA.map(withVerifiedPublicApi),
-    ...DOCTUI_NOTIFICATIONS_METADATA.map(withVerifiedPublicApi),
+    ...DOCTUI_DATES_METADATA,
+    ...DOCTUI_NOTIFICATIONS_METADATA,
   ],
   packages: [
     {
