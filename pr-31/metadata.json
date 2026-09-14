@@ -1,0 +1,10 @@
+{
+  "number": "31",
+  "title": "fix(notifications): harden lifecycle, timing and accessibility",
+  "branch": "fix/issue-16-notifications-lifecycle",
+  "sha": "28813808f61b13fab2846e69a68116076a6dbb3b",
+  "repository": "OneTwoTen/doctui",
+  "prUrl": "https://github.com/OneTwoTen/doctui/pull/31",
+  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/34825270102",
+  "generatedAt": "2026-09-14T08:56:47.218Z"
+}
