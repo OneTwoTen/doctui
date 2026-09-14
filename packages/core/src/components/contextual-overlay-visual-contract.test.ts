@@ -6,7 +6,13 @@ import { h } from "vue";
 import { Popover } from "../index";
 
 const readStyles = () =>
-  readFile(resolve(process.cwd(), "packages/core/src/styles.css"), "utf8");
+  readFile(
+    resolve(
+      process.cwd(),
+      "packages/core/src/components/overlay-extras-styles.css",
+    ),
+    "utf8",
+  );
 
 describe("contextual overlay visual contract", () => {
   it("gives Popover dialogs an explicit accessible name", () => {
