@@ -58,6 +58,26 @@ A normal public component should usually have the following Storybook coverage w
 
 Do not create redundant stories only to satisfy names. Combine stories when that makes comparison clearer, but preserve the coverage above.
 
+### Footer and action coverage
+
+When a public component exposes a persistent action region such as a named `footer` slot, documentation must show more than one static footer label. Cover the product states users actually need to compose.
+
+For modal-like surfaces such as Modal and Drawer, include these Storybook scenarios when applicable:
+
+- standard secondary + primary actions,
+- destructive action with semantic danger styling,
+- loading primary action and duplicate-submit prevention,
+- disabled primary action,
+- long body content with persistent footer actions,
+- narrow surface with wrapping actions,
+- informational/read-only surface with no footer,
+- custom footer layout such as status text plus actions,
+- nested surfaces where each layer owns its own actions.
+
+Use public action components such as `Button`, `Group`, `Text`, and `Loader` inside the slot. Do not solve documentation convenience by adding product-specific dialog props such as `confirmLabel`, `cancelLabel`, `onConfirm`, or `confirmLoading` when the component is intentionally composable.
+
+VitePress must include at least one **live rendered** named-slot example for an important action region, plus copy-paste examples for meaningful edge states. If long-content or fixed/persistent action behavior depends on viewport geometry, pair source/unit coverage with browser-level regression evidence.
+
 ### Advanced composition requirement
 
 Once the repository has enough public primitives, `AdvancedComposition` should use **two or more relevant exported doctui components** and demonstrate how their APIs work together. Prefer composing the component under documentation with sibling components rather than building a fake one-off demo entirely from native HTML.
