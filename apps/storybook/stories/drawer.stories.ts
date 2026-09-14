@@ -131,7 +131,11 @@ export const ApplyFilters: Story = {
             ]),
             h(Stack, { gap: "xs" }, () => [
               h(Text, null, () => "Shipping"),
-              h(Text, { size: "sm", muted: true }, () => "Free delivery selected"),
+              h(
+                Text,
+                { size: "sm", muted: true },
+                () => "Free delivery selected",
+              ),
             ]),
           ]),
         footer: () =>
@@ -153,7 +157,8 @@ export const LoadingAction: Story = {
           h(
             Text,
             null,
-            () => "Saving state stays in the persistent footer while content remains scrollable.",
+            () =>
+              "Saving state stays in the persistent footer while content remains scrollable.",
           ),
         footer: () =>
           h(Group, { justify: "end" }, () => [
@@ -170,18 +175,15 @@ export const LongContentFixedFooter: Story = {
     preview(() =>
       h(Drawer, args, {
         default: () =>
-          h(
-            Stack,
-            { gap: "md" },
-            () =>
-              Array.from({ length: 22 }, (_, index) =>
-                h(
-                  Text,
-                  { key: index },
-                  () =>
-                    `Activity ${index + 1}: A detailed audit entry that makes the drawer body taller than the viewport.`,
-                ),
+          h(Stack, { gap: "md" }, () =>
+            Array.from({ length: 22 }, (_, index) =>
+              h(
+                Text,
+                { key: index },
+                () =>
+                  `Activity ${index + 1}: A detailed audit entry that makes the drawer body taller than the viewport.`,
               ),
+            ),
           ),
         footer: () =>
           h(Group, { justify: "end" }, () => [
@@ -201,7 +203,8 @@ export const ResponsiveActions: Story = {
           h(
             Text,
             null,
-            () => "Several footer actions wrap in a narrow drawer instead of overflowing.",
+            () =>
+              "Several footer actions wrap in a narrow drawer instead of overflowing.",
           ),
         footer: () =>
           h(Group, { justify: "end", wrap: true }, () => [
@@ -245,7 +248,8 @@ export const LeftPosition: Story = {
           h(
             Text,
             null,
-            () => "Footer actions use the same layout contract on left-positioned drawers.",
+            () =>
+              "Footer actions use the same layout contract on left-positioned drawers.",
           ),
         footer: () =>
           h(Group, { justify: "end" }, () => [
@@ -290,7 +294,8 @@ export const DestructiveAction: Story = {
           h(
             Text,
             null,
-            () => "Removing this integration stops future synchronization jobs.",
+            () =>
+              "Removing this integration stops future synchronization jobs.",
           ),
         footer: () =>
           h(Group, { justify: "end" }, () => [
