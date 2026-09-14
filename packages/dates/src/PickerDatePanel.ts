@@ -14,13 +14,14 @@ type PickerView = "day" | "month" | "year";
 export const PickerDatePanel = defineComponent({
   name: "DuiPickerDatePanel",
   props: {
+    id: { type: String, default: undefined },
     modelValue: { type: String as PropType<DateValue>, default: null },
     minDate: { type: String, default: undefined },
     maxDate: { type: String, default: undefined },
     locale: { type: String, default: "en-US" },
     firstDayOfWeek: { type: Number, default: 0 },
     disabled: Boolean,
-    ariaLabel: { type: String, default: undefined },
+    ariaLabel: { type: String, default: "Choose date" },
   },
   emits: ["update:modelValue", "select", "update:view"],
   setup(props, { emit, slots }) {
@@ -72,9 +73,7 @@ export const PickerDatePanel = defineComponent({
               locale: props.locale,
               firstDayOfWeek: props.firstDayOfWeek,
               disabled: props.disabled,
-              ...(props.ariaLabel !== undefined
-                ? { ariaLabel: props.ariaLabel }
-                : {}),
+              ariaLabel: props.ariaLabel,
               headerInteractive: true,
               "onUpdate:month": (value: string) => {
                 visibleMonth.value = value;
@@ -113,8 +112,11 @@ export const PickerDatePanel = defineComponent({
       return h(
         "div",
         {
+          id: props.id,
           ref: root,
           class: "dui-DatePickerPanel dui-DateSurface",
+          role: "dialog",
+          "aria-label": props.ariaLabel,
           "data-view": view.value,
           "data-disabled": props.disabled ? "true" : undefined,
         },
