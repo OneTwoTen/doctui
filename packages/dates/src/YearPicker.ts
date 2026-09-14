@@ -1,11 +1,4 @@
-import {
-  defineComponent,
-  h,
-  nextTick,
-  type PropType,
-  ref,
-  watch,
-} from "vue";
+import { defineComponent, h, nextTick, type PropType, ref, watch } from "vue";
 import { listboxKeydown } from "./listbox-utils";
 
 export const YearPicker = defineComponent({
