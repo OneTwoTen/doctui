@@ -50,6 +50,7 @@ export const TagsInput = defineComponent({
   setup(props, { attrs, emit, slots }) {
     const draft = ref("");
     const input = ref<HTMLInputElement>();
+    let isComposing = false;
     const canMutate = computed(() => !props.disabled && !props.readonly);
     const maxTags = computed(() =>
       props.maxTags === undefined
@@ -112,7 +113,19 @@ export const TagsInput = defineComponent({
       focusInput();
     };
 
+    const onCompositionStart = () => {
+      isComposing = true;
+    };
+
+    const onCompositionEnd = (event: CompositionEvent) => {
+      isComposing = false;
+      if (!canMutate.value) return;
+      draft.value = (event.target as HTMLInputElement).value;
+    };
+
     const onKeydown = (event: KeyboardEvent) => {
+      if (isComposing || event.isComposing || event.keyCode === 229) return;
+
       const isSingleCharacterSeparator =
         props.separator.length === 1 && event.key === props.separator;
 
@@ -270,6 +283,8 @@ export const TagsInput = defineComponent({
                         class: "dui-TagsInput-input",
                         onInput,
                         onKeydown,
+                        onCompositionstart: onCompositionStart,
+                        onCompositionend: onCompositionEnd,
                       }),
                     ),
                     props.clearable && props.modelValue.length
