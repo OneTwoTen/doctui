@@ -74,7 +74,7 @@ describe("@doctui/dates SSR and field accessibility", () => {
       },
     });
 
-    const input = wrapper.get('input[type="datetime-local"]');
+    const input = wrapper.get('input[type="text"]');
     const describedBy = input.attributes("aria-describedby");
     expect(describedBy).toBeTruthy();
     expect(wrapper.get(".dui-InputWrapper-description").attributes("id")).toBe(
@@ -84,14 +84,16 @@ describe("@doctui/dates SSR and field accessibility", () => {
       "alert",
     );
 
-    await wrapper.get('button[aria-label="Clear input"]').trigger("click");
+    await wrapper
+      .get('button[aria-label="Clear date and time"]')
+      .trigger("click");
     expect(wrapper.emitted("update:modelValue")?.[0]).toEqual([""]);
     expect(wrapper.emitted("clear")?.[0]).toEqual([]);
   });
 });
 
 describe("@doctui/dates popup accessibility", () => {
-  it("connects the trigger to the calendar and forwards disabled state", async () => {
+  it("connects the trigger to the picker dialog and forwards disabled state", async () => {
     const wrapper = mount(DatePicker, {
       props: {
         modelValue: null,
@@ -106,7 +108,7 @@ describe("@doctui/dates popup accessibility", () => {
     const toggle = wrapper.get(".dui-DatePicker__toggle");
     expect(toggle.attributes("disabled")).toBeDefined();
     await toggle.trigger("click");
-    expect(wrapper.findComponent(Calendar).exists()).toBe(false);
+    expect(wrapper.find(".dui-DatePickerPanel").exists()).toBe(false);
   });
 
   it("closes on Escape and outside pointer input, restoring trigger focus for Escape", async () => {
@@ -117,19 +119,20 @@ describe("@doctui/dates popup accessibility", () => {
     const toggle = wrapper.get(".dui-DatePicker__toggle");
 
     await toggle.trigger("click");
-    const calendar = wrapper.get(".dui-Calendar");
-    expect(toggle.attributes("aria-controls")).toBe(calendar.attributes("id"));
-    expect(toggle.attributes("aria-haspopup")).toBe("grid");
+    const panel = wrapper.get(".dui-DatePickerPanel");
+    expect(toggle.attributes("aria-controls")).toBe(panel.attributes("id"));
+    expect(toggle.attributes("aria-haspopup")).toBe("dialog");
+    expect(panel.attributes("role")).toBe("dialog");
 
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
     await nextTick();
-    expect(wrapper.find(".dui-Calendar").exists()).toBe(false);
+    expect(wrapper.find(".dui-DatePickerPanel").exists()).toBe(false);
     expect(document.activeElement).toBe(toggle.element);
 
     await toggle.trigger("click");
     document.body.dispatchEvent(new Event("pointerdown", { bubbles: true }));
     await nextTick();
-    expect(wrapper.find(".dui-Calendar").exists()).toBe(false);
+    expect(wrapper.find(".dui-DatePickerPanel").exists()).toBe(false);
 
     wrapper.unmount();
   });
