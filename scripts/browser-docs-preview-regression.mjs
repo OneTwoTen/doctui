@@ -183,19 +183,28 @@ async function main() {
     })()`);
 
     assert(basicAudit, "Basic docs preview audit could not resolve elements");
-    assert(basicAudit.colorToken, "Docs provider did not expose --dui-color-text");
+    assert(
+      basicAudit.colorToken,
+      "Docs provider did not expose --dui-color-text",
+    );
     assert(
       basicAudit.spacingToken,
       "Docs provider did not expose --dui-spacing-md",
     );
-    assert(basicAudit.radiusToken, "Docs provider did not expose --dui-radius-md");
+    assert(
+      basicAudit.radiusToken,
+      "Docs provider did not expose --dui-radius-md",
+    );
     assert(
       basicAudit.buttonBackground !== "rgba(0, 0, 0, 0)" &&
         basicAudit.buttonBackground !== "transparent",
       "Primary Button preview lost its themed background",
     );
     assert(basicAudit.buttonRadius > 0, "Button preview lost themed radius");
-    assert(basicAudit.inputHeight >= 30, "TextInput preview collapsed vertically");
+    assert(
+      basicAudit.inputHeight >= 30,
+      "TextInput preview collapsed vertically",
+    );
     assert(
       basicAudit.horizontalOverflow <= 1,
       `Basic docs page overflows horizontally by ${basicAudit.horizontalOverflow}px`,
@@ -228,8 +237,14 @@ async function main() {
         viewportWidth: window.innerWidth,
       };
     })()`);
-    assert(selectionAudit?.width > 120, "Selection dropdown collapsed horizontally");
-    assert(selectionAudit.left >= -1, "Selection dropdown is clipped on the left");
+    assert(
+      selectionAudit?.width > 120,
+      "Selection dropdown collapsed horizontally",
+    );
+    assert(
+      selectionAudit.left >= -1,
+      "Selection dropdown is clipped on the left",
+    );
     assert(
       selectionAudit.right <= selectionAudit.viewportWidth + 1,
       "Selection dropdown overflows the viewport",
@@ -257,9 +272,15 @@ async function main() {
       };
     })()`);
     assert(tagsAudit?.height >= 30, "TagsInput preview collapsed vertically");
-    assert(tagsAudit.borderWidth > 0, "TagsInput preview lost its field border");
+    assert(
+      tagsAudit.borderWidth > 0,
+      "TagsInput preview lost its field border",
+    );
     assert(tagsAudit.radius > 0, "TagsInput preview lost its themed radius");
-    assert(tagsAudit.overflow <= 1, "TagsInput docs page overflows horizontally");
+    assert(
+      tagsAudit.overflow <= 1,
+      "TagsInput docs page overflows horizontally",
+    );
 
     await client.send("Emulation.setDeviceMetricsOverride", {
       width: 390,
@@ -288,7 +309,9 @@ async function main() {
       `${mobileAudit.overflowingPreviews} docs previews overflow the mobile viewport`,
     );
 
-    console.log("Docs browser preview regression: theme, overlays and responsive geometry OK");
+    console.log(
+      "Docs browser preview regression: theme, overlays and responsive geometry OK",
+    );
   } finally {
     client?.close();
     docs.kill("SIGTERM");
