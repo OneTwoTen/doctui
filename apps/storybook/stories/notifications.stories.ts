@@ -10,10 +10,11 @@ import { preview } from "./story-helpers";
 const meta = {
   title: "Feedback/Notifications",
   parameters: {
+    layout: "fullscreen",
     docs: {
       description: {
         component:
-          "Notification stores own their lifecycle. Renderers preserve shared state by default, while each message is announced through an independent polite status region.",
+          "Notifications are viewport overlays, not in-flow content. Stores own their lifecycle by default, while each message is announced through an independent polite status region.",
       },
     },
   },
@@ -21,6 +22,22 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+function storySurface(content: ReturnType<typeof h>) {
+  return h(
+    "div",
+    {
+      style: {
+        background: "var(--dui-color-body)",
+        boxSizing: "border-box",
+        color: "var(--dui-color-text)",
+        minHeight: "100vh",
+        padding: "var(--dui-spacing-xl)",
+      },
+    },
+    [content],
+  );
+}
 
 const LifecycleOwnershipDemo = defineComponent({
   setup() {
@@ -30,51 +47,51 @@ const LifecycleOwnershipDemo = defineComponent({
 
     onBeforeUnmount(store.clean);
 
+    const show = () =>
+      store.show({
+        title: "Shared notification",
+        message: "This state belongs to the store, not the renderer.",
+        color: "primary",
+        autoClose: false,
+      });
+
+    show();
+
     return () =>
-      h(Stack, { gap: "sm", style: { maxWidth: "36rem" } }, () => [
-        h(
-          Text,
-          { size: "sm", muted: true },
-          () =>
-            "Unmounting the renderer does not clear the shared store. Mount it again to render the same notification state.",
-        ),
-        h(Group, { gap: "sm" }, () => [
+      storySurface(
+        h(Stack, { gap: "sm", style: { maxWidth: "36rem" } }, () => [
           h(
-            Button,
-            {
-              onClick: () =>
-                store.show({
-                  title: "Shared notification",
-                  message: "This state belongs to the store, not the renderer.",
-                  color: "primary",
-                  autoClose: false,
-                }),
-            },
-            () => "Show persistent notification",
-          ),
-          h(
-            Button,
-            {
-              variant: "outline",
-              onClick: () => {
-                rendererMounted.value = !rendererMounted.value;
-              },
-            },
+            Text,
+            { size: "sm", muted: true },
             () =>
-              rendererMounted.value ? "Unmount renderer" : "Mount renderer",
+              "The toast is intentionally fixed to the viewport. Unmounting this renderer does not clear the shared store; mount it again to render the same state.",
           ),
-          h(
-            Button,
-            {
-              variant: "subtle",
-              onClick: store.clean,
-            },
-            () => "Clean store",
-          ),
+          h(Group, { gap: "sm" }, () => [
+            h(Button, { onClick: show }, () => "Show persistent notification"),
+            h(
+              Button,
+              {
+                variant: "outline",
+                onClick: () => {
+                  rendererMounted.value = !rendererMounted.value;
+                },
+              },
+              () =>
+                rendererMounted.value ? "Unmount renderer" : "Mount renderer",
+            ),
+            h(
+              Button,
+              {
+                variant: "subtle",
+                onClick: store.clean,
+              },
+              () => "Clean store",
+            ),
+          ]),
+          h(Text, { size: "sm" }, () => `Store notifications: ${count.value}`),
+          rendererMounted.value ? h(NotificationsView, { store }) : null,
         ]),
-        h(Text, { size: "sm" }, () => `Store notifications: ${count.value}`),
-        rendererMounted.value ? h(NotificationsView, { store }) : null,
-      ]);
+      );
   },
 });
 
@@ -110,24 +127,28 @@ const AnnouncementUpdatesDemo = defineComponent({
       });
     };
 
+    showPair();
+
     return () =>
-      h(Stack, { gap: "sm", style: { maxWidth: "36rem" } }, () => [
-        h(
-          Text,
-          { size: "sm", muted: true },
-          () =>
-            "Each notification owns a polite, atomic status region. Updating one message does not replace the announcement contract of its siblings.",
-        ),
-        h(Group, { gap: "sm" }, () => [
-          h(Button, { onClick: showPair }, () => "Show two notifications"),
+      storySurface(
+        h(Stack, { gap: "sm", style: { maxWidth: "36rem" } }, () => [
           h(
-            Button,
-            { variant: "outline", onClick: updateFirst },
-            () => "Update first notification",
+            Text,
+            { size: "sm", muted: true },
+            () =>
+              "Each notification owns a polite, atomic status region. Updating one message does not replace the announcement contract of its siblings.",
           ),
+          h(Group, { gap: "sm" }, () => [
+            h(Button, { onClick: showPair }, () => "Reset two notifications"),
+            h(
+              Button,
+              { variant: "outline", onClick: updateFirst },
+              () => "Update first notification",
+            ),
+          ]),
+          h(NotificationsView, { store }),
         ]),
-        h(NotificationsView, { store }),
-      ]);
+      );
   },
 });
 
@@ -149,33 +170,37 @@ const ExplicitRendererOwnershipDemo = defineComponent({
       });
     };
 
+    show();
+
     return () =>
-      h(Stack, { gap: "sm", style: { maxWidth: "36rem" } }, () => [
-        h(
-          Text,
-          { size: "sm", muted: true },
-          () =>
-            "Use cleanOnUnmount only when the renderer exclusively owns the store lifecycle.",
-        ),
-        h(Group, { gap: "sm" }, () => [
-          h(Button, { onClick: show }, () => "Show notification"),
+      storySurface(
+        h(Stack, { gap: "sm", style: { maxWidth: "36rem" } }, () => [
           h(
-            Button,
-            {
-              variant: "outline",
-              disabled: !rendererMounted.value,
-              onClick: () => {
-                rendererMounted.value = false;
-              },
-            },
-            () => "Unmount owner renderer",
+            Text,
+            { size: "sm", muted: true },
+            () =>
+              "Use cleanOnUnmount only when the renderer exclusively owns the store lifecycle.",
           ),
+          h(Group, { gap: "sm" }, () => [
+            h(Button, { onClick: show }, () => "Show notification"),
+            h(
+              Button,
+              {
+                variant: "outline",
+                disabled: !rendererMounted.value,
+                onClick: () => {
+                  rendererMounted.value = false;
+                },
+              },
+              () => "Unmount owner renderer",
+            ),
+          ]),
+          h(Text, { size: "sm" }, () => `Store notifications: ${count.value}`),
+          rendererMounted.value
+            ? h(NotificationsView, { store, cleanOnUnmount: true })
+            : null,
         ]),
-        h(Text, { size: "sm" }, () => `Store notifications: ${count.value}`),
-        rendererMounted.value
-          ? h(NotificationsView, { store, cleanOnUnmount: true })
-          : null,
-      ]);
+      );
   },
 });
 
