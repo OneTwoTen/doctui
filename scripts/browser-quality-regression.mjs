@@ -85,6 +85,8 @@ async function main() {
     [
       "x",
       "vite",
+      "--config",
+      "tests/browser/vite.config.ts",
       "--host",
       "127.0.0.1",
       "--port",
