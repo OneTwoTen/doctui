@@ -52,7 +52,7 @@ function parseEditableDate(value: string, locale: string): DateValue {
   if (isoDate) return toDateValue(isoDate);
 
   const groups = trimmed.match(/\d+/g);
-  if (!groups || groups.length !== 3) return null;
+  if (groups?.length !== 3) return null;
 
   const order = dateFormatter(locale)
     .formatToParts(new Date(2006, 10, 22))
@@ -69,7 +69,7 @@ function parseEditableDate(value: string, locale: string): DateValue {
   const year = values.year;
   const month = values.month;
   const day = values.day;
-  if (!year || year.length !== 4 || !month || !day) return null;
+  if (year?.length !== 4 || !month || !day) return null;
 
   const normalized = `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
   return parseDate(normalized) ? normalized : null;
@@ -179,10 +179,7 @@ export const DateInput = defineComponent({
       }
 
       const parsed = parseEditableDate(value, props.locale);
-      if (
-        parsed &&
-        !isOutsideRange(parsed, props.minDate, props.maxDate)
-      ) {
+      if (parsed && !isOutsideRange(parsed, props.minDate, props.maxDate)) {
         emit("update:modelValue", parsed);
       }
     };
@@ -190,10 +187,7 @@ export const DateInput = defineComponent({
     const normalizeOnBlur = (event: FocusEvent) => {
       focused.value = false;
       const parsed = parseEditableDate(inputText.value, props.locale);
-      if (
-        parsed &&
-        !isOutsideRange(parsed, props.minDate, props.maxDate)
-      ) {
+      if (parsed && !isOutsideRange(parsed, props.minDate, props.maxDate)) {
         inputText.value = formatEditableDate(parsed, props.locale);
         emit("update:modelValue", parsed);
       } else if (!inputText.value.trim()) {
