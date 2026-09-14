@@ -29,7 +29,7 @@ export const DOCTUI_DATES_METADATA = [
     package: "@doctui/dates",
     category: "inputs",
     description:
-      "Native date field that reuses doctui core field geometry, sizing and validation states.",
+      "Editable localized date field with strict ISO model values and the shared doctui day/month/year picker dialog.",
     props: [
       "id",
       "modelValue",
@@ -37,8 +37,11 @@ export const DOCTUI_DATES_METADATA = [
       "description",
       "error",
       "ariaLabel",
+      "placeholder",
       "minDate",
       "maxDate",
+      "locale",
+      "firstDayOfWeek",
       "disabled",
       "clearable",
       "size",
@@ -46,8 +49,9 @@ export const DOCTUI_DATES_METADATA = [
     ],
     accessibility: [
       "Reuses the core TextInput label, description, error and SSR-safe ID relationships.",
-      "Keeps native date input semantics while sharing doctui visual field states.",
-      "When no visible label is supplied, ariaLabel or the default Date accessible name is used.",
+      "The text field stays editable while the calendar action opens the same custom dialog used by DatePicker.",
+      "Typed localized dates are normalized back to strict YYYY-MM-DD model values only when valid and in range.",
+      "The calendar action exposes aria-expanded, aria-controls and aria-haspopup=dialog.",
     ],
   },
   {
@@ -128,6 +132,32 @@ export const DOCTUI_DATES_METADATA = [
     accessibility: [
       "Uses listbox/option semantics with aria-selected and roving keyboard focus.",
       "When headerInteractive is enabled, the year title becomes a keyboard-accessible switch to year selection.",
+    ],
+  },
+  {
+    name: "NativeDateInput",
+    package: "@doctui/dates",
+    category: "inputs",
+    description:
+      "Explicit browser-native date input wrapper that keeps OS date picker semantics while sharing doctui core field geometry.",
+    props: [
+      "id",
+      "modelValue",
+      "label",
+      "description",
+      "error",
+      "ariaLabel",
+      "minDate",
+      "maxDate",
+      "disabled",
+      "clearable",
+      "size",
+      "radius",
+    ],
+    accessibility: [
+      "Keeps native input[type=date] semantics and browser/OS picker behavior.",
+      "Reuses core field label, description, error, clear, disabled and SSR-safe ID relationships.",
+      "Use DateInput when editable text and a visually consistent doctui picker are preferred.",
     ],
   },
   {
