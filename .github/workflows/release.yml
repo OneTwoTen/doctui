@@ -1,9 +1,8 @@
 name: Release packages
 
+# Automatic package releases are temporarily paused until npm publishing is configured.
+# Keep this workflow manual-only so it can still be tested explicitly when needed.
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 permissions:
