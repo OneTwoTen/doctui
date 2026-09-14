@@ -23,8 +23,9 @@ export const Calendar = defineComponent({
     firstDayOfWeek: { type: Number, default: 0 },
     disabled: Boolean,
     ariaLabel: { type: String, default: undefined },
+    headerInteractive: Boolean,
   },
-  emits: ["update:modelValue", "update:month", "select"],
+  emits: ["update:modelValue", "update:month", "select", "titleClick"],
   setup(props, { emit }) {
     const now = new Date();
     const initial =
@@ -283,6 +284,7 @@ export const Calendar = defineComponent({
           }),
         ),
       );
+      const title = monthLabel(visibleMonth.value, props.locale);
 
       return h(
         "div",
@@ -305,11 +307,23 @@ export const Calendar = defineComponent({
               },
               chevronLeftIcon(),
             ),
-            h(
-              "strong",
-              { class: "dui-Calendar__title", "aria-live": "polite" },
-              monthLabel(visibleMonth.value, props.locale),
-            ),
+            props.headerInteractive
+              ? h(
+                  "button",
+                  {
+                    type: "button",
+                    class: "dui-Calendar__titleButton",
+                    "aria-label": `Choose month or year, current ${title}`,
+                    disabled: props.disabled,
+                    onClick: () => emit("titleClick"),
+                  },
+                  title,
+                )
+              : h(
+                  "strong",
+                  { class: "dui-Calendar__title", "aria-live": "polite" },
+                  title,
+                ),
             h(
               "button",
               {
@@ -327,8 +341,7 @@ export const Calendar = defineComponent({
             {
               class: "dui-Calendar__grid",
               role: "grid",
-              "aria-label":
-                props.ariaLabel ?? monthLabel(visibleMonth.value, props.locale),
+              "aria-label": props.ariaLabel ?? title,
               "aria-disabled": props.disabled ? "true" : undefined,
             },
             [
