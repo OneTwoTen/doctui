@@ -87,7 +87,8 @@ export const Modal = defineComponent({
                   h(
                     FocusTrap,
                     {
-                      active: props.trapFocus,
+                      active: true,
+                      trapped: props.trapFocus,
                       returnFocus: props.returnFocus,
                     },
                     {
