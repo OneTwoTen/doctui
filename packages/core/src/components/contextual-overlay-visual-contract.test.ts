@@ -15,18 +15,19 @@ const readStyles = () =>
   );
 
 describe("contextual overlay visual contract", () => {
-  it("gives Popover dialogs an explicit accessible name", () => {
+  it("names Popover dialogs from their real trigger", () => {
     const wrapper = mount(Popover, {
-      props: { modelValue: true, ariaLabel: "Workspace details" },
+      props: { modelValue: true },
       slots: {
-        target: () => h("button", { type: "button" }, "Details"),
+        target: () => h("button", { type: "button" }, "Workspace details"),
         default: () => "Popover content",
       },
     });
 
-    expect(wrapper.get("[role='dialog']").attributes("aria-label")).toBe(
-      "Workspace details",
-    );
+    const trigger = wrapper.get("button");
+    const panel = wrapper.get("[role='dialog']");
+    expect(trigger.attributes("id")).toBeTruthy();
+    expect(panel.attributes("aria-labelledby")).toBe(trigger.attributes("id"));
   });
 
   it("keeps contextual surfaces readable and viewport-safe", async () => {
