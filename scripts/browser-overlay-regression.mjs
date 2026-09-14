@@ -215,12 +215,42 @@ async function main() {
       `Modal size control did not change real geometry: ${xsGeometry.width} -> ${xlWidth}`,
     );
 
+    await evaluate(`
+      window.__doctuiFocusEvents = [];
+      document.addEventListener('focusin', (event) => {
+        const target = event.target;
+        const active = document.activeElement;
+        window.__doctuiFocusEvents.push({
+          target: target instanceof HTMLElement
+            ? target.id || target.className || target.tagName
+            : String(target),
+          active: active instanceof HTMLElement
+            ? active.id || active.className || active.tagName
+            : String(active),
+        });
+      }, true);
+      true;
+    `);
     await evaluate("document.querySelector('#outside').focus(); true;");
     await sleep(50);
-    const focusContained = await evaluate(
-      "document.querySelector('.dui-Modal').contains(document.activeElement)",
+    const focusState = await evaluate(`(() => {
+      const modal = document.querySelector('.dui-Modal');
+      const trap = document.querySelector('.dui-FocusTrap');
+      const active = document.activeElement;
+      return {
+        contained: Boolean(modal?.contains(active)),
+        trapContainsActive: Boolean(trap?.contains(active)),
+        trapCount: document.querySelectorAll('.dui-FocusTrap').length,
+        active: active instanceof HTMLElement
+          ? active.id || active.className || active.tagName
+          : String(active),
+        events: window.__doctuiFocusEvents,
+      };
+    })()`);
+    assert(
+      focusState.contained,
+      `Focus escaped the active Modal: ${JSON.stringify(focusState)}`,
     );
-    assert(focusContained, "Focus escaped the active Modal");
 
     await evaluate(`
       document.querySelector('#open-drawer').focus();
