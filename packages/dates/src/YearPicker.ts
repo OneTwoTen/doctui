@@ -12,7 +12,7 @@ export const YearPicker = defineComponent({
   },
   emits: ["update:modelValue", "select"],
   setup(props, { emit }) {
-    const root = ref<HTMLElement | null>(null);
+    const listbox = ref<HTMLElement | null>(null);
     const count = () => Math.max(0, props.maxYear - props.minYear + 1);
     const selectedIndex = () =>
       props.modelValue !== null &&
@@ -36,7 +36,7 @@ export const YearPicker = defineComponent({
       if (props.disabled) return;
       activeIndex.value = index;
       await nextTick();
-      root.value
+      listbox.value
         ?.querySelectorAll<HTMLButtonElement>('[role="option"]')
         .item(index)
         ?.focus();
@@ -48,40 +48,52 @@ export const YearPicker = defineComponent({
       return h(
         "div",
         {
-          ref: root,
-          class: "dui-DatePicker__options",
-          role: "listbox",
-          "aria-label": props.ariaLabel,
-          "aria-disabled": props.disabled ? "true" : undefined,
+          class: "dui-DateSurface dui-YearPicker",
+          "data-disabled": props.disabled ? "true" : undefined,
         },
-        Array.from({ length: optionCount }, (_, index) => {
-          const year = props.minYear + index;
-          const selected = props.modelValue === year;
-
-          return h(
-            "button",
+        [
+          h("div", { class: "dui-DateSurface__header" }, [
+            h("strong", { class: "dui-DateSurface__title" }, "Select year"),
+          ]),
+          h(
+            "div",
             {
-              type: "button",
-              class: "dui-DatePicker__option",
-              role: "option",
-              "aria-selected": selected ? "true" : "false",
-              "data-selected": selected || undefined,
-              tabindex: activeIndex.value === index ? 0 : -1,
-              disabled: props.disabled,
-              onFocus: () => (activeIndex.value = index),
-              onKeydown: (event: KeyboardEvent) =>
-                listboxKeydown(event, index, optionCount, (next) => {
-                  void focusOption(next);
-                }),
-              onClick: () => {
-                if (props.disabled) return;
-                emit("update:modelValue", year);
-                emit("select", year);
-              },
+              ref: listbox,
+              class: "dui-DatePicker__options dui-YearPicker__options",
+              role: "listbox",
+              "aria-label": props.ariaLabel,
+              "aria-disabled": props.disabled ? "true" : undefined,
             },
-            String(year),
-          );
-        }),
+            Array.from({ length: optionCount }, (_, index) => {
+              const year = props.minYear + index;
+              const selected = props.modelValue === year;
+
+              return h(
+                "button",
+                {
+                  type: "button",
+                  class: "dui-DatePicker__option",
+                  role: "option",
+                  "aria-selected": selected ? "true" : "false",
+                  "data-selected": selected ? "true" : undefined,
+                  tabindex: activeIndex.value === index ? 0 : -1,
+                  disabled: props.disabled,
+                  onFocus: () => (activeIndex.value = index),
+                  onKeydown: (event: KeyboardEvent) =>
+                    listboxKeydown(event, index, optionCount, (next) => {
+                      void focusOption(next);
+                    }),
+                  onClick: () => {
+                    if (props.disabled) return;
+                    emit("update:modelValue", year);
+                    emit("select", year);
+                  },
+                },
+                String(year),
+              );
+            }),
+          ),
+        ],
       );
     };
   },
