@@ -26,7 +26,7 @@ describe("TagsInput visual contract", () => {
   it("ships token-driven control, tag, focus, error and disabled styles", async () => {
     const cssPath = resolve(
       process.cwd(),
-      "packages/core/src/components/field-styles.css",
+      "packages/core/src/components/tags-input-styles.css",
     );
     const css = await readFile(cssPath, "utf8");
 
