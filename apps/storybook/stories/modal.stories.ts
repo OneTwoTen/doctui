@@ -88,7 +88,7 @@ export const Playground: Story = {
                       "Actions belong in the footer slot so body content and action chrome stay independent.",
                   ),
                 footer: () =>
-                  h(Group, { justify: "end" }, () => [
+                  h(Group, { justify: "flex-end" }, () => [
                     h(
                       Button,
                       {
@@ -206,7 +206,7 @@ export const DestructiveAction: Story = {
                     ),
                   ]),
                 footer: () =>
-                  h(Group, { justify: "end" }, () => [
+                  h(Group, { justify: "flex-end" }, () => [
                     h(
                       Button,
                       {
@@ -247,7 +247,7 @@ export const LoadingAction: Story = {
               "The primary action communicates progress and cannot be clicked twice.",
           ),
         footer: () =>
-          h(Group, { justify: "end" }, () => [
+          h(Group, { justify: "flex-end" }, () => [
             h(Button, { variant: "default", disabled: true }, () => "Cancel"),
             h(Button, { loading: true }, () => "Publishing"),
           ]),
@@ -275,7 +275,7 @@ export const DisabledAction: Story = {
             ),
           ]),
         footer: () =>
-          h(Group, { justify: "end" }, () => [
+          h(Group, { justify: "flex-end" }, () => [
             h(Button, { variant: "default" }, () => "Cancel"),
             h(Button, { disabled: true }, () => "Create key"),
           ]),
@@ -300,7 +300,7 @@ export const LongContentFixedFooter: Story = {
             ),
           ),
         footer: () =>
-          h(Group, { justify: "end" }, () => [
+          h(Group, { justify: "flex-end" }, () => [
             h(Button, { variant: "default" }, () => "Decline"),
             h(Button, null, () => "Accept"),
           ]),
@@ -321,7 +321,7 @@ export const ResponsiveActions: Story = {
               "A narrow modal with several actions should wrap instead of overflowing.",
           ),
         footer: () =>
-          h(Group, { justify: "end", wrap: true }, () => [
+          h(Group, { justify: "flex-end", wrap: true }, () => [
             h(Button, { variant: "transparent" }, () => "Back"),
             h(Button, { variant: "default" }, () => "Save draft"),
             h(Button, null, () => "Continue"),
@@ -373,7 +373,7 @@ export const CustomFooterLayout: Story = {
             },
             [
               h(Text, { size: "sm", muted: true }, () => "Saved 2 minutes ago"),
-              h(Group, { justify: "end" }, () => [
+              h(Group, { justify: "flex-end" }, () => [
                 h(Button, { variant: "default" }, () => "Preview"),
                 h(Button, null, () => "Publish"),
               ]),
@@ -443,7 +443,7 @@ export const AdvancedComposition: Story = {
                               "Nested Drawer owns its actions and closes before its parent Modal.",
                           ),
                         footer: () =>
-                          h(Group, { justify: "end" }, () => [
+                          h(Group, { justify: "flex-end" }, () => [
                             h(
                               Button,
                               {
@@ -462,7 +462,7 @@ export const AdvancedComposition: Story = {
                     ),
                   ]),
                 footer: () =>
-                  h(Group, { justify: "end" }, () => [
+                  h(Group, { justify: "flex-end" }, () => [
                     h(
                       Button,
                       {
