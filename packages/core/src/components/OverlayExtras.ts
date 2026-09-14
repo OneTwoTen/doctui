@@ -1,8 +1,34 @@
-import { computed, defineComponent, h, type PropType, ref, useId } from "vue";
+import {
+  cloneVNode,
+  computed,
+  defineComponent,
+  h,
+  nextTick,
+  type PropType,
+  ref,
+  useId,
+  watch,
+} from "vue";
 import { DismissableLayer, FocusTrap, Portal } from "../primitives";
 import { useScrollLock } from "../primitives/useScrollLock";
 import type { Radius, Size } from "../theme/types";
 import { Overlay } from "./Overlay";
+
+function resolveElement(value: unknown): HTMLElement | undefined {
+  if (typeof HTMLElement !== "undefined" && value instanceof HTMLElement) {
+    return value;
+  }
+  if (
+    value &&
+    typeof value === "object" &&
+    "$el" in value &&
+    typeof HTMLElement !== "undefined" &&
+    value.$el instanceof HTMLElement
+  ) {
+    return value.$el;
+  }
+  return undefined;
+}
 
 export const Drawer = defineComponent({
   name: "DuiDrawer",
@@ -123,29 +149,54 @@ export const Popover = defineComponent({
   },
   emits: { "update:modelValue": (_value: boolean) => true },
   setup(props, { attrs, emit, slots }) {
-    const close = () => emit("update:modelValue", false);
-    return () =>
-      h("div", { ...attrs, class: ["dui-Popover", attrs.class] }, [
-        h(
-          "div",
-          {
-            class: "dui-Popover-target",
-            onClick: () => emit("update:modelValue", !props.modelValue),
-          },
-          slots.target?.(),
-        ),
+    const panelId = `dui-popover-${useId()}`;
+    const triggerElement = ref<HTMLElement>();
+    const close = (restoreFocus = false) => {
+      emit("update:modelValue", false);
+      if (restoreFocus) {
+        void nextTick(() => triggerElement.value?.focus());
+      }
+    };
+
+    return () => {
+      const targetNodes = slots.target?.() ?? [];
+      const target = targetNodes[0]
+        ? cloneVNode(
+            targetNodes[0],
+            {
+              ref: (value: unknown) => {
+                triggerElement.value = resolveElement(value);
+              },
+              "aria-haspopup": "dialog",
+              "aria-expanded": String(props.modelValue),
+              "aria-controls": panelId,
+              onClick: () => emit("update:modelValue", !props.modelValue),
+            },
+            true,
+          )
+        : null;
+
+      return h("div", { ...attrs, class: ["dui-Popover", attrs.class] }, [
+        h("div", { class: "dui-Popover-target" }, [
+          target,
+          ...targetNodes.slice(1),
+        ]),
         props.modelValue
           ? h(
               DismissableLayer,
               {
                 closeOnEscape: props.closeOnEscape,
-                ...(props.closeOnClickOutside ? { onOutside: close } : {}),
+                onEscape: () => close(true),
+                ...(props.closeOnClickOutside
+                  ? { onOutside: () => close(false) }
+                  : {}),
               },
               {
                 default: () =>
                   h(
                     "div",
                     {
+                      id: panelId,
                       class: "dui-Popover-panel",
                       role: "dialog",
                       "data-position": props.position,
@@ -156,6 +207,7 @@ export const Popover = defineComponent({
             )
           : null,
       ]);
+    };
   },
 });
 
@@ -177,34 +229,63 @@ export const Tooltip = defineComponent({
       internalOpen.value = value;
       emit("update:modelValue", value);
     };
+
     return () => {
       const visible = props.modelValue ?? internalOpen.value;
-      return h(
-        "span",
-        {
-          class: "dui-Tooltip",
-          "aria-describedby": visible ? tooltipId : undefined,
-          onMouseenter: () => open(true),
-          onMouseleave: () => open(false),
-          onFocusin: () => open(true),
-          onFocusout: () => open(false),
-        },
-        [
-          slots.default?.(),
-          visible
-            ? h(
-                "span",
-                {
-                  id: tooltipId,
-                  class: "dui-Tooltip-content",
-                  role: "tooltip",
-                  "data-position": props.position,
-                },
-                props.label,
-              )
-            : null,
-        ],
-      );
+      const targetNodes = slots.default?.() ?? [];
+      const targetNode = targetNodes[0];
+      const existingDescription = targetNode?.props?.["aria-describedby"];
+      const describedBy = visible
+        ? [
+            typeof existingDescription === "string"
+              ? existingDescription
+              : undefined,
+            tooltipId,
+          ]
+            .filter(Boolean)
+            .join(" ")
+        : existingDescription;
+      const target = targetNode
+        ? cloneVNode(
+            targetNode,
+            {
+              "aria-describedby": describedBy,
+              onMouseenter: () => open(true),
+              onMouseleave: () => open(false),
+              onFocusin: () => open(true),
+              onFocusout: (event: FocusEvent) => {
+                const currentTarget = event.currentTarget;
+                const nextTarget = event.relatedTarget;
+                if (
+                  currentTarget instanceof HTMLElement &&
+                  nextTarget instanceof Node &&
+                  currentTarget.contains(nextTarget)
+                ) {
+                  return;
+                }
+                open(false);
+              },
+            },
+            true,
+          )
+        : null;
+
+      return h("span", { class: "dui-Tooltip" }, [
+        target,
+        ...targetNodes.slice(1),
+        visible
+          ? h(
+              "span",
+              {
+                id: tooltipId,
+                class: "dui-Tooltip-content",
+                role: "tooltip",
+                "data-position": props.position,
+              },
+              props.label,
+            )
+          : null,
+      ]);
     };
   },
 });
@@ -228,42 +309,144 @@ export const Menu = defineComponent({
     select: (_value: string) => true,
   },
   setup(props, { attrs, emit, slots }) {
+    const menuId = `dui-menu-${useId()}`;
+    const triggerElement = ref<HTMLElement>();
+    const itemElements = ref<(HTMLButtonElement | undefined)[]>([]);
     const activeIndex = ref(-1);
-    const close = () => emit("update:modelValue", false);
+    const pendingFocus = ref<"first" | "last">("first");
+
+    const firstEnabledIndex = () =>
+      props.data.findIndex((item) => !item.disabled);
+    const lastEnabledIndex = () => {
+      for (let index = props.data.length - 1; index >= 0; index -= 1) {
+        if (!props.data[index]?.disabled) return index;
+      }
+      return -1;
+    };
+    const focusIndex = (index: number) => {
+      if (index < 0 || props.data[index]?.disabled) return;
+      activeIndex.value = index;
+      itemElements.value[index]?.focus();
+    };
+    const close = (restoreFocus = false) => {
+      emit("update:modelValue", false);
+      if (restoreFocus) {
+        void nextTick(() => triggerElement.value?.focus());
+      }
+    };
     const move = (direction: 1 | -1) => {
+      if (props.data.length === 0) return;
       let index = activeIndex.value;
       for (let count = 0; count < props.data.length; count += 1) {
         index = (index + direction + props.data.length) % props.data.length;
         if (!props.data[index]?.disabled) {
-          activeIndex.value = index;
+          focusIndex(index);
           return;
         }
       }
     };
-    return () =>
-      h("div", { ...attrs, class: ["dui-Menu", attrs.class] }, [
-        h(
-          "div",
-          {
-            class: "dui-Menu-target",
-            onClick: () => emit("update:modelValue", !props.modelValue),
-          },
-          slots.target?.(),
-        ),
+    const activate = (index: number) => {
+      const item = props.data[index];
+      if (!item || item.disabled) return;
+      emit("select", item.value);
+      close(true);
+    };
+    const openFromTrigger = (focus: "first" | "last") => {
+      pendingFocus.value = focus;
+      if (props.modelValue) {
+        focusIndex(
+          focus === "first" ? firstEnabledIndex() : lastEnabledIndex(),
+        );
+        return;
+      }
+      emit("update:modelValue", true);
+    };
+
+    watch(
+      () => props.modelValue,
+      async (open) => {
+        if (!open) return;
+        const index =
+          pendingFocus.value === "last"
+            ? lastEnabledIndex()
+            : firstEnabledIndex();
+        activeIndex.value = index;
+        await nextTick();
+        itemElements.value[index]?.focus();
+      },
+      { immediate: true, flush: "post" },
+    );
+
+    watch(
+      () => props.data.map((item) => `${item.value}:${item.disabled ?? false}`),
+      () => {
+        const current = props.data[activeIndex.value];
+        if (!current || current.disabled) {
+          activeIndex.value = firstEnabledIndex();
+        }
+      },
+    );
+
+    return () => {
+      const targetNodes = slots.target?.() ?? [];
+      const target = targetNodes[0]
+        ? cloneVNode(
+            targetNodes[0],
+            {
+              ref: (value: unknown) => {
+                triggerElement.value = resolveElement(value);
+              },
+              "aria-haspopup": "menu",
+              "aria-expanded": String(props.modelValue),
+              "aria-controls": menuId,
+              onClick: () => {
+                if (props.modelValue) {
+                  close(false);
+                } else {
+                  openFromTrigger("first");
+                }
+              },
+              onKeydown: (event: KeyboardEvent) => {
+                if (event.key === "ArrowDown") {
+                  event.preventDefault();
+                  openFromTrigger("first");
+                } else if (event.key === "ArrowUp") {
+                  event.preventDefault();
+                  openFromTrigger("last");
+                } else if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  openFromTrigger("first");
+                }
+              },
+            },
+            true,
+          )
+        : null;
+      const tabbableIndex =
+        activeIndex.value >= 0 ? activeIndex.value : firstEnabledIndex();
+
+      return h("div", { ...attrs, class: ["dui-Menu", attrs.class] }, [
+        h("div", { class: "dui-Menu-target" }, [
+          target,
+          ...targetNodes.slice(1),
+        ]),
         props.modelValue
           ? h(
               DismissableLayer,
               {
-                ...(props.closeOnClickOutside ? { onOutside: close } : {}),
+                onEscape: () => close(true),
+                ...(props.closeOnClickOutside
+                  ? { onOutside: () => close(false) }
+                  : {}),
               },
               {
                 default: () =>
                   h(
                     "div",
                     {
+                      id: menuId,
                       class: "dui-Menu-dropdown",
                       role: "menu",
-                      tabindex: -1,
                       onKeydown: (event: KeyboardEvent) => {
                         if (event.key === "ArrowDown") {
                           event.preventDefault();
@@ -273,12 +456,17 @@ export const Menu = defineComponent({
                           move(-1);
                         } else if (event.key === "Home") {
                           event.preventDefault();
-                          activeIndex.value = 0;
+                          focusIndex(firstEnabledIndex());
                         } else if (event.key === "End") {
                           event.preventDefault();
-                          activeIndex.value = props.data.length - 1;
+                          focusIndex(lastEnabledIndex());
+                        } else if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault();
+                          activate(activeIndex.value);
                         } else if (event.key === "Escape") {
-                          close();
+                          event.preventDefault();
+                          event.stopPropagation();
+                          close(true);
                         }
                       },
                     },
@@ -286,18 +474,26 @@ export const Menu = defineComponent({
                       h(
                         "button",
                         {
+                          ref: (value: unknown) => {
+                            itemElements.value[index] = resolveElement(value) as
+                              | HTMLButtonElement
+                              | undefined;
+                          },
                           type: "button",
                           role: "menuitem",
+                          tabindex:
+                            !item.disabled && tabbableIndex === index ? 0 : -1,
                           class: "dui-Menu-item",
                           disabled: item.disabled,
                           "data-active":
                             activeIndex.value === index || undefined,
-                          onClick: () => {
-                            if (!item.disabled) {
-                              emit("select", item.value);
-                              close();
-                            }
+                          onFocus: () => {
+                            if (!item.disabled) activeIndex.value = index;
                           },
+                          onMouseenter: () => {
+                            if (!item.disabled) activeIndex.value = index;
+                          },
+                          onClick: () => activate(index),
                         },
                         item.label,
                       ),
@@ -307,5 +503,6 @@ export const Menu = defineComponent({
             )
           : null,
       ]);
+    };
   },
 });

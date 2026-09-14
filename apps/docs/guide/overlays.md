@@ -1,12 +1,12 @@
 # Overlays
 
-`Overlay`, `Modal`, and `Drawer` share one layering contract: semantic backdrop colors, token-backed z-index values, deterministic dismissal, focus restoration, reference-counted page scroll locking, and theme-safe rendering through Vue Teleport.
+`Overlay`, `Modal`, `Drawer`, `Popover`, `Menu`, and `Tooltip` share doctui-owned interaction primitives for predictable layering, dismissal, focus, accessible trigger relationships, and theme-safe rendering through Vue Teleport.
 
 ## Portal and theme behavior
 
-Overlay-family components render into `body` by default. Teleport moves DOM nodes away from the `DoctuiProvider` element, so doctui copies the active theme CSS variables onto each teleported overlay root. Semantic colors, spacing, radii, shadows and z-index values therefore keep working even though the layer is no longer a DOM descendant of the provider.
+Overlay-family modal layers render into `body` by default. Teleport moves DOM nodes away from the `DoctuiProvider` element, so doctui carries the active theme CSS variables onto each teleported Overlay root. Semantic colors, spacing, radii, shadows and z-index values therefore keep working after teleport.
 
-Use `portalTarget` when a layer must render into another DOM target:
+Use `portalTarget` when Modal, Drawer, or Overlay must render into another DOM target:
 
 ```vue
 <Modal v-model="open" title="Preview" portal-target="#overlay-root">
@@ -34,23 +34,11 @@ const open = ref(false)
 </template>
 ```
 
-When the dialog intentionally has no visible heading, provide `aria-label` instead:
+When the dialog intentionally has no visible heading, provide `aria-label` instead. `Modal` keeps a `Dialog` fallback if neither naming path is supplied, but applications should prefer an explicit title or `aria-label` with domain context.
 
-```vue
-<Modal
-  v-model="confirmOpen"
-  aria-label="Confirm publish"
-  :close-on-click-outside="false"
->
-  Publishing cannot be undone.
-</Modal>
-```
+### Size and alignment
 
-`Modal` keeps a `Dialog` fallback if neither naming path is supplied, but applications should prefer an explicit title or `aria-label` with domain context.
-
-### Size
-
-The token sizes `xs`, `sm`, `md`, `lg`, and `xl` map to real dialog widths through `--dui-modal-width`:
+Token sizes map to real dialog widths through `--dui-modal-width`:
 
 | size | width |
 | --- | --- |
@@ -60,7 +48,7 @@ The token sizes `xs`, `sm`, `md`, `lg`, and `xl` map to real dialog widths throu
 | `lg` | `42rem` |
 | `xl` | `56rem` |
 
-`size` also accepts a CSS width string or a number. Numbers are interpreted as pixels.
+`size` also accepts a CSS width string or a number; numbers are interpreted as pixels. `centered` controls vertical alignment on the shared overlay and `radius` maps to the doctui radius scale.
 
 ```vue
 <Modal v-model="open" title="Compact" size="xs">...</Modal>
@@ -68,13 +56,9 @@ The token sizes `xs`, `sm`, `md`, `lg`, and `xl` map to real dialog widths throu
 <Modal v-model="open" title="Pixels" :size="720">...</Modal>
 ```
 
-`centered` controls vertical alignment on the shared overlay and `radius` maps to the doctui radius scale.
+### Backdrop and behavior props
 
-### Backdrop
-
-`withOverlay` controls whether the visual backdrop is painted. The layer remains mounted when the backdrop is disabled, so focus, Escape handling and outside-dismissal behavior remain predictable.
-
-Use `overlayProps` to customize semantic backdrop color and opacity:
+`withOverlay` controls whether the visual backdrop is painted. The layer remains mounted when the backdrop is disabled. Use `overlayProps` to customize semantic backdrop color and opacity.
 
 ```vue
 <Modal
@@ -84,31 +68,13 @@ Use `overlayProps` to customize semantic backdrop color and opacity:
 >
   ...
 </Modal>
-```
 
-```vue
 <Modal v-model="open" title="No backdrop" :with-overlay="false">
   ...
 </Modal>
 ```
 
-### Behavior props
-
 `closeOnEscape` and `closeOnClickOutside` are independent. `lockScroll`, `trapFocus`, and `returnFocus` are enabled by default and can be disabled for specialized composition.
-
-```vue
-<Modal
-  v-model="editorOpen"
-  title="Unsaved editor"
-  :close-on-escape="false"
-  :close-on-click-outside="false"
-  :lock-scroll="true"
-  :trap-focus="true"
-  :return-focus="true"
->
-  Use an explicit Save or Cancel action.
-</Modal>
-```
 
 Modal/Drawer outside dismissal is handled by the shared dismissable-layer stack. The backdrop itself does not register a second dismissal path, preventing one pointer interaction from producing duplicate close events.
 
@@ -137,31 +103,101 @@ Token drawer widths are:
 | `lg` | `36rem` |
 | `xl` | `48rem` |
 
-Like `Modal`, Drawer accepts custom CSS widths/numeric pixel widths and supports `withOverlay`, `overlayProps`, `lockScroll`, `trapFocus`, `returnFocus`, and `portalTarget`.
+Like `Modal`, Drawer accepts custom CSS widths or numeric pixel widths and supports `withOverlay`, `overlayProps`, `lockScroll`, `trapFocus`, `returnFocus`, and `portalTarget`.
 
 Drawer uses a single Portal path through the shared Overlay. Do not wrap Drawer in another Portal.
 
-## Focus and nested dialogs
+## Menu
 
-The shared focus trap is stack-aware. Only the top active dialog may cycle Tab/Shift+Tab or redirect focus that tries to escape. Closing the child restores focus to the child's trigger before the parent trap becomes active again.
+`Menu` follows the menu-button keyboard pattern. The element rendered by the `target` slot is the actual trigger: doctui adds `aria-haspopup="menu"`, `aria-expanded`, and `aria-controls` to that element instead of putting those attributes on an implementation wrapper.
+
+```vue
+<Menu
+  v-model="actionsOpen"
+  :data="[
+    { value: 'edit', label: 'Edit' },
+    { value: 'archive', label: 'Archive' },
+    { value: 'delete', label: 'Delete', disabled: true },
+  ]"
+  @select="handleAction"
+>
+  <template #target>
+    <Button>Actions</Button>
+  </template>
+</Menu>
+```
+
+From the trigger, `ArrowDown`, `Enter`, or `Space` opens the menu at the first enabled item and `ArrowUp` opens at the last enabled item. Inside the menu, `ArrowDown` and `ArrowUp` move DOM focus, `Home` and `End` jump to the first or last enabled item, and disabled items are skipped. `Enter` or `Space` selects the focused item. `Escape` closes the menu and restores focus to the trigger.
+
+Menu items use roving `tabindex`: exactly one enabled item is in the tab order while the rest use `tabindex="-1"`. Pointer hover may update the active item, but keyboard navigation always moves actual focus rather than changing visual state alone.
+
+Outside pointer interaction closes the menu when `closeOnClickOutside` is enabled. Outside-pointer dismissal does not steal focus back from the element the user clicked.
+
+## Popover
+
+`Popover` treats the `target` slot root as the real trigger. The trigger receives `aria-haspopup="dialog"`, `aria-expanded`, and `aria-controls`, and the controlled panel receives the matching stable `id`.
+
+```vue
+<Popover v-model="detailsOpen" position="right">
+  <template #target>
+    <Button>Show details</Button>
+  </template>
+
+  <div>Contextual content</div>
+</Popover>
+```
+
+`closeOnEscape` and `closeOnClickOutside` are independent. Escape dismissal restores focus to the trigger. Outside-pointer dismissal keeps the user's new pointer/focus destination intact.
+
+### Position and collision behavior
+
+`position="top | right | bottom | left"` currently selects a deterministic CSS-anchored side relative to the Popover wrapper. The current 0.x contract does **not** automatically flip or shift the panel when it approaches a viewport edge.
+
+Core must not grow a custom JavaScript popper engine. If doctui promotes collision-aware positioning into the public contract, use the approved low-level floating-positioning abstraction instead of bespoke geometry code.
+
+## Tooltip
+
+`Tooltip` is for short, non-essential helper text. It opens on pointer hover and keyboard focus. The slotted root trigger receives `aria-describedby` only while the tooltip is visible, pointing to the rendered `role="tooltip"` element.
+
+```vue
+<Tooltip label="Save changes without publishing">
+  <Button>Save draft</Button>
+</Tooltip>
+```
+
+Prefer a single focusable root in the default slot so the element users actually focus receives the description. If the root is a composite wrapper containing several focusable descendants, focus moving between descendants does not close and reopen the tooltip; it closes only when focus leaves the composite root. For important instructions, validation, or required content, render visible text instead of relying on a tooltip.
+
+Tooltip `position` uses the same deterministic CSS-side contract as Popover and does not currently auto-flip on collision.
+
+## Dismissal behavior
+
+`closeOnEscape` and `closeOnClickOutside` are independent where the component exposes them. Both default to `true` for modal and contextual dismissable surfaces.
+
+When overlays are nested, only the top dismissable layer handles Escape or outside pointer interaction. A nested Modal → Drawer closes the Drawer first. A nested Popover → Menu similarly closes the Menu first and restores focus one level at a time.
 
 ```vue
 <Modal v-model="reviewOpen" title="Review order">
   <Button @click="detailsOpen = true">Edit delivery details</Button>
-
-  <Drawer v-model="detailsOpen" title="Delivery details">
-    ...
-  </Drawer>
+  <Drawer v-model="detailsOpen" title="Delivery details">...</Drawer>
 </Modal>
 ```
 
-When both layers are open, Escape closes Drawer first. A second Escape closes Modal.
+```vue
+<Popover v-model="workspaceOpen">
+  <template #target><Button>Workspace actions</Button></template>
+  <Menu v-model="menuOpen" :data="actions">
+    <template #target><Button>More actions</Button></template>
+  </Menu>
+</Popover>
+```
 
-## Scroll locking
+## Focus and page scroll
 
-Page scroll locking is reference-counted per active overlay instance. Opening a second dialog adds another lock; closing one nested layer does not unlock the document while another remains open. The original inline `body.style.overflow` value is restored only after the final lock releases.
+Modal and Drawer use the shared stack-aware focus trap. Only the top active dialog may cycle Tab/Shift+Tab or redirect focus that tries to escape. Closing the child restores focus to the child's trigger before the parent trap becomes active again.
 
-Set `lockScroll=false` when the layer intentionally must not modify body overflow.
+Page scroll locking is reference-counted per active overlay instance. Opening a second dialog adds another lock; closing one nested layer does not unlock the document while another remains open. The original inline `body.style.overflow` value is restored only after the final lock releases. Set `lockScroll=false` when the layer intentionally must not modify body overflow.
+
+Menu and Popover do not trap focus. They preserve normal document tab order and apply focus restoration only to dismissal paths where restoration is expected, such as Escape.
 
 ## Overlay primitive
 
@@ -202,4 +238,6 @@ Override the theme z-index scale through normal doctui theme configuration inste
 
 ## Storybook
 
-Overlay, Modal, and Drawer each have a dedicated Storybook page with a `Playground` story. Public visual and behavior props are represented as Controls rather than being hidden behind hard-coded launcher demos. Additional stories cover size geometry, custom/no backdrop states and nested `Modal` → `Drawer` composition.
+Overlay, Modal, and Drawer each have a dedicated Storybook page with a `Playground` story whose public visual and behavior props are represented as Controls. Additional stories cover size geometry, custom/no backdrop states and nested `Modal` → `Drawer` composition.
+
+Storybook also includes Menu keyboard, Popover position/focus-restoration, Tooltip hover/focus, and advanced nested Popover → Menu + Tooltip compositions for contextual overlays.
