@@ -1,0 +1,1 @@
+import{t as e}from"./iframe-Boc229Te.js";e();
