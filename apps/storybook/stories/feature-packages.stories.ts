@@ -1,9 +1,5 @@
 import { Button, Stack, Text, TextInput } from "@doctui/core";
 import { useForm } from "@doctui/form";
-import {
-  createNotifications,
-  Notifications as NotificationsView,
-} from "@doctui/notifications";
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import { defineComponent, h } from "vue";
 import { preview } from "./story-helpers";
@@ -41,30 +37,4 @@ const FormDemo = defineComponent({
   },
 });
 
-const NotificationsDemo = defineComponent({
-  setup() {
-    const store = createNotifications({ position: "top-end" });
-    return () =>
-      h(Stack, { gap: "sm", style: { minHeight: "10rem" } }, () => [
-        h(
-          Button,
-          {
-            onClick: () =>
-              store.show({
-                title: "Saved",
-                message: "Your preferences have been updated.",
-                color: "success",
-                autoClose: false,
-              }),
-          },
-          () => "Show notification",
-        ),
-        h(NotificationsView, { store }),
-      ]);
-  },
-});
-
 export const Form: Story = { render: () => preview(() => h(FormDemo)) };
-export const Notifications: Story = {
-  render: () => preview(() => h(NotificationsDemo)),
-};
