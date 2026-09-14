@@ -141,7 +141,7 @@
       "name": "Calendar",
       "package": "@doctui/dates",
       "category": "inputs",
-      "description": "Accessible month grid with ISO date values, range constraints and keyboard navigation.",
+      "description": "Accessible token-driven month grid with adjacent-month days, range constraints and keyboard navigation.",
       "props": [
         "id",
         "modelValue",
@@ -242,30 +242,7 @@
       "name": "DateInput",
       "package": "@doctui/dates",
       "category": "inputs",
-      "description": "SSR-safe native date field with label, description, error and clear behavior.",
-      "props": [
-        "id",
-        "modelValue",
-        "label",
-        "description",
-        "error",
-        "ariaLabel",
-        "minDate",
-        "maxDate",
-        "disabled",
-        "clearable"
-      ],
-      "accessibility": [
-        "Uses Vue useId for stable label/description/error relationships during SSR hydration.",
-        "Errors are referenced with aria-describedby and announced with role=alert.",
-        "When no visible label is supplied, ariaLabel or the default Date accessible name is used."
-      ]
-    },
-    {
-      "name": "DatePicker",
-      "package": "@doctui/dates",
-      "category": "inputs",
-      "description": "Date field with an accessible calendar popup and controlled ISO date value.",
+      "description": "Native date field that reuses doctui core field geometry, sizing and validation states.",
       "props": [
         "id",
         "modelValue",
@@ -277,20 +254,49 @@
         "maxDate",
         "disabled",
         "clearable",
-        "locale",
-        "firstDayOfWeek"
+        "size",
+        "radius"
       ],
       "accessibility": [
+        "Reuses the core TextInput label, description, error and SSR-safe ID relationships.",
+        "Keeps native date input semantics while sharing doctui visual field states.",
+        "When no visible label is supplied, ariaLabel or the default Date accessible name is used."
+      ]
+    },
+    {
+      "name": "DatePicker",
+      "package": "@doctui/dates",
+      "category": "inputs",
+      "description": "Doctui-styled readonly date field with formatted display value and an accessible calendar popup.",
+      "props": [
+        "id",
+        "modelValue",
+        "label",
+        "description",
+        "error",
+        "ariaLabel",
+        "placeholder",
+        "minDate",
+        "maxDate",
+        "disabled",
+        "clearable",
+        "locale",
+        "firstDayOfWeek",
+        "size",
+        "radius"
+      ],
+      "accessibility": [
+        "Uses a readonly text field rather than browser-native date chrome for the custom picker surface.",
         "The popup trigger exposes aria-expanded, aria-controls and aria-haspopup=grid.",
         "Escape closes the popup and restores trigger focus; pointer input outside closes it without stealing focus.",
-        "Disabled state is forwarded to the native field, trigger and calendar."
+        "Disabled state is forwarded to the field, actions and calendar."
       ]
     },
     {
       "name": "DateTimePicker",
       "package": "@doctui/dates",
       "category": "inputs",
-      "description": "SSR-safe native date-time field with shared label, description, error and clear behavior.",
+      "description": "Native date-time field that reuses doctui core field geometry, sizing and validation states.",
       "props": [
         "id",
         "modelValue",
@@ -299,10 +305,12 @@
         "error",
         "ariaLabel",
         "disabled",
-        "clearable"
+        "clearable",
+        "size",
+        "radius"
       ],
       "accessibility": [
-        "Uses the same stable described-by and alert relationships as DateInput."
+        "Uses the same core field relationships and native control semantics as DateInput."
       ]
     },
     {
@@ -438,7 +446,7 @@
       "name": "MonthPicker",
       "package": "@doctui/dates",
       "category": "inputs",
-      "description": "Keyboard-navigable month listbox that emits YYYY-MM values.",
+      "description": "Keyboard-navigable month listbox rendered in the shared doctui date surface.",
       "props": ["modelValue", "year", "locale", "disabled", "ariaLabel"],
       "accessibility": [
         "Uses listbox/option semantics with aria-selected and roving keyboard focus."
@@ -840,7 +848,7 @@
       "name": "YearPicker",
       "package": "@doctui/dates",
       "category": "inputs",
-      "description": "Keyboard-navigable year listbox over a configurable range.",
+      "description": "Keyboard-navigable year listbox rendered in the shared doctui date surface.",
       "props": ["modelValue", "minYear", "maxYear", "disabled", "ariaLabel"],
       "accessibility": [
         "Uses listbox/option semantics with aria-selected and roving keyboard focus."

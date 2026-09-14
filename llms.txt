@@ -18,15 +18,15 @@ Generated component and package reference for doctui 0.0.0.
 - Badge (@doctui/core): Compact status label using semantic color and variant tokens.
 - Box (@doctui/core): Low-level polymorphic container with token-based spacing.
 - Button (@doctui/core): Native button control with doctui color, variant and size tokens.
-- Calendar (@doctui/dates): Accessible month grid with ISO date values, range constraints and keyboard navigation.
+- Calendar (@doctui/dates): Accessible token-driven month grid with adjacent-month days, range constraints and keyboard navigation.
 - Center (@doctui/core): Flex helper that centers content on both axes.
 - Checkbox (@doctui/core): Native checkbox semantics with doctui-controlled visual geometry and shared field messaging.
 - Code (@doctui/core): Monospace inline or block code presentation.
 - Combobox (@doctui/core): Focus-managed listbox engine used by doctui selection controls.
 - Container (@doctui/core): Centered responsive container constrained by theme breakpoints.
-- DateInput (@doctui/dates): SSR-safe native date field with label, description, error and clear behavior.
-- DatePicker (@doctui/dates): Date field with an accessible calendar popup and controlled ISO date value.
-- DateTimePicker (@doctui/dates): SSR-safe native date-time field with shared label, description, error and clear behavior.
+- DateInput (@doctui/dates): Native date field that reuses doctui core field geometry, sizing and validation states.
+- DatePicker (@doctui/dates): Doctui-styled readonly date field with formatted display value and an accessible calendar popup.
+- DateTimePicker (@doctui/dates): Native date-time field that reuses doctui core field geometry, sizing and validation states.
 - Divider (@doctui/core): Separator for related content with optional label content.
 - Drawer (@doctui/core): Accessible side dialog with shared overlay, nested-layer dismissal and focus restoration.
 - Flex (@doctui/core): Flexbox layout primitive with theme-token gaps.
@@ -37,7 +37,7 @@ Generated component and package reference for doctui 0.0.0.
 - Loader (@doctui/core): Animated progress indicator for an indeterminate operation.
 - Menu (@doctui/core): Keyboard-navigable menu built from native menu item buttons.
 - Modal (@doctui/core): Accessible modal dialog with nested-layer dismissal, reference-counted scroll lock and focus restoration.
-- MonthPicker (@doctui/dates): Keyboard-navigable month listbox that emits YYYY-MM values.
+- MonthPicker (@doctui/dates): Keyboard-navigable month listbox rendered in the shared doctui date surface.
 - MultiSelect (@doctui/core): Searchable multi-value selection control backed by the shared Combobox engine.
 - Notifications (@doctui/notifications): Accessible renderer for notifications managed by a store.
 - NumberInput (@doctui/core): Native numeric input with numeric v-model values and range constraints.
@@ -59,4 +59,4 @@ Generated component and package reference for doctui 0.0.0.
 - Title (@doctui/core): Semantic h1-h6 heading primitive.
 - Tooltip (@doctui/core): Non-essential contextual text revealed on hover or focus.
 - UnstyledButton (@doctui/core): Native button reset for building custom action surfaces.
-- YearPicker (@doctui/dates): Keyboard-navigable year listbox over a configurable range.
+- YearPicker (@doctui/dates): Keyboard-navigable year listbox rendered in the shared doctui date surface.
