@@ -33,34 +33,31 @@ type Story = StoryObj<typeof meta>;
 export const Playground: Story = {
   render: (args) =>
     preview(() =>
-      h(
-        Overlay,
-        args,
-        {
-          default: () =>
-            h(
-              Paper,
-              {
-                shadow: "xl",
-                radius: "lg",
-                style: {
-                  margin: "2rem auto",
-                  maxWidth: "24rem",
-                  padding: "1.5rem",
-                },
+      h(Overlay, args, {
+        default: () =>
+          h(
+            Paper,
+            {
+              shadow: "xl",
+              radius: "lg",
+              style: {
+                margin: "2rem auto",
+                maxWidth: "24rem",
+                padding: "1.5rem",
               },
-              () =>
-                h(Stack, { gap: "sm" }, () => [
-                  h(Text, null, () => "Overlay surface"),
-                  h(
-                    Text,
-                    { size: "sm", muted: true },
-                    () => "Backdrop color and opacity are controlled independently from child content.",
-                  ),
-                ]),
-            ),
-        },
-      ),
+            },
+            () =>
+              h(Stack, { gap: "sm" }, () => [
+                h(Text, null, () => "Overlay surface"),
+                h(
+                  Text,
+                  { size: "sm", muted: true },
+                  () =>
+                    "Backdrop color and opacity are controlled independently from child content.",
+                ),
+              ]),
+          ),
+      }),
     ),
 };
 
@@ -73,8 +70,23 @@ export const NoBackdrop: Story = {
     preview(() =>
       h(Overlay, args, {
         default: () =>
-          h(Paper, { shadow: "lg", style: { margin: "2rem auto", padding: "1rem", maxWidth: "20rem" } }, () =>
-            h(Text, null, () => "The layer remains mounted while the visual backdrop is disabled."),
+          h(
+            Paper,
+            {
+              shadow: "lg",
+              style: {
+                margin: "2rem auto",
+                padding: "1rem",
+                maxWidth: "20rem",
+              },
+            },
+            () =>
+              h(
+                Text,
+                null,
+                () =>
+                  "The layer remains mounted while the visual backdrop is disabled.",
+              ),
           ),
       }),
     ),
