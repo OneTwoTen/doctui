@@ -9,7 +9,9 @@ alwaysApply: false
 - Each public component needs basic usage plus its important variants and states.
 - Storybook should demonstrate behavior, not just static appearance.
 - Every public component story module must register the actual component in Storybook metadata and expose functional `args`/`argTypes` Controls for the meaningful public props. The primary `Basic`/`Default`/`Playground` story must consume `args`; a primary story showing `This story has no controls` is a documentation failure.
+- Controlled stories that expose `modelValue`/`v-model` through Controls must keep canvas interactions and the Controls panel synchronized. Use Storybook `useArgs` (or the current supported equivalent) to write `update:modelValue` changes back into args; do not use an isolated local `ref` as the primary Playground source of truth.
 - Do not add decorative Controls that the story render ignores. Matrix/composition stories may override individual props, but the primary interactive story must respond to Controls.
+- Composition stories that intentionally manage multiple independent component states should disable Controls explicitly instead of presenting a misleading Controls panel.
 - Document accessibility/keyboard behavior for custom interactive widgets.
 - Keep docs metadata structured enough to generate API pages and `llms.txt` later.
 - Do not copy Mantine prose verbatim; describe doctui's actual Vue API and behavior.
