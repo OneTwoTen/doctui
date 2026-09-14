@@ -1,5 +1,5 @@
-import { defineComponent, h, useId } from "vue";
-import { describedBy } from "./date-utils";
+import { TextInput, type Radius, type Size } from "@doctui/core";
+import { defineComponent, h, type PropType } from "vue";
 
 export const DateTimePicker = defineComponent({
   name: "DuiDateTimePicker",
@@ -12,88 +12,33 @@ export const DateTimePicker = defineComponent({
     ariaLabel: { type: String, default: undefined },
     disabled: Boolean,
     clearable: Boolean,
+    size: { type: String as PropType<Size>, default: "md" },
+    radius: { type: String as PropType<Radius>, default: "md" },
   },
   emits: ["update:modelValue", "blur", "clear"],
   setup(props, { emit }) {
-    const uid = useId();
-    const inputId = props.id ?? `dui-datetime-${uid}`;
-    const descriptionId = `${inputId}-description`;
-    const errorId = `${inputId}-error`;
-
     return () =>
-      h(
-        "div",
-        {
-          class: "dui-DateInput",
-          "data-disabled": props.disabled || undefined,
-        },
-        [
-          props.label
-            ? h(
-                "label",
-                { class: "dui-DateInput__label", for: inputId },
-                props.label,
-              )
-            : null,
-          props.description
-            ? h(
-                "div",
-                { id: descriptionId, class: "dui-DateInput__description" },
-                props.description,
-              )
-            : null,
-          h("div", { class: "dui-DateInput__control" }, [
-            h("input", {
-              id: inputId,
-              class: "dui-DateInput__input",
-              type: "datetime-local",
-              value: props.modelValue,
-              disabled: props.disabled,
-              "aria-label": props.label
-                ? undefined
-                : (props.ariaLabel ?? "Date and time"),
-              "aria-describedby": describedBy(
-                props.description ? descriptionId : undefined,
-                props.error ? errorId : undefined,
-              ),
-              "aria-invalid": props.error ? "true" : undefined,
-              onInput: (event: Event) =>
-                emit(
-                  "update:modelValue",
-                  (event.target as HTMLInputElement).value,
-                ),
-              onBlur: (event: FocusEvent) => emit("blur", event),
-            }),
-            props.clearable && props.modelValue
-              ? h(
-                  "button",
-                  {
-                    type: "button",
-                    class: "dui-DateInput__clear",
-                    "aria-label": "Clear date and time",
-                    disabled: props.disabled,
-                    onClick: () => {
-                      if (props.disabled) return;
-                      emit("update:modelValue", "");
-                      emit("clear");
-                    },
-                  },
-                  "×",
-                )
-              : null,
-          ]),
-          props.error
-            ? h(
-                "div",
-                {
-                  id: errorId,
-                  class: "dui-DateInput__error",
-                  role: "alert",
-                },
-                props.error,
-              )
-            : null,
-        ],
-      );
+      h(TextInput, {
+        class: "dui-DateTimePicker",
+        ...(props.id !== undefined ? { id: props.id } : {}),
+        modelValue: props.modelValue,
+        ...(props.label !== undefined ? { label: props.label } : {}),
+        ...(props.description !== undefined
+          ? { description: props.description }
+          : {}),
+        ...(props.error !== undefined ? { error: props.error } : {}),
+        type: "datetime-local",
+        size: props.size,
+        radius: props.radius,
+        disabled: props.disabled,
+        clearable: props.clearable,
+        "aria-label": props.label
+          ? undefined
+          : (props.ariaLabel ?? "Date and time"),
+        "onUpdate:modelValue": (value: string) =>
+          emit("update:modelValue", value),
+        onBlur: (event: FocusEvent) => emit("blur", event),
+        onClear: () => emit("clear"),
+      });
   },
 });
