@@ -20,7 +20,7 @@ export * from "./Modal";
 export * from "./MultiSelect";
 export * from "./NumberInput";
 export * from "./Overlay";
-export { Drawer, Menu, Tooltip, type MenuItem } from "./OverlayExtras";
+export { Drawer, Menu, type MenuItem, Tooltip } from "./OverlayExtras";
 export * from "./Paper";
 export * from "./PasswordInput";
 export * from "./Popover";
