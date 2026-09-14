@@ -1,0 +1,60 @@
+.dui-Modal,
+.dui-Drawer {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dui-Modal-header,
+.dui-Drawer-header,
+.dui-Modal-footer,
+.dui-Drawer-footer {
+  flex: none;
+}
+
+.dui-Modal-body,
+.dui-Drawer-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.dui-Modal-footer,
+.dui-Drawer-footer {
+  align-items: center;
+  background: inherit;
+  border-top: 1px solid var(--dui-color-border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dui-spacing-sm);
+  justify-content: flex-end;
+  padding: var(--dui-spacing-md) var(--dui-spacing-lg);
+}
+
+.dui-Drawer {
+  padding: 0;
+}
+
+.dui-Drawer-header {
+  border-bottom: 1px solid var(--dui-color-border);
+  gap: var(--dui-spacing-sm);
+  margin-bottom: 0;
+  padding: var(--dui-spacing-md) var(--dui-spacing-lg);
+}
+
+.dui-Drawer-body {
+  padding: var(--dui-spacing-lg);
+}
+
+@media (max-width: 30rem) {
+  .dui-Modal-footer,
+  .dui-Drawer-footer {
+    align-items: stretch;
+  }
+
+  .dui-Modal-footer > .dui-Group,
+  .dui-Drawer-footer > .dui-Group {
+    flex: 1 1 100%;
+  }
+}
