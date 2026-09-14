@@ -9,14 +9,12 @@ const meta = {
   component: Popover,
   args: {
     modelValue: false,
-    ariaLabel: "Popover details",
     position: "bottom",
     closeOnEscape: true,
     closeOnClickOutside: true,
   },
   argTypes: {
     modelValue: { control: "boolean" },
-    ariaLabel: { control: "text" },
     position: {
       control: "inline-radio",
       options: ["top", "right", "bottom", "left"],
@@ -78,7 +76,6 @@ export const Playground: Story = {
 export const LongContent: Story = {
   args: {
     modelValue: true,
-    ariaLabel: "Long popover content",
   },
   render: function Render(args) {
     const [currentArgs, updateArgs] = useArgs();
@@ -105,7 +102,7 @@ export const LongContent: Story = {
                 updateArgs({ modelValue: value }),
             },
             {
-              target: () => h(Button, null, () => "Details"),
+              target: () => h(Button, null, () => "Long content details"),
               default: () =>
                 h(
                   Text,
