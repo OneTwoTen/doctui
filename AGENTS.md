@@ -25,6 +25,7 @@ Core principles:
 9. Documentation, LLM artifacts and MCP should converge on one validated public API metadata source rather than independent handwritten copies.
 10. doctui is GitHub-first and zero-VPS by default: the normal project lifecycle must not require a project-owned server or always-on backend.
 11. Do not replace the canonical tech stack casually; new infrastructure/tooling must solve a demonstrated requirement.
+12. Visual quality is a release requirement for public components: a component that is technically correct but visibly inconsistent, browser-default-looking, or materially rougher than adjacent doctui controls is not complete.
 
 ## Repository architecture
 
@@ -69,6 +70,20 @@ Do not create a new package for code that is only used by one package. Start loc
 - Keep style selectors shallow and local.
 - Do not couple behavior to visual classes.
 - Dark mode must be token-driven, not component-by-component overrides.
+- Before styling a new component family, inspect adjacent doctui controls and reuse their visual contracts for control height, radius, typography, border, focus, disabled, error, surface and elevation states.
+- Do not ship text glyphs such as `×`, `▣`, `<`, `>` or similar characters as final UI icons when a stable inline SVG/icon treatment is appropriate.
+- Avoid exposing browser-default chrome as part of a custom doctui composite unless native appearance is the explicit product choice for that component.
+
+## Visual quality gate
+
+For every new or materially changed public component, review the rendered component as a product surface, not only as DOM/CSS implementation.
+
+- Compare it with adjacent doctui components and at least one strong reference implementation when useful.
+- Check hierarchy, spacing rhythm, typography, iconography, control geometry, hover/focus/active/disabled/error states, surface elevation, dark mode and responsive behavior.
+- Storybook must include enough states to make visual defects obvious: default, empty/value, disabled, error, focused/interactive where practical, dark mode, and at least one realistic composition for non-trivial components.
+- Composite controls must look like one intentional control. Do not stack native browser chrome and doctui chrome in the same affordance unless explicitly designed that way.
+- If a component introduces a new visual pattern, prefer reusable package-local or shared style primitives over one-off absolute-position fixes.
+- A passing lint/type/test/build pipeline does not override a failed visual review.
 
 ## Internal primitives
 
@@ -198,6 +213,7 @@ Before coding:
 5. Inspect adjacent components and shared types.
 6. Check whether a primitive/composable already solves part of the task.
 7. Confirm the public API before implementing details.
+8. For public UI work, inspect the rendered visual states and compare geometry/state treatment with adjacent doctui components before finalizing the implementation.
 
 Before finishing:
 
@@ -206,5 +222,6 @@ Before finishing:
 3. Confirm Storybook/docs examples still build when affected.
 4. Summarize public API changes and compatibility impact.
 5. Leave unrelated files untouched.
+6. Confirm the component passes the visual quality gate; passing automated checks alone is not sufficient.
 
 If the repository is still being bootstrapped and commands do not exist yet, do not invent passing test results. State exactly what could and could not be run.
