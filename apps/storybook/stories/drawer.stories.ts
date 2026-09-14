@@ -1,14 +1,16 @@
 import { Button, Drawer, Group, Stack, Text } from "@doctui/core";
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { defineComponent, h, ref, watch } from "vue";
+import { useArgs } from "storybook/preview-api";
+import { h } from "vue";
 import { preview } from "./story-helpers";
 
 const meta = {
   title: "Overlays/Drawer",
   component: Drawer,
   args: {
-    modelValue: true,
+    modelValue: false,
     title: "Filters",
+    ariaLabel: "Filters drawer",
     position: "right",
     size: "md",
     radius: "md",
@@ -27,7 +29,7 @@ const meta = {
     title: { control: "text" },
     ariaLabel: { control: "text" },
     position: {
-      control: "select",
+      control: "inline-radio",
       options: ["left", "right"],
     },
     size: {
@@ -54,63 +56,91 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
-  render: (args) => {
-    const Demo = defineComponent({
-      setup() {
-        const open = ref(args.modelValue ?? true);
-        watch(
-          () => args.modelValue,
-          (value) => (open.value = value ?? false),
-        );
+  render: function Render(args) {
+    const [currentArgs, updateArgs] = useArgs();
+    const liveArgs = currentArgs as typeof args;
 
-        return () =>
-          h(Stack, { gap: "md" }, () => [
-            h(
-              Button,
-              { onClick: () => (open.value = true) },
-              () => "Open drawer",
-            ),
-            h(
-              Drawer,
-              {
-                ...args,
-                modelValue: open.value,
-                "onUpdate:modelValue": (value: boolean) => (open.value = value),
-              },
-              {
-                default: () =>
-                  h(Stack, { gap: "md" }, () => [
-                    h(Text, null, () => "Drawer content"),
-                    h(
-                      Text,
-                      { size: "sm", muted: true },
-                      () =>
-                        "Use Controls to verify position, width, radius, backdrop, dismissal and focus behavior.",
-                    ),
-                  ]),
-                footer: () =>
-                  h(Group, { justify: "flex-end" }, () => [
-                    h(
-                      Button,
-                      {
-                        variant: "default",
-                        onClick: () => (open.value = false),
-                      },
-                      () => "Cancel",
-                    ),
-                    h(
-                      Button,
-                      { onClick: () => (open.value = false) },
-                      () => "Apply",
-                    ),
-                  ]),
-              },
-            ),
-          ]);
-      },
-    });
+    return preview(() =>
+      h(Stack, { gap: "md" }, () => [
+        h(
+          Button,
+          { onClick: () => updateArgs({ modelValue: true }) },
+          () => "Open drawer",
+        ),
+        h(
+          Drawer,
+          {
+            ...liveArgs,
+            "onUpdate:modelValue": (value: boolean) =>
+              updateArgs({ modelValue: value }),
+          },
+          {
+            default: () =>
+              h(Stack, { gap: "md" }, () => [
+                h(Text, null, () => "Drawer content"),
+                h(
+                  Text,
+                  { size: "sm", muted: true },
+                  () =>
+                    "Use Controls to verify position, width, radius, backdrop, dismissal and focus behavior.",
+                ),
+              ]),
+            footer: () =>
+              h(Group, { justify: "flex-end" }, () => [
+                h(
+                  Button,
+                  {
+                    variant: "default",
+                    onClick: () => updateArgs({ modelValue: false }),
+                  },
+                  () => "Cancel",
+                ),
+                h(
+                  Button,
+                  { onClick: () => updateArgs({ modelValue: false }) },
+                  () => "Apply",
+                ),
+              ]),
+          },
+        ),
+      ]),
+    );
+  },
+};
 
-    return preview(() => h(Demo));
+export const Open: Story = {
+  args: { modelValue: true },
+  render: function Render(args) {
+    const [currentArgs, updateArgs] = useArgs();
+    const liveArgs = currentArgs as typeof args;
+
+    return preview(() =>
+      h(
+        Drawer,
+        {
+          ...liveArgs,
+          "onUpdate:modelValue": (value: boolean) =>
+            updateArgs({ modelValue: value }),
+        },
+        {
+          default: () =>
+            h(
+              Text,
+              null,
+              () =>
+                "This story starts open so geometry and footer changes are visible immediately.",
+            ),
+          footer: () =>
+            h(Group, { justify: "flex-end" }, () => [
+              h(
+                Button,
+                { onClick: () => updateArgs({ modelValue: false }) },
+                () => "Done",
+              ),
+            ]),
+        },
+      ),
+    );
   },
 };
 
