@@ -17,12 +17,25 @@ const year = ref<number | null>(2026);
 
 # Dates
 
-`@doctui/dates` provides dependency-free date controls that emit strict ISO
-values. Date fields use Vue SSR-safe IDs for label, description and error
-relationships, while calendar/listbox controls expose keyboard models directly
-instead of relying on pointer interaction.
+`@doctui/dates` is the date-domain package for doctui. It does not pull in a
+date library, but it intentionally uses `@doctui/core` as a peer so date fields
+share the same geometry, sizing, radius, focus, error and disabled states as the
+rest of the component system.
 
-## Date picker
+Import the public styles for both packages in applications that consume the
+packages directly:
+
+```ts
+import '@doctui/core/styles.css';
+import '@doctui/dates/styles.css';
+```
+
+## DatePicker
+
+`DatePicker` is a fully doctui-owned picker surface. It does **not** render a
+browser-native `input[type="date"]`; the visible field is a readonly text input
+with a locale-formatted value, SVG actions and an accessible custom calendar.
+Use `DateInput` when browser-native date chrome is preferred.
 
 <DoctuiProvider>
   <Stack gap="md" style="max-width: 28rem;">
@@ -30,8 +43,11 @@ instead of relying on pointer interaction.
       v-model="date"
       label="Release date"
       description="Choose a date between September 10 and September 25."
+      placeholder="Choose a release date"
       min-date="2026-09-10"
       max-date="2026-09-25"
+      size="md"
+      radius="md"
       clearable
     />
     <Text size="sm" muted>Selected: {{ date ?? "none" }}</Text>
@@ -51,30 +67,35 @@ const date = ref<string | null>('2026-09-14');
     v-model="date"
     label="Release date"
     description="Choose a publishing date"
-    min-date="2026-09-10"
-    max-date="2026-09-25"
+    placeholder="Select date"
+    size="md"
+    radius="md"
     clearable
   />
 </template>
 ```
 
-The toggle exposes `aria-expanded`, `aria-controls` and `aria-haspopup="grid"`.
-Opening moves focus into the active calendar day. `Escape` closes the popup and
-restores focus to the toggle; pointer input outside closes it without moving
-focus. `disabled` is forwarded to the native input, toggle and calendar.
+The field and calendar actions expose `aria-expanded`, `aria-controls` and
+`aria-haspopup="grid"`. Opening moves focus into the active calendar day.
+`Escape` closes the popup and restores focus to the calendar action; pointer
+input outside closes it without moving focus. `disabled` is forwarded to the
+field, actions and calendar.
 
-## Field states
+## Native date fields
 
-`DateInput` and `DateTimePicker` share the same `label`, `description`, `error`,
-`disabled`, `clearable` and `ariaLabel` behavior. Error text is connected with
-`aria-describedby`, marks the field invalid and uses `role="alert"`.
+`DateInput` and `DateTimePicker` keep native `date` / `datetime-local` browser
+semantics while reusing the core `TextInput` field contract. Both support
+`size`, `radius`, `label`, `description`, `error`, `disabled`, `clearable` and
+`ariaLabel`.
 
 <DoctuiProvider>
   <Stack gap="md" style="max-width: 28rem;">
     <DateInput
       v-model="date"
       label="Start date"
-      description="Native date input with SSR-safe relationships."
+      description="Native date input with doctui field geometry."
+      size="md"
+      radius="md"
       clearable
     />
     <DateInput
@@ -91,10 +112,11 @@ focus. `disabled` is forwarded to the native input, toggle and calendar.
   </Stack>
 </DoctuiProvider>
 
-When no visible `label` is supplied, pass `ariaLabel`. A safe default accessible
-name is used otherwise, but an explicit product-specific name is preferred.
+When no visible `label` is supplied, pass `ariaLabel`. Label, description and
+error relationships are provided by the same SSR-safe core field structure used
+by other doctui inputs.
 
-## Calendar keyboard model
+## Calendar surface
 
 <DoctuiProvider>
   <Calendar
@@ -105,6 +127,11 @@ name is used otherwise, but an explicit product-specific name is preferred.
     :first-day-of-week="1"
   />
 </DoctuiProvider>
+
+The calendar renders a stable six-week grid and keeps adjacent-month days
+visible in a muted state. Calendar, `MonthPicker` and `YearPicker` share the
+same token-driven date surface, so light/dark mode and theme overrides stay
+consistent without component-specific dark-mode CSS.
 
 The calendar uses `grid` → `row` → `gridcell` semantics with one roving tab
 stop. The selected date uses `aria-selected`; today uses `aria-current="date"`.
@@ -118,10 +145,11 @@ stop. The selected date uses `aria-selected`; today uses `aria-current="date"`.
 | Enter / Space | Select the focused native day button |
 
 `firstDayOfWeek` accepts `0` for Sunday through `6` for Saturday. `locale`
-controls weekday and month labels. `minDate` and `maxDate` disable out-of-range
-dates and keyboard movement does not focus those disabled dates.
+controls weekday, month and formatted picker values. `minDate` and `maxDate`
+disable out-of-range dates and keyboard movement does not focus those disabled
+dates.
 
-## Month and year listboxes
+## Month and year surfaces
 
 <DoctuiProvider>
   <Stack gap="md" style="max-width: 24rem;">
