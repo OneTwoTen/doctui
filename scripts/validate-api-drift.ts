@@ -10,11 +10,17 @@ function propertyName(node: ts.PropertyName | undefined) {
   return undefined;
 }
 
+function objectElementName(property: ts.ObjectLiteralElementLike) {
+  return "name" in property ? propertyName(property.name) : undefined;
+}
+
 function objectMember(
   object: ts.ObjectLiteralExpression,
   name: string,
 ): ts.ObjectLiteralElementLike | undefined {
-  return object.properties.find((property) => propertyName(property.name) === name);
+  return object.properties.find(
+    (property) => objectElementName(property) === name,
+  );
 }
 
 function componentOptions(source: ts.SourceFile, componentName: string) {
@@ -45,7 +51,8 @@ function componentOptions(source: ts.SourceFile, componentName: string) {
   };
 
   visit(source);
-  if (!result) throw new Error(`Could not find defineComponent for ${componentName}`);
+  if (!result)
+    throw new Error(`Could not find defineComponent for ${componentName}`);
   return result;
 }
 
@@ -55,7 +62,7 @@ function extractProps(options: ts.ObjectLiteralExpression) {
   if (!ts.isObjectLiteralExpression(member.initializer)) return [];
 
   return member.initializer.properties
-    .map((property) => propertyName(property.name))
+    .map(objectElementName)
     .filter((name): name is string => Boolean(name));
 }
 
@@ -65,7 +72,7 @@ function extractEvents(options: ts.ObjectLiteralExpression) {
 
   if (ts.isObjectLiteralExpression(member.initializer)) {
     return member.initializer.properties
-      .map((property) => propertyName(property.name))
+      .map(objectElementName)
       .filter((name): name is string => Boolean(name));
   }
 
@@ -167,23 +174,29 @@ for (const contract of QUALITY_PUBLIC_API) {
   const metadata = DOCTUI_REGISTRY.components.find(
     (entry) => entry.name === contract.name,
   );
-  if (!metadata) throw new Error(`Missing generated metadata for ${contract.name}`);
+  if (!metadata)
+    throw new Error(`Missing generated metadata for ${contract.name}`);
   if (metadata.package !== contract.package) {
     throw new Error(
       `${contract.name} package drifted: ${metadata.package} != ${contract.package}`,
     );
   }
+
+  const metadataApi = metadata as typeof metadata & {
+    readonly events?: readonly string[];
+    readonly slots?: readonly string[];
+  };
   assertSame(contract.name, "metadata props", metadata.props, contract.props);
   assertSame(
     contract.name,
     "metadata events",
-    "events" in metadata ? metadata.events : [],
+    metadataApi.events ?? [],
     contract.events,
   );
   assertSame(
     contract.name,
     "metadata slots",
-    "slots" in metadata ? metadata.slots : [],
+    metadataApi.slots ?? [],
     contract.slots,
   );
 
