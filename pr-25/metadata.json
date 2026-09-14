@@ -2,9 +2,9 @@
   "number": "25",
   "title": "fix(core): rebuild overlay, modal and drawer contracts",
   "branch": "codex/issue-12-overlay-v2",
-  "sha": "00912830d2aef7466afb07e58a040166604b9ce3",
+  "sha": "42a00ac075e15746b82ee5529f9ef70f085ccc95",
   "repository": "OneTwoTen/doctui",
   "prUrl": "https://github.com/OneTwoTen/doctui/pull/25",
-  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/34800928175",
-  "generatedAt": "2026-09-14T02:58:32.410Z"
+  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/34800999952",
+  "generatedAt": "2026-09-14T02:59:24.609Z"
 }
