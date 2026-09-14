@@ -146,7 +146,8 @@ async function main() {
     const waitForDom = (expression, message) =>
       waitFor(() => evaluate(expression), message);
     const pressKey = async (key, code = key) => {
-      const virtualKeyCode = key === "Enter" ? 13 : key === " " ? 32 : undefined;
+      const virtualKeyCode =
+        key === "Enter" ? 13 : key === " " ? 32 : undefined;
       const text = key === "Enter" ? "\r" : key === " " ? " " : undefined;
       await client.send("Input.dispatchKeyEvent", {
         type: "keyDown",
