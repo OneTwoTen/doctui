@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { TextInput } from "@doctui/core";
 import { mount } from "@vue/test-utils";
 import { describe, expect, it } from "vitest";
@@ -85,5 +85,27 @@ describe("@doctui/dates visual contracts", () => {
 
     expect(styles).not.toContain("--dui-color-surface-muted");
     expect(styles).toContain("--dui-color-neutral-subtle-hover");
+  });
+
+  it("provides args and explicit controls for every public date component", () => {
+    const storyFiles = [
+      "date-picker.stories.ts",
+      "date-input.stories.ts",
+      "date-time-picker.stories.ts",
+      "calendar.stories.ts",
+      "month-picker.stories.ts",
+      "year-picker.stories.ts",
+    ];
+
+    for (const storyFile of storyFiles) {
+      const path = `apps/storybook/stories/${storyFile}`;
+      expect(existsSync(path), `${storyFile} should exist`).toBe(true);
+      const story = readFileSync(path, "utf8");
+      expect(story, `${storyFile} should define argTypes`).toContain("argTypes:");
+      expect(story, `${storyFile} should define default args`).toContain("args:");
+      expect(story, `${storyFile} should expose a Playground`).toContain(
+        "export const Playground",
+      );
+    }
   });
 });
