@@ -108,7 +108,9 @@ export function createNotifications(options: NotificationsOptions = {}) {
     };
     const next = [...notifications.value, item];
     const retained = limit === 0 ? [] : next.slice(-limit);
-    const retainedIds = new Set(retained.map(({ id: retainedId }) => retainedId));
+    const retainedIds = new Set(
+      retained.map(({ id: retainedId }) => retainedId),
+    );
 
     for (const candidate of next) {
       if (!retainedIds.has(candidate.id)) clearTimer(candidate.id);
@@ -123,11 +125,8 @@ export function createNotifications(options: NotificationsOptions = {}) {
     const current = notifications.value.find((item) => item.id === id);
     if (!current) return;
 
-    const updatesAutoClose = Object.prototype.hasOwnProperty.call(
-      patch,
-      "autoClose",
-    );
-    const updatesPaused = Object.prototype.hasOwnProperty.call(patch, "paused");
+    const updatesAutoClose = Object.hasOwn(patch, "autoClose");
+    const updatesPaused = Object.hasOwn(patch, "paused");
     const next: Notification = {
       ...current,
       ...patch,
