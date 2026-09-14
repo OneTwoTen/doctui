@@ -1,3 +1,4 @@
+import { DoctuiProvider, Stack, Text } from "@doctui/core";
 import {
   Calendar,
   DateInput,
@@ -6,9 +7,8 @@ import {
   MonthPicker,
   YearPicker,
 } from "@doctui/dates";
-import { DoctuiProvider, Stack, Text } from "@doctui/core";
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { h, ref } from "vue";
+import { defineComponent, h, ref } from "vue";
 import { preview } from "./story-helpers";
 
 const meta = {
@@ -92,7 +92,8 @@ export const NativeFields: Story = {
       h("div", { style: canvasStyle }, [
         h(DateInput, {
           label: "Native date",
-          description: "Keeps browser-native date semantics with doctui field geometry.",
+          description:
+            "Keeps browser-native date semantics with doctui field geometry.",
           modelValue: "2026-09-14",
           clearable: true,
         }),
@@ -111,8 +112,11 @@ export const CalendarSurface: Story = {
       const date = ref<string | null>("2026-09-14");
       const month = ref("2026-09");
       return h("div", { style: canvasStyle }, [
-        h(Text, { muted: true, size: "sm" }, () =>
-          "Adjacent-month days stay visible and keyboard navigation keeps one roving tab stop.",
+        h(
+          Text,
+          { muted: true, size: "sm" },
+          () =>
+            "Adjacent-month days stay visible and keyboard navigation keeps one roving tab stop.",
         ),
         h(Calendar, {
           modelValue: date.value,
@@ -179,8 +183,11 @@ export const SchedulingComposition: Story = {
         [
           h(Stack, { gap: "md" }, () => [
             h(Text, { as: "strong" }, () => "Schedule release"),
-            h(Text, { muted: true, size: "sm" }, () =>
-              "A realistic composition using the same field geometry as core inputs.",
+            h(
+              Text,
+              { muted: true, size: "sm" },
+              () =>
+                "A realistic composition using the same field geometry as core inputs.",
             ),
             h(DatePicker, {
               label: "Release date",
@@ -202,37 +209,42 @@ export const SchedulingComposition: Story = {
 };
 
 export const DarkMode: Story = {
-  render: () => () =>
-    h(
-      DoctuiProvider,
-      { colorScheme: "dark" },
-      {
-        default: () =>
+  render: () =>
+    defineComponent({
+      setup() {
+        return () =>
           h(
-            "div",
+            DoctuiProvider,
+            { colorScheme: "dark" },
             {
-              style: {
-                background: "var(--dui-color-body)",
-                color: "var(--dui-color-text)",
-                minHeight: "34rem",
-                padding: "1.5rem",
-              },
+              default: () =>
+                h(
+                  "div",
+                  {
+                    style: {
+                      background: "var(--dui-color-body)",
+                      color: "var(--dui-color-text)",
+                      minHeight: "34rem",
+                      padding: "1.5rem",
+                    },
+                  },
+                  [
+                    h(DatePicker, {
+                      label: "Release date",
+                      description: "Dark mode is entirely token driven.",
+                      modelValue: "2026-09-14",
+                      clearable: true,
+                    }),
+                    h("div", { style: { marginTop: "1rem" } }, [
+                      h(Calendar, {
+                        modelValue: "2026-09-14",
+                        month: "2026-09",
+                      }),
+                    ]),
+                  ],
+                ),
             },
-            [
-              h(DatePicker, {
-                label: "Release date",
-                description: "Dark mode is entirely token driven.",
-                modelValue: "2026-09-14",
-                clearable: true,
-              }),
-              h("div", { style: { marginTop: "1rem" } }, [
-                h(Calendar, {
-                  modelValue: "2026-09-14",
-                  month: "2026-09",
-                }),
-              ]),
-            ],
-          ),
+          );
       },
-    ),
+    }),
 };
