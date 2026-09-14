@@ -7,24 +7,50 @@ import {
   DateInput,
   DatePicker,
   DateTimePicker,
+  NativeDateInput,
   YearPicker,
 } from "./index";
 
 describe("@doctui/dates visual contracts", () => {
-  it("reuses the core TextInput geometry for the native DateInput field", () => {
-    const date = mount(DateInput, {
+  it("renders DateInput as an editable doctui text field with a custom calendar", async () => {
+    const wrapper = mount(DateInput, {
+      attachTo: document.body,
       props: {
         modelValue: "2026-09-14",
         label: "Release date",
-        description: "Native date control",
+        locale: "en-GB",
         size: "lg",
         radius: "lg",
         clearable: true,
       },
     });
 
-    expect(date.findComponent(TextInput).exists()).toBe(true);
-    expect(date.get('input[type="date"]').exists()).toBe(true);
+    expect(wrapper.findComponent(TextInput).exists()).toBe(true);
+    expect(wrapper.find('input[type="date"]').exists()).toBe(false);
+    const input = wrapper.get('input[type="text"]');
+    expect(input.attributes("readonly")).toBeUndefined();
+    expect(input.element.value).toBe("14/09/2026");
+
+    await wrapper.get(".dui-DateInput__toggle").trigger("click");
+    expect(wrapper.find(".dui-DateInput__panel").exists()).toBe(true);
+    expect(wrapper.find(".dui-Calendar").exists()).toBe(true);
+
+    wrapper.unmount();
+  });
+
+  it("keeps browser-native date semantics behind the explicit NativeDateInput name", () => {
+    const wrapper = mount(NativeDateInput, {
+      props: {
+        modelValue: "2026-09-14",
+        label: "Native release date",
+        size: "md",
+        radius: "md",
+        clearable: true,
+      },
+    });
+
+    expect(wrapper.findComponent(TextInput).exists()).toBe(true);
+    expect(wrapper.get('input[type="date"]').exists()).toBe(true);
   });
 
   it("renders DatePicker as a doctui text control instead of browser-native date chrome", () => {
@@ -147,6 +173,7 @@ describe("@doctui/dates visual contracts", () => {
     const storyFiles = [
       "date-picker.stories.ts",
       "date-input.stories.ts",
+      "native-date-input.stories.ts",
       "date-time-picker.stories.ts",
       "calendar.stories.ts",
       "month-picker.stories.ts",
