@@ -2,9 +2,9 @@
   "number": "27",
   "title": "fix(core): wire theme tokens through visual contracts",
   "branch": "codex/issue-14-theme-tokens",
-  "sha": "4b937c8b74b25a2552c73ab33162dcd369ab9ac3",
+  "sha": "f48e43f259e7f45af7e666ad6d7d549cd686b1ba",
   "repository": "OneTwoTen/doctui",
   "prUrl": "https://github.com/OneTwoTen/doctui/pull/27",
-  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/34805356114",
-  "generatedAt": "2026-09-14T04:15:52.664Z"
+  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/34805369295",
+  "generatedAt": "2026-09-14T04:16:42.988Z"
 }
