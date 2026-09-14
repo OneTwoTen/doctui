@@ -9,6 +9,9 @@ const componentStories = [
   "checkbox.stories.ts",
   "radio.stories.ts",
   "switch.stories.ts",
+  "overlay.stories.ts",
+  "modal.stories.ts",
+  "drawer.stories.ts",
 ] as const;
 
 describe("Storybook component controls contract", () => {
