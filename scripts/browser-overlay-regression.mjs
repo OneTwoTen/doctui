@@ -198,12 +198,12 @@ async function main() {
       `Modal is not horizontally centered: ${JSON.stringify(xsGeometry)}`,
     );
 
-    await evaluate(`
+    await evaluate(`(() => {
       const select = document.querySelector('#modal-size');
       select.value = 'xl';
       select.dispatchEvent(new Event('change', { bubbles: true }));
-      true;
-    `);
+      return true;
+    })()`);
     const xlWidth = await waitFor(async () => {
       const width = await evaluate(
         "document.querySelector('.dui-Modal').getBoundingClientRect().width",
@@ -315,13 +315,13 @@ async function main() {
       "Final dialog close did not restore body overflow",
     );
 
-    await evaluate(`
+    await evaluate(`(() => {
       const select = document.querySelector('#modal-size');
       select.value = 'xs';
       select.dispatchEvent(new Event('change', { bubbles: true }));
       document.querySelector('#open-modal').click();
-      true;
-    `);
+      return true;
+    })()`);
     await waitForDom(
       "Boolean(document.querySelector('.dui-Modal'))",
       "Modal did not reopen for pointer regression",
