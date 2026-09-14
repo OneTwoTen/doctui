@@ -57,7 +57,7 @@ import {
 import { Notifications } from "@doctui/notifications";
 import { useData } from "vitepress";
 import DefaultTheme from "vitepress/theme";
-import { defineComponent, h, type Component } from "vue";
+import { type Component, defineComponent, h } from "vue";
 
 const docsComponents: Record<string, Component> = {
   ActionIcon,
