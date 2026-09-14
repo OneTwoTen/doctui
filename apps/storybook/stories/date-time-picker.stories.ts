@@ -10,8 +10,6 @@ const meta = {
     modelValue: "2026-09-14T09:30",
     label: "Publish at",
     description: "Native date-time semantics with doctui field styling.",
-    error: undefined,
-    ariaLabel: undefined,
     disabled: false,
     clearable: true,
     size: "md",
