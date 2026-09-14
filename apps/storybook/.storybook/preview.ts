@@ -1,4 +1,5 @@
 import "@doctui/core/styles.css";
+import "@doctui/dates/styles.css";
 import "./typography.css";
 import type { Preview } from "@storybook/vue3-vite";
 
