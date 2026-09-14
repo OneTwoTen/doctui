@@ -24,7 +24,7 @@ Generated component and package reference for doctui 0.0.0.
 - Code (@doctui/core): Monospace inline or block code presentation.
 - Combobox (@doctui/core): Focus-managed listbox engine used by doctui selection controls.
 - Container (@doctui/core): Centered responsive container constrained by theme breakpoints.
-- DateInput (@doctui/dates): Native date field that reuses doctui core field geometry, sizing and validation states.
+- DateInput (@doctui/dates): Editable localized date field with strict ISO model values and the shared doctui day/month/year picker dialog.
 - DatePicker (@doctui/dates): Doctui-styled readonly date field with day, month and year picker views in one accessible dialog surface.
 - DateTimePicker (@doctui/dates): Custom doctui date-time field combining the shared day/month/year picker with explicit hour and minute controls.
 - Divider (@doctui/core): Separator for related content with optional label content.
@@ -39,6 +39,7 @@ Generated component and package reference for doctui 0.0.0.
 - Modal (@doctui/core): Accessible modal dialog with nested-layer dismissal, reference-counted scroll lock and focus restoration.
 - MonthPicker (@doctui/dates): Keyboard-navigable month listbox rendered in the shared doctui date surface.
 - MultiSelect (@doctui/core): Searchable multi-value selection control backed by the shared Combobox engine.
+- NativeDateInput (@doctui/dates): Explicit browser-native date input wrapper that keeps OS date picker semantics while sharing doctui core field geometry.
 - Notifications (@doctui/notifications): Accessible renderer for notifications managed by a store.
 - NumberInput (@doctui/core): Native numeric input with numeric v-model values and range constraints.
 - Overlay (@doctui/core): Portal-backed semantic-color backdrop with controlled visibility and dismissal.
@@ -186,13 +187,14 @@ Props: `as`, `size`.
 
 Package: `@doctui/dates`
 
-Native date field that reuses doctui core field geometry, sizing and validation states.
+Editable localized date field with strict ISO model values and the shared doctui day/month/year picker dialog.
 
-Props: `id`, `modelValue`, `label`, `description`, `error`, `ariaLabel`, `minDate`, `maxDate`, `disabled`, `clearable`, `size`, `radius`.
+Props: `id`, `modelValue`, `label`, `description`, `error`, `ariaLabel`, `placeholder`, `minDate`, `maxDate`, `locale`, `firstDayOfWeek`, `disabled`, `clearable`, `size`, `radius`.
 
 Accessibility: Reuses the core TextInput label, description, error and SSR-safe ID relationships.
-Accessibility: Keeps native date input semantics while sharing doctui visual field states.
-Accessibility: When no visible label is supplied, ariaLabel or the default Date accessible name is used.
+Accessibility: The text field stays editable while the calendar action opens the same custom dialog used by DatePicker.
+Accessibility: Typed localized dates are normalized back to strict YYYY-MM-DD model values only when valid and in range.
+Accessibility: The calendar action exposes aria-expanded, aria-controls and aria-haspopup=dialog.
 
 ### DatePicker
 
@@ -349,6 +351,18 @@ Accessibility: Uses aria-multiselectable listbox semantics while keeping DOM foc
 Accessibility: Backspace removes the last selected value when the search query is empty, and controlled updates immediately refresh aria-selected state.
 Accessibility: Clear emits an empty array plus the shared clear event.
 Example: <MultiSelect id="compare" v-model="frameworks" :data="options" label="Compare with" clearable />
+
+### NativeDateInput
+
+Package: `@doctui/dates`
+
+Explicit browser-native date input wrapper that keeps OS date picker semantics while sharing doctui core field geometry.
+
+Props: `id`, `modelValue`, `label`, `description`, `error`, `ariaLabel`, `minDate`, `maxDate`, `disabled`, `clearable`, `size`, `radius`.
+
+Accessibility: Keeps native input[type=date] semantics and browser/OS picker behavior.
+Accessibility: Reuses core field label, description, error, clear, disabled and SSR-safe ID relationships.
+Accessibility: Use DateInput when editable text and a visually consistent doctui picker are preferred.
 
 ### Notifications
 
