@@ -19,6 +19,10 @@
   font-variant-numeric: tabular-nums;
 }
 
+.dui-DateInput .dui-DatePicker__field .dui-TextInput-input {
+  cursor: text;
+}
+
 .dui-DatePicker__field .dui-TextInput-rightSection {
   flex: 0 0 auto;
   gap: 0;
