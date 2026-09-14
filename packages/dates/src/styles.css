@@ -16,7 +16,7 @@
 
 .dui-Calendar__header,
 .dui-Calendar__weekdays,
-.dui-Calendar__grid {
+.dui-Calendar__row {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 0.25rem;
@@ -29,6 +29,11 @@
   text-align: center;
 }
 
+.dui-Calendar__grid {
+  display: grid;
+  gap: 0.25rem;
+}
+
 .dui-Calendar__nav,
 .dui-Calendar__day,
 .dui-DatePicker__option {
@@ -37,12 +42,23 @@
   background: transparent;
   color: inherit;
   cursor: pointer;
+  font: inherit;
 }
 
-.dui-Calendar__nav:hover,
+.dui-Calendar__nav:hover:not(:disabled),
 .dui-Calendar__day:hover:not(:disabled),
-.dui-DatePicker__option:hover {
+.dui-DatePicker__option:hover:not(:disabled) {
   background: var(--dui-color-surface-muted);
+}
+
+.dui-Calendar__nav:focus-visible,
+.dui-Calendar__day:focus-visible,
+.dui-DatePicker__option:focus-visible,
+.dui-DateInput__input:focus-visible,
+.dui-DateInput__clear:focus-visible,
+.dui-DatePicker__toggle:focus-visible {
+  outline: 2px solid var(--dui-color-focus-ring);
+  outline-offset: 2px;
 }
 
 .dui-Calendar__weekdays {
@@ -57,12 +73,20 @@
 
 .dui-Calendar__day[data-selected="true"],
 .dui-DatePicker__option[data-selected="true"] {
-  background: var(--dui-color-primary);
-  color: var(--dui-color-on-primary);
+  background: var(--dui-color-primary-filled);
+  color: var(--dui-color-primary-filled-text);
 }
 
 .dui-Calendar__empty {
   min-height: 2rem;
+}
+
+.dui-Calendar button:disabled,
+.dui-DateInput button:disabled,
+.dui-DatePicker button:disabled,
+.dui-DatePicker__option:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 .dui-DateInput__label {
@@ -70,6 +94,12 @@
   margin-bottom: 0.25rem;
   font-size: var(--dui-font-size-sm);
   font-weight: 600;
+}
+
+.dui-DateInput__description {
+  margin-bottom: 0.25rem;
+  color: var(--dui-color-text-muted);
+  font-size: var(--dui-font-size-xs);
 }
 
 .dui-DateInput__control {
@@ -87,12 +117,17 @@
   font: inherit;
 }
 
+.dui-DateInput__input[aria-invalid="true"] {
+  border-color: var(--dui-color-danger-outline);
+}
+
 .dui-DateInput__clear,
 .dui-DatePicker__toggle {
   border: 0;
   background: transparent;
   color: var(--dui-color-text-muted);
   cursor: pointer;
+  font: inherit;
 }
 
 .dui-DateInput__clear {
@@ -105,7 +140,7 @@
 
 .dui-DateInput__error {
   margin-top: 0.25rem;
-  color: var(--dui-color-danger);
+  color: var(--dui-color-danger-light-text);
   font-size: var(--dui-font-size-xs);
 }
 
@@ -113,16 +148,25 @@
   position: relative;
 }
 
+.dui-DatePicker .dui-DateInput__clear {
+  right: 2rem;
+}
+
 .dui-DatePicker__toggle {
   position: absolute;
-  top: 1.8rem;
+  top: 0.25rem;
   right: 0.35rem;
+  min-width: 1.75rem;
   min-height: 1.75rem;
+}
+
+.dui-DatePicker[data-has-label="true"] .dui-DatePicker__toggle {
+  top: 1.8rem;
 }
 
 .dui-DatePicker > .dui-Calendar {
   position: absolute;
-  z-index: 2;
+  z-index: var(--dui-z-index-popover);
   top: 100%;
   left: 0;
   margin-top: 0.25rem;
