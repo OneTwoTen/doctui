@@ -1,4 +1,4 @@
-import { TextInput, type Radius, type Size } from "@doctui/core";
+import { type Radius, type Size, TextInput } from "@doctui/core";
 import {
   defineComponent,
   h,
@@ -163,8 +163,7 @@ export const DatePicker = defineComponent({
                         "button",
                         {
                           type: "button",
-                          class:
-                            "dui-DatePicker__action dui-DatePicker__clear",
+                          class: "dui-DatePicker__action dui-DatePicker__clear",
                           "aria-label": "Clear date",
                           disabled: props.disabled,
                           onClick: () => {
@@ -181,8 +180,7 @@ export const DatePicker = defineComponent({
                     {
                       ref: toggle,
                       type: "button",
-                      class:
-                        "dui-DatePicker__action dui-DatePicker__toggle",
+                      class: "dui-DatePicker__action dui-DatePicker__toggle",
                       "aria-label": opened.value
                         ? "Close calendar"
                         : "Open calendar",
