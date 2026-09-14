@@ -63,7 +63,11 @@ export const Playground: Story = {
 
         return () =>
           h(Stack, { gap: "md", style: { maxWidth: "28rem" } }, () => [
-            h(Button, { onClick: () => (open.value = true) }, () => "Open modal"),
+            h(
+              Button,
+              { onClick: () => (open.value = true) },
+              () => "Open modal",
+            ),
             h(
               Text,
               { size: "sm", muted: true },
@@ -79,10 +83,20 @@ export const Playground: Story = {
               {
                 default: () =>
                   h(Stack, { gap: "md" }, () => [
-                    h(Text, null, () => "Resize the dialog, change its radius, backdrop, dismissal and focus behavior from Controls."),
-                    h(Button, { onClick: () => (open.value = false) }, () => "Done"),
+                    h(
+                      Text,
+                      null,
+                      () =>
+                        "Resize the dialog, change its radius, backdrop, dismissal and focus behavior from Controls.",
+                    ),
+                    h(
+                      Button,
+                      { onClick: () => (open.value = false) },
+                      () => "Done",
+                    ),
                   ]),
-                footer: () => h(Text, { size: "sm", muted: true }, () => "Footer slot"),
+                footer: () =>
+                  h(Text, { size: "sm", muted: true }, () => "Footer slot"),
               },
             ),
           ]);
@@ -128,7 +142,14 @@ export const Sizes: Story = {
                 title: `${size.value.toUpperCase()} modal`,
                 "onUpdate:modelValue": (value: boolean) => (open.value = value),
               },
-              { default: () => h(Text, null, () => "Each token maps to a different real width.") },
+              {
+                default: () =>
+                  h(
+                    Text,
+                    null,
+                    () => "Each token maps to a different real width.",
+                  ),
+              },
             ),
           ]);
       },
@@ -148,7 +169,11 @@ export const AdvancedComposition: Story = {
 
         return () =>
           h(Stack, { gap: "md" }, () => [
-            h(Button, { onClick: () => (modalOpen.value = true) }, () => "Review order"),
+            h(
+              Button,
+              { onClick: () => (modalOpen.value = true) },
+              () => "Review order",
+            ),
             h(
               Modal,
               {
@@ -157,22 +182,40 @@ export const AdvancedComposition: Story = {
                 title: "Review order",
                 size: "lg",
                 centered: true,
-                "onUpdate:modelValue": (value: boolean) => (modalOpen.value = value),
+                "onUpdate:modelValue": (value: boolean) =>
+                  (modalOpen.value = value),
               },
               {
                 default: () =>
                   h(Stack, { gap: "md" }, () => [
-                    h(Text, null, () => "3 items · Standard delivery · Total $128"),
-                    h(Button, { onClick: () => (drawerOpen.value = true) }, () => "Edit delivery details"),
+                    h(
+                      Text,
+                      null,
+                      () => "3 items · Standard delivery · Total $128",
+                    ),
+                    h(
+                      Button,
+                      { onClick: () => (drawerOpen.value = true) },
+                      () => "Edit delivery details",
+                    ),
                     h(
                       Drawer,
                       {
                         modelValue: drawerOpen.value,
                         title: "Delivery details",
                         size: "sm",
-                        "onUpdate:modelValue": (value: boolean) => (drawerOpen.value = value),
+                        "onUpdate:modelValue": (value: boolean) =>
+                          (drawerOpen.value = value),
                       },
-                      { default: () => h(Text, null, () => "Nested Drawer closes before its parent Modal.") },
+                      {
+                        default: () =>
+                          h(
+                            Text,
+                            null,
+                            () =>
+                              "Nested Drawer closes before its parent Modal.",
+                          ),
+                      },
                     ),
                   ]),
               },
