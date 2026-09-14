@@ -5,6 +5,7 @@ import {
   DatePicker,
   DateTimePicker,
   MonthPicker,
+  NativeDateInput,
   YearPicker,
 } from "@doctui/dates";
 import { DoctuiProvider, Stack, Text } from "@doctui/core";
@@ -31,12 +32,41 @@ import '@doctui/core/styles.css';
 import '@doctui/dates/styles.css';
 ```
 
+## DateInput
+
+`DateInput` is the editable custom date field. Users can type a localized date
+directly or open the doctui-owned day → month → year picker. The public model
+value remains a strict `YYYY-MM-DD` string, while the visible text follows
+`locale` (for example `14/09/2026` with `en-GB`).
+
+<DoctuiProvider>
+  <Stack gap="md" style="max-width: 28rem;">
+    <DateInput
+      v-model="date"
+      label="Release date"
+      description="Type a date or use the custom picker."
+      locale="en-GB"
+      :first-day-of-week="1"
+      min-date="2026-01-01"
+      max-date="2027-12-31"
+      clearable
+    />
+    <Text size="sm" muted>Selected: {{ date ?? "none" }}</Text>
+  </Stack>
+</DoctuiProvider>
+
+Typed values are parsed according to the locale's day/month/year order and are
+committed only when they form a valid in-range date. Invalid partial text stays
+editable while the field is focused; on blur it returns to the last valid model
+value. The calendar action exposes `aria-expanded`, `aria-controls` and
+`aria-haspopup="dialog"`.
+
 ## DatePicker
 
-`DatePicker` is a fully doctui-owned picker surface. It does **not** render a
-browser-native `input[type="date"]`; the visible field is a readonly text input
-with a locale-formatted value, SVG actions and an accessible custom picker.
-Use `DateInput` when browser-native date chrome is preferred.
+`DatePicker` is the readonly/select-oriented counterpart to `DateInput`. It does
+**not** render browser-native `input[type="date"]` chrome; the visible field is
+a readonly text input with a locale-formatted value, SVG actions and an
+accessible custom picker. Use `DateInput` when direct typing is required.
 
 <DoctuiProvider>
   <Stack gap="md" style="max-width: 28rem;">
@@ -87,27 +117,23 @@ closes the popup and restores focus to the picker action; pointer input outside
 closes it without moving focus. `disabled` is forwarded to the field, actions
 and all picker views.
 
-## Native DateInput
+## NativeDateInput
 
-`DateInput` intentionally keeps browser-native `date` semantics while reusing
-the core `TextInput` field contract. The browser or operating system controls
-the native calendar popup, so its popup visuals can differ between platforms.
-Use `DatePicker` when a fully theme-controlled doctui surface is required.
+`NativeDateInput` is the explicit browser-native escape hatch. It renders
+`input[type="date"]` and reuses the core `TextInput` geometry, labels, errors,
+sizing and clear behavior, but the browser or operating system owns the popup
+UI. Use it when native semantics/platform integration matter more than visual
+consistency.
 
 <DoctuiProvider>
   <Stack gap="md" style="max-width: 28rem;">
-    <DateInput
+    <NativeDateInput
       v-model="date"
-      label="Start date"
-      description="Native date input with doctui field geometry."
+      label="Native start date"
+      description="Browser/OS date picker with doctui field geometry."
       size="md"
       radius="md"
       clearable
-    />
-    <DateInput
-      :model-value="null"
-      label="End date"
-      error="End date is required"
     />
   </Stack>
 </DoctuiProvider>
