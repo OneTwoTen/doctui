@@ -160,7 +160,8 @@ const MenuKeyboardDemo = defineComponent({
               { value: "archive", label: "Archive" },
             ],
             "onUpdate:modelValue": (value: boolean) => (open.value = value),
-            onSelect: (value: string) => (selected.value = `Selected: ${value}`),
+            onSelect: (value: string) =>
+              (selected.value = `Selected: ${value}`),
           },
           { target: () => h(Button, null, () => "Document actions") },
         ),
