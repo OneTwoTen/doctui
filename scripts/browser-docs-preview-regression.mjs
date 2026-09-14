@@ -165,7 +165,7 @@ async function main() {
 
     const basicAudit = await evaluate(`(() => {
       const provider = document.querySelector("[data-dui-provider]");
-      const button = document.querySelector('.docs-preview [data-dui-component="Button"]');
+      const button = document.querySelector('.docs-preview [data-dui-component="Button"][data-color="primary"][data-variant="filled"]');
       const textInput = document.querySelector('.docs-preview [data-dui-component="TextInput"] input');
       if (!provider || !button || !textInput) return null;
       const providerStyle = getComputedStyle(provider);
@@ -198,7 +198,7 @@ async function main() {
     assert(
       basicAudit.buttonBackground !== "rgba(0, 0, 0, 0)" &&
         basicAudit.buttonBackground !== "transparent",
-      "Primary Button preview lost its themed background",
+      "Primary filled Button preview lost its themed background",
     );
     assert(basicAudit.buttonRadius > 0, "Button preview lost themed radius");
     assert(
