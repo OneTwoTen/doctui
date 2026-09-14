@@ -123,22 +123,19 @@ export const Sizes: Story = {
 
         return () =>
           h(Stack, { gap: "md" }, () => [
-            h(
-              Group,
-              { gap: "sm" },
-              () =>
-                (["xs", "sm", "md", "lg", "xl"] as const).map((value) =>
-                  h(
-                    Button,
-                    {
-                      onClick: () => {
-                        size.value = value;
-                        open.value = true;
-                      },
+            h(Group, { gap: "sm" }, () =>
+              (["xs", "sm", "md", "lg", "xl"] as const).map((value) =>
+                h(
+                  Button,
+                  {
+                    onClick: () => {
+                      size.value = value;
+                      open.value = true;
                     },
-                    () => `Open ${value}`,
-                  ),
+                  },
+                  () => `Open ${value}`,
                 ),
+              ),
             ),
             h(
               Modal,
@@ -204,7 +201,8 @@ export const DestructiveAction: Story = {
                     h(
                       Text,
                       { size: "sm", muted: true },
-                      () => "Destructive actions should be explicit and visually distinct.",
+                      () =>
+                        "Destructive actions should be explicit and visually distinct.",
                     ),
                   ]),
                 footer: () =>
@@ -240,23 +238,20 @@ export const LoadingAction: Story = {
   args: { modelValue: true, size: "sm", title: "Publishing release" },
   render: (args) =>
     preview(() =>
-      h(
-        Modal,
-        args,
-        {
-          default: () =>
-            h(
-              Text,
-              null,
-              () => "The primary action communicates progress and cannot be clicked twice.",
-            ),
-          footer: () =>
-            h(Group, { justify: "end" }, () => [
-              h(Button, { variant: "default", disabled: true }, () => "Cancel"),
-              h(Button, { loading: true }, () => "Publishing"),
-            ]),
-        },
-      ),
+      h(Modal, args, {
+        default: () =>
+          h(
+            Text,
+            null,
+            () =>
+              "The primary action communicates progress and cannot be clicked twice.",
+          ),
+        footer: () =>
+          h(Group, { justify: "end" }, () => [
+            h(Button, { variant: "default", disabled: true }, () => "Cancel"),
+            h(Button, { loading: true }, () => "Publishing"),
+          ]),
+      }),
     ),
 };
 
@@ -267,11 +262,16 @@ export const DisabledAction: Story = {
       h(Modal, args, {
         default: () =>
           h(Stack, { gap: "sm" }, () => [
-            h(Text, null, () => "Complete all required fields before continuing."),
+            h(
+              Text,
+              null,
+              () => "Complete all required fields before continuing.",
+            ),
             h(
               Text,
               { size: "sm", muted: true },
-              () => "Disabled primary action remains visible in its expected footer position.",
+              () =>
+                "Disabled primary action remains visible in its expected footer position.",
             ),
           ]),
         footer: () =>
@@ -289,18 +289,15 @@ export const LongContentFixedFooter: Story = {
     preview(() =>
       h(Modal, args, {
         default: () =>
-          h(
-            Stack,
-            { gap: "md" },
-            () =>
-              Array.from({ length: 18 }, (_, index) =>
-                h(
-                  Text,
-                  { key: index },
-                  () =>
-                    `Section ${index + 1}: Review the policy text and permission details before accepting.`,
-                ),
+          h(Stack, { gap: "md" }, () =>
+            Array.from({ length: 18 }, (_, index) =>
+              h(
+                Text,
+                { key: index },
+                () =>
+                  `Section ${index + 1}: Review the policy text and permission details before accepting.`,
               ),
+            ),
           ),
         footer: () =>
           h(Group, { justify: "end" }, () => [
@@ -320,7 +317,8 @@ export const ResponsiveActions: Story = {
           h(
             Text,
             null,
-            () => "A narrow modal with several actions should wrap instead of overflowing.",
+            () =>
+              "A narrow modal with several actions should wrap instead of overflowing.",
           ),
         footer: () =>
           h(Group, { justify: "end", wrap: true }, () => [
@@ -341,7 +339,8 @@ export const NoFooter: Story = {
           h(
             Text,
             null,
-            () => "Informational dialogs do not render an empty footer when no actions are needed.",
+            () =>
+              "Informational dialogs do not render an empty footer when no actions are needed.",
           ),
       }),
     ),
@@ -356,7 +355,8 @@ export const CustomFooterLayout: Story = {
           h(
             Text,
             null,
-            () => "Footer content is fully composable and is not limited to action buttons.",
+            () =>
+              "Footer content is fully composable and is not limited to action buttons.",
           ),
         footer: () =>
           h(
