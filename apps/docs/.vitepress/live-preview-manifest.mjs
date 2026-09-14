@@ -53,7 +53,7 @@ export const livePreviewManifest = [
 
 export const guidePreviewCoverage = [
   { guide: "basic-components.md", minPreviews: 14 },
-  { guide: "selection-controls.md", minPreviews: 1 },
+  { guide: "selection-controls.md", minPreviews: 5 },
   { guide: "tags-input.md", minPreviews: 3 },
   { guide: "overlays.md", minPreviews: 6 },
   { guide: "dialog-actions.md", minPreviews: 5 },
