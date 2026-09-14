@@ -33,6 +33,14 @@ describe("theme foundation", () => {
     expect(DEFAULT_THEME.spacing.md).toBe("1rem");
   });
 
+  it("uses the doctui typography stack as a public theme token", () => {
+    const variables = getThemeCssVariables(DEFAULT_THEME, "light");
+
+    expect(DEFAULT_THEME.fontFamily).toContain('"Be Vietnam Pro"');
+    expect(DEFAULT_THEME.fontFamily).toContain('"Segoe UI Variable"');
+    expect(variables["--dui-font-family"]).toBe(DEFAULT_THEME.fontFamily);
+  });
+
   it("maps the active color scheme and scales to --dui-* variables", () => {
     const theme = mergeTheme(DEFAULT_THEME, customTheme);
     const variables = getThemeCssVariables(theme, "dark");
