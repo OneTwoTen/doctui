@@ -78,6 +78,8 @@ Token sizes map to real dialog widths through `--dui-modal-width`:
 
 Modal/Drawer outside dismissal is handled by the shared dismissable-layer stack. The backdrop itself does not register a second dismissal path, preventing one pointer interaction from producing duplicate close events.
 
+For persistent dialog actions, use the named `footer` slot. See [Dialog footer actions](/guide/dialog-actions) for standard, destructive, loading, disabled, long-content, responsive and nested action patterns.
+
 ## Drawer
 
 `Drawer` uses the same Overlay, focus, dismissal and scroll-lock contract as `Modal`, but positions a fixed side panel at the left or right edge.
@@ -135,7 +137,7 @@ Outside pointer interaction closes the menu when `closeOnClickOutside` is enable
 
 ## Popover
 
-`Popover` treats the `target` slot root as the real trigger. The trigger receives `aria-haspopup="dialog"`, `aria-expanded`, and `aria-controls`, and the controlled panel receives the matching stable `id`.
+`Popover` treats the `target` slot root as the real trigger. The trigger receives a stable `id`, `aria-haspopup="dialog"`, `aria-expanded`, and `aria-controls`; the controlled panel receives the matching stable panel `id` and uses `aria-labelledby` to take its accessible name from that real trigger. If the trigger already has an `id`, doctui preserves and reuses it.
 
 ```vue
 <Popover v-model="detailsOpen" position="right">
@@ -147,11 +149,11 @@ Outside pointer interaction closes the menu when `closeOnClickOutside` is enable
 </Popover>
 ```
 
-`closeOnEscape` and `closeOnClickOutside` are independent. Escape dismissal restores focus to the trigger. Outside-pointer dismissal keeps the user's new pointer/focus destination intact.
+Use a clear accessible name on the trigger because that same trigger names the contextual dialog. `closeOnEscape` and `closeOnClickOutside` are independent. Escape dismissal restores focus to the trigger. Outside-pointer dismissal keeps the user's new pointer/focus destination intact.
 
 ### Position and collision behavior
 
-`position="top | right | bottom | left"` currently selects a deterministic CSS-anchored side relative to the Popover wrapper. The current 0.x contract does **not** automatically flip or shift the panel when it approaches a viewport edge.
+`position="top | right | bottom | left"` currently selects a deterministic CSS-anchored side relative to the Popover wrapper. The current 0.x contract does **not** automatically flip or shift the panel when it approaches a viewport edge. Choose a position that fits the surrounding layout when clipping is possible.
 
 Core must not grow a custom JavaScript popper engine. If doctui promotes collision-aware positioning into the public contract, use the approved low-level floating-positioning abstraction instead of bespoke geometry code.
 
@@ -167,7 +169,7 @@ Core must not grow a custom JavaScript popper engine. If doctui promotes collisi
 
 Prefer a single focusable root in the default slot so the element users actually focus receives the description. If the root is a composite wrapper containing several focusable descendants, focus moving between descendants does not close and reopen the tooltip; it closes only when focus leaves the composite root. For important instructions, validation, or required content, render visible text instead of relying on a tooltip.
 
-Tooltip `position` uses the same deterministic CSS-side contract as Popover and does not currently auto-flip on collision.
+Tooltip text wraps within a viewport-safe maximum width rather than forcing one unbroken line. Tooltip `position` uses the same deterministic CSS-side contract as Popover and does not currently auto-flip on collision.
 
 ## Dismissal behavior
 
@@ -238,6 +240,8 @@ Override the theme z-index scale through normal doctui theme configuration inste
 
 ## Storybook
 
-Overlay, Modal, and Drawer each have a dedicated Storybook page with a `Playground` story whose public visual and behavior props are represented as Controls. Additional stories cover size geometry, custom/no backdrop states and nested `Modal` → `Drawer` composition.
+Overlay, Modal and Drawer each have a dedicated Storybook module with the actual component registered in metadata and functional Controls for meaningful public props. Controlled open state in the primary Playgrounds is synchronized both ways: changing `modelValue` in Controls updates the canvas, while component dismissal writes the new value back to Storybook args.
 
-Storybook also includes Menu keyboard, Popover position/focus-restoration, Tooltip hover/focus, and advanced nested Popover → Menu + Tooltip compositions for contextual overlays.
+Menu, Popover and Tooltip also have dedicated Storybook modules with functional Controls. Composition stories are separate so several independently controlled components do not present a misleading shared Controls panel.
+
+The dialog stories additionally cover footer/action composition, long-content scrolling, responsive action wrapping, destructive/loading/disabled states, no-footer surfaces and nested Modal → Drawer actions. Contextual overlay composition keeps Popover → Menu + Tooltip available for manually verifying nested Escape ordering and one-level-at-a-time focus restoration.
