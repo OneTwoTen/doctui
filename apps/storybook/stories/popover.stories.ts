@@ -59,7 +59,7 @@ export const Playground: Story = {
               target: () => h(Button, null, () => "Toggle popover"),
               default: () =>
                 h(Stack, { gap: "xs" }, () => [
-                  h(Text, { fw: 600 }, () => "Contextual details"),
+                  h(Text, { weight: 600 }, () => "Contextual details"),
                   h(Text, { muted: true }, () =>
                     "Change position and dismissal behavior from Controls.",
                   ),
