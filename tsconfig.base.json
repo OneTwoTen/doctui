@@ -5,7 +5,7 @@
     "module": "Preserve",
     "moduleResolution": "Bundler",
     "paths": {
-      "@doctui/core": ["./packages/core/src/index.ts"],
+      "@doctui/core": ["./packages/core/src/public-index.ts"],
       "@doctui/form": ["./packages/form/src/index.ts"],
       "@doctui/hooks": ["./packages/hooks/src/index.ts"],
       "@doctui/notifications": ["./packages/notifications/src/index.ts"],
