@@ -120,7 +120,7 @@ export const AdvancedComposition: Story = {
               }),
           },
         ),
-        h(Group, { gap: "sm", justify: "end" }, () => [
+        h(Group, { gap: "sm", justify: "flex-end" }, () => [
           h(Button, { variant: "default" }, () => "Cancel"),
           h(Button, null, () => "Save preferences"),
         ]),
