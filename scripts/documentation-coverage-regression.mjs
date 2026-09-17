@@ -92,7 +92,9 @@ async function main() {
     );
   }
 
-  const workspaceConfig = JSON.parse(await readFile("tsconfig.base.json", "utf8"));
+  const workspaceConfig = JSON.parse(
+    await readFile("tsconfig.base.json", "utf8"),
+  );
   const corePath = workspaceConfig.compilerOptions?.paths?.["@doctui/core"];
   if (
     !Array.isArray(corePath) ||
