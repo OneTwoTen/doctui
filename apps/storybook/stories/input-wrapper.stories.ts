@@ -24,23 +24,22 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const nativeField = (id: string, describedBy?: string) =>
-  h("input", {
-    id,
-    type: "email",
-    placeholder: "you@example.com",
-    "aria-describedby": describedBy,
-    style: {
-      boxSizing: "border-box",
-      width: "100%",
-      minHeight: "2.5rem",
-      padding: "0 var(--dui-spacing-sm)",
-      border: "1px solid var(--dui-color-border)",
-      borderRadius: "var(--dui-radius-md)",
-      background: "var(--dui-color-surface)",
-      color: "var(--dui-color-text)",
-    },
-  });
+const nativeFieldProps = (id: string, describedBy?: string) => ({
+  id,
+  type: "email",
+  placeholder: "you@example.com",
+  "aria-describedby": describedBy,
+  style: {
+    boxSizing: "border-box",
+    width: "100%",
+    minHeight: "2.5rem",
+    padding: "0 var(--dui-spacing-sm)",
+    border: "1px solid var(--dui-color-border)",
+    borderRadius: "var(--dui-radius-md)",
+    background: "var(--dui-color-surface)",
+    color: "var(--dui-color-text)",
+  },
+});
 
 export const Default: Story = {
   render: (args) =>
@@ -49,8 +48,13 @@ export const Default: Story = {
         InputWrapper,
         { ...args, style: { maxWidth: "28rem" } },
         {
-          default: ({ id, describedBy }: { id: string; describedBy?: string }) =>
-            nativeField(id, describedBy),
+          default: ({
+            id,
+            describedBy,
+          }: {
+            id: string;
+            describedBy?: string;
+          }) => h("input", nativeFieldProps(id, describedBy)),
         },
       ),
     ),
@@ -66,9 +70,15 @@ export const ErrorState: Story = {
         InputWrapper,
         { ...args, style: { maxWidth: "28rem" } },
         {
-          default: ({ id, describedBy }: { id: string; describedBy?: string }) =>
+          default: ({
+            id,
+            describedBy,
+          }: {
+            id: string;
+            describedBy?: string;
+          }) =>
             h("input", {
-              ...nativeField(id, describedBy).props,
+              ...nativeFieldProps(id, describedBy),
               value: "invalid-email",
               "aria-invalid": "true",
             }),
@@ -94,9 +104,15 @@ export const AdvancedComposition: Story = {
               "InputWrapper supplies the accessible label and message relationships while the consumer owns the native control.",
           },
           {
-            default: ({ id, describedBy }: { id: string; describedBy?: string }) =>
+            default: ({
+              id,
+              describedBy,
+            }: {
+              id: string;
+              describedBy?: string;
+            }) =>
               h("input", {
-                ...nativeField(id, describedBy).props,
+                ...nativeFieldProps(id, describedBy),
                 value: value.value,
                 onInput: (event: Event) => {
                   value.value = (event.target as HTMLInputElement).value;
