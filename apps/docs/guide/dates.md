@@ -8,7 +8,7 @@ import {
   NativeDateInput,
   YearPicker,
 } from "@doctui/dates";
-import { DoctuiProvider, Stack, Text } from "@doctui/core";
+import { Stack, Text } from "@doctui/core";
 import { ref } from "vue";
 
 const date = ref<string | null>("2026-09-14");
@@ -28,8 +28,8 @@ Import the public styles for both packages in applications that consume the
 packages directly:
 
 ```ts
-import '@doctui/core/styles.css';
-import '@doctui/dates/styles.css';
+import "@doctui/core/styles.css";
+import "@doctui/dates/styles.css";
 ```
 
 ## DateInput
@@ -39,8 +39,8 @@ directly or open the doctui-owned day → month → year picker. The public mode
 value remains a strict `YYYY-MM-DD` string, while the visible text follows
 `locale` (for example `14/09/2026` with `en-GB`).
 
-<DoctuiProvider>
-  <Stack gap="md" style="max-width: 28rem;">
+<div class="docs-preview docs-preview--narrow" data-docs-preview="date-input">
+  <Stack gap="md">
     <DateInput
       v-model="date"
       label="Release date"
@@ -53,7 +53,20 @@ value remains a strict `YYYY-MM-DD` string, while the visible text follows
     />
     <Text size="sm" muted>Selected: {{ date ?? "none" }}</Text>
   </Stack>
-</DoctuiProvider>
+</div>
+
+```vue
+<DateInput
+  v-model="date"
+  label="Release date"
+  description="Type a date or use the custom picker."
+  locale="en-GB"
+  :first-day-of-week="1"
+  min-date="2026-01-01"
+  max-date="2027-12-31"
+  clearable
+/>
+```
 
 Typed values are parsed according to the locale's day/month/year order and are
 committed only when they form a valid in-range date. Invalid partial text stays
@@ -68,8 +81,8 @@ value. The calendar action exposes `aria-expanded`, `aria-controls` and
 a readonly text input with a locale-formatted value, SVG actions and an
 accessible custom picker. Use `DateInput` when direct typing is required.
 
-<DoctuiProvider>
-  <Stack gap="md" style="max-width: 28rem;">
+<div class="docs-preview docs-preview--narrow" data-docs-preview="date-picker">
+  <Stack gap="md">
     <DatePicker
       v-model="date"
       label="Release date"
@@ -83,14 +96,14 @@ accessible custom picker. Use `DateInput` when direct typing is required.
     />
     <Text size="sm" muted>Selected: {{ date ?? "none" }}</Text>
   </Stack>
-</DoctuiProvider>
+</div>
 
 ```vue
 <script setup lang="ts">
-import { DatePicker } from '@doctui/dates';
-import { ref } from 'vue';
+import { DatePicker } from "@doctui/dates";
+import { ref } from "vue";
 
-const date = ref<string | null>('2026-09-14');
+const date = ref<string | null>("2026-09-14");
 </script>
 
 <template>
@@ -117,6 +130,29 @@ closes the popup and restores focus to the picker action; pointer input outside
 closes it without moving focus. `disabled` is forwarded to the field, actions
 and all picker views.
 
+### Field states
+
+<div class="docs-preview docs-preview--compare" data-docs-preview="date-field-states">
+  <DateInput
+    model-value="2026-09-14"
+    label="Validation error"
+    description="Supporting context remains visible."
+    error="Review this date before continuing."
+  />
+  <DatePicker
+    model-value="2026-09-14"
+    label="Disabled picker"
+    disabled
+  />
+  <DateTimePicker
+    model-value="2026-09-14T09:30"
+    label="Disabled date and time"
+    disabled
+  />
+</div>
+
+These previews keep error and disabled geometry visible next to the interactive examples instead of leaving state coverage only in Storybook.
+
 ## NativeDateInput
 
 `NativeDateInput` is the explicit browser-native escape hatch. It renders
@@ -125,18 +161,27 @@ sizing and clear behavior, but the browser or operating system owns the popup
 UI. Use it when native semantics/platform integration matter more than visual
 consistency.
 
-<DoctuiProvider>
-  <Stack gap="md" style="max-width: 28rem;">
-    <NativeDateInput
-      v-model="date"
-      label="Native start date"
-      description="Browser/OS date picker with doctui field geometry."
-      size="md"
-      radius="md"
-      clearable
-    />
-  </Stack>
-</DoctuiProvider>
+<div class="docs-preview docs-preview--narrow" data-docs-preview="native-date-input">
+  <NativeDateInput
+    v-model="date"
+    label="Native start date"
+    description="Browser/OS date picker with doctui field geometry."
+    size="md"
+    radius="md"
+    clearable
+  />
+</div>
+
+```vue
+<NativeDateInput
+  v-model="date"
+  label="Native start date"
+  description="Browser/OS date picker with doctui field geometry."
+  size="md"
+  radius="md"
+  clearable
+/>
+```
 
 When no visible `label` is supplied, pass `ariaLabel`. Label, description and
 error relationships are provided by the same SSR-safe core field structure used
@@ -150,8 +195,8 @@ as `DatePicker`, then adds explicit hour and minute controls with `Now` and
 `Apply` actions. This keeps the popup visually consistent across browsers and
 platforms.
 
-<DoctuiProvider>
-  <Stack gap="md" style="max-width: 28rem;">
+<div class="docs-preview docs-preview--narrow" data-docs-preview="date-time-picker">
+  <Stack gap="md">
     <DateTimePicker
       v-model="dateTime"
       label="Publish at"
@@ -163,7 +208,19 @@ platforms.
     />
     <Text size="sm" muted>Selected: {{ dateTime }}</Text>
   </Stack>
-</DoctuiProvider>
+</div>
+
+```vue
+<DateTimePicker
+  v-model="dateTime"
+  label="Publish at"
+  description="Choose a local date and time"
+  min-date="2026-01-01"
+  max-date="2027-12-31"
+  :first-day-of-week="1"
+  clearable
+/>
+```
 
 The public value remains a local `YYYY-MM-DDTHH:mm` string. Date and time edits
 are kept as a draft while the popup is open; `Apply` commits the combined value.
@@ -172,7 +229,7 @@ popup while restoring focus to the trigger.
 
 ## Calendar surface
 
-<DoctuiProvider>
+<div class="docs-preview docs-preview--narrow" data-docs-preview="calendar">
   <Calendar
     v-model="date"
     month="2026-09"
@@ -180,7 +237,17 @@ popup while restoring focus to the trigger.
     max-date="2026-10-20"
     :first-day-of-week="1"
   />
-</DoctuiProvider>
+</div>
+
+```vue
+<Calendar
+  v-model="date"
+  month="2026-09"
+  min-date="2026-08-20"
+  max-date="2026-10-20"
+  :first-day-of-week="1"
+/>
+```
 
 The calendar renders a stable six-week grid and keeps adjacent-month days
 visible in a muted state. Calendar, `MonthPicker` and `YearPicker` share the
@@ -205,17 +272,25 @@ dates.
 
 ## Month and year surfaces
 
-<DoctuiProvider>
-  <Stack gap="md" style="max-width: 24rem;">
-    <MonthPicker v-model="month" :year="2026" />
-    <YearPicker
-      v-model="year"
-      :min-year="1900"
-      :max-year="2100"
-      :page-size="12"
-    />
-  </Stack>
-</DoctuiProvider>
+<div class="docs-preview docs-preview--narrow docs-preview--stack" data-docs-preview="month-year-pickers">
+  <MonthPicker v-model="month" :year="2026" />
+  <YearPicker
+    v-model="year"
+    :min-year="1900"
+    :max-year="2100"
+    :page-size="12"
+  />
+</div>
+
+```vue
+<MonthPicker v-model="month" :year="2026" />
+<YearPicker
+  v-model="year"
+  :min-year="1900"
+  :max-year="2100"
+  :page-size="12"
+/>
+```
 
 Month and year pickers use `listbox` / `option` semantics with `aria-selected`.
 Arrow keys move between options and Home/End jump to the first/last option.

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vitepress dev",
-    "build": "bun run --bun vitepress build",
+    "build": "node ../../scripts/docs-live-preview-regression.mjs --source && bun run --bun vitepress build && node ../../scripts/docs-live-preview-regression.mjs --render",
     "preview": "vitepress preview"
   },
   "dependencies": {

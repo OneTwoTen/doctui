@@ -3,15 +3,20 @@
 Modal and Drawer expose a composable `footer` slot for persistent actions. Keep business actions in that slot instead of placing them at the end of scrolling body content.
 
 <script setup lang="ts">
-import { ref } from "vue"
+import { Button, Drawer, Group, Modal, Text } from "@doctui/core";
+import { ref } from "vue";
 
-const modalOpen = ref(false)
-const drawerOpen = ref(false)
+const modalOpen = ref(false);
+const drawerOpen = ref(false);
+const destructiveOpen = ref(false);
+const stateOpen = ref(false);
+const narrowOpen = ref(false);
+const customOpen = ref(false);
 </script>
 
 ## Live examples
 
-<div style="display:flex; flex-wrap:wrap; gap:0.75rem; margin-bottom:1rem">
+<div class="docs-preview docs-preview--row" data-docs-preview="dialog-standard-actions">
   <Button @click="modalOpen = true">Open modal actions</Button>
   <Button variant="default" @click="drawerOpen = true">Open drawer actions</Button>
 </div>
@@ -62,6 +67,21 @@ This keeps the surface generic while allowing two actions, three actions, status
 
 Keep the safe action visually neutral and make the destructive action explicit.
 
+<div class="docs-preview docs-preview--row" data-docs-preview="dialog-destructive-actions">
+  <Button color="danger" variant="light" @click="destructiveOpen = true">Preview destructive footer</Button>
+</div>
+
+<Modal v-model="destructiveOpen" title="Delete workspace" size="sm" centered>
+  This action permanently removes the workspace and its saved views.
+
+  <template #footer>
+    <Group justify="flex-end">
+      <Button variant="default" @click="destructiveOpen = false">Cancel</Button>
+      <Button color="danger" @click="destructiveOpen = false">Delete permanently</Button>
+    </Group>
+  </template>
+</Modal>
+
 ```vue
 <template #footer>
   <Group justify="flex-end">
@@ -77,15 +97,28 @@ Do not make a destructive button the only obvious way to leave the dialog.
 
 `Button` already owns loading and disabled semantics, so compose those states rather than adding action-state props to Modal or Drawer.
 
+<div class="docs-preview docs-preview--row" data-docs-preview="dialog-loading-disabled-actions">
+  <Button variant="outline" @click="stateOpen = true">Preview saving state</Button>
+</div>
+
+<Modal v-model="stateOpen" title="Save settings" size="sm" centered>
+  While the save is in flight, the action row keeps its position and communicates the temporary state.
+
+  <template #footer>
+    <Group justify="flex-end">
+      <Button variant="default" disabled>Cancel</Button>
+      <Button loading>Saving</Button>
+    </Group>
+  </template>
+</Modal>
+
 ```vue
 <template #footer>
   <Group justify="flex-end">
     <Button variant="default" :disabled="saving" @click="open = false">
       Cancel
     </Button>
-    <Button :loading="saving" @click="save">
-      Saving
-    </Button>
+    <Button :loading="saving" @click="save">Saving</Button>
   </Group>
 </template>
 ```
@@ -102,6 +135,22 @@ Do not add another full-height scroll container around the whole Modal or Drawer
 
 The footer itself supports wrapping. Use `Group` with its default `wrap=true` when several actions may not fit on one row.
 
+<div class="docs-preview docs-preview--row" data-docs-preview="dialog-narrow-wrapping-actions">
+  <Button variant="light" @click="narrowOpen = true">Preview xs footer</Button>
+</div>
+
+<Modal v-model="narrowOpen" title="Continue setup" size="xs" centered>
+  The action group can wrap naturally instead of forcing horizontal overflow.
+
+  <template #footer>
+    <Group justify="flex-end" wrap>
+      <Button variant="transparent">Back</Button>
+      <Button variant="default">Save draft</Button>
+      <Button @click="narrowOpen = false">Continue</Button>
+    </Group>
+  </template>
+</Modal>
+
 ```vue
 <template #footer>
   <Group justify="flex-end" wrap>
@@ -117,6 +166,24 @@ Avoid forcing a single no-wrap action row inside `xs` Modal or Drawer sizes.
 ## Custom footer layouts
 
 The slot can contain status text and actions together. Keep the full-width layout inside your slot so doctui does not need business-specific footer props.
+
+<div class="docs-preview docs-preview--row" data-docs-preview="dialog-custom-footer">
+  <Button variant="subtle" @click="customOpen = true">Preview status + actions</Button>
+</div>
+
+<Modal v-model="customOpen" title="Publish article" size="md" centered>
+  Review the final article metadata before publishing.
+
+  <template #footer>
+    <Group justify="space-between" wrap style="width: 100%">
+      <Text size="sm" muted>Saved 2 minutes ago</Text>
+      <Group justify="flex-end">
+        <Button variant="default">Preview</Button>
+        <Button @click="customOpen = false">Publish</Button>
+      </Group>
+    </Group>
+  </template>
+</Modal>
 
 ```vue
 <template #footer>
