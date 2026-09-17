@@ -2,9 +2,9 @@
   "number": "38",
   "title": "docs: enforce complete public documentation coverage",
   "branch": "docs/issue-37-full-coverage",
-  "sha": "855b3a783f4e7c8446ab571f51a021df892a3b7f",
+  "sha": "9e8ddd1e7c338ce8ccf1c41a06429135c33f2f93",
   "repository": "OneTwoTen/doctui",
   "prUrl": "https://github.com/OneTwoTen/doctui/pull/38",
-  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/35176606377",
-  "generatedAt": "2026-09-17T03:02:33.352Z"
+  "runUrl": "https://github.com/OneTwoTen/doctui/actions/runs/35176746753",
+  "generatedAt": "2026-09-17T03:04:17.739Z"
 }
