@@ -175,18 +175,26 @@ async function main() {
         const viewportWidth = window.innerWidth;
         return {
           previewCount: previews.length,
-          documentOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+          documentOverflow:
+            document.documentElement.scrollWidth -
+            document.documentElement.clientWidth,
           overflowingPreviews: previews.filter((preview) => {
             const rect = preview.getBoundingClientRect();
             return rect.left < -1 || rect.right > viewportWidth + 1;
           }).length,
           transparentPreviews: previews.filter((preview) => {
             const background = getComputedStyle(preview).backgroundColor;
-            return background === "rgba(0, 0, 0, 0)" || background === "transparent";
+            return (
+              background === "rgba(0, 0, 0, 0)" ||
+              background === "transparent"
+            );
           }).length,
         };
       })()`);
-      assert(audit.previewCount > 0, `${path} has no rendered preview boundaries`);
+      assert(
+        audit.previewCount > 0,
+        `${path} has no rendered preview boundaries`,
+      );
       assert(
         audit.documentOverflow <= 1,
         `${path} overflows ${viewportLabel} viewport by ${audit.documentOverflow}px`,
