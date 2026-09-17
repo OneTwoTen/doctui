@@ -76,7 +76,10 @@ async function main() {
   const registryComponents = DOCTUI_REGISTRY.components;
   const registryNames = new Set(registryComponents.map(({ name }) => name));
   const expectedPackages = new Map(
-    registryComponents.map(({ name, package: packageName }) => [name, packageName]),
+    registryComponents.map(({ name, package: packageName }) => [
+      name,
+      packageName,
+    ]),
   );
 
   const coreIndex = await readFile("packages/core/src/index.ts", "utf8");
@@ -139,7 +142,9 @@ async function main() {
   }
 
   if (errors.length) {
-    throw new Error(`Documentation coverage regression:\n- ${errors.join("\n- ")}`);
+    throw new Error(
+      `Documentation coverage regression:\n- ${errors.join("\n- ")}`,
+    );
   }
 
   console.log(
