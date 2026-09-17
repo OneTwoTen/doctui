@@ -82,10 +82,25 @@ async function main() {
     ]),
   );
 
-  const coreIndex = await readFile("packages/core/src/index.ts", "utf8");
-  if (coreIndex.includes('export * from "./primitives/index"')) {
+  const publicIndex = await readFile(
+    "packages/core/src/public-index.ts",
+    "utf8",
+  );
+  if (publicIndex.includes("./primitives/index")) {
     errors.push(
-      "@doctui/core root still re-exports internal primitives; keep low-level primitives internal unless they are deliberately promoted into the public registry/docs contract",
+      "@doctui/core public entry re-exports internal primitives; promote a primitive into the registry/docs contract before exposing it publicly",
+    );
+  }
+
+  const workspaceConfig = JSON.parse(await readFile("tsconfig.base.json", "utf8"));
+  const corePath = workspaceConfig.compilerOptions?.paths?.["@doctui/core"];
+  if (
+    !Array.isArray(corePath) ||
+    corePath.length !== 1 ||
+    corePath[0] !== "./packages/core/src/public-index.ts"
+  ) {
+    errors.push(
+      "Workspace @doctui/core resolution must point at packages/core/src/public-index.ts so docs and Storybook exercise the real public surface",
     );
   }
 
@@ -148,7 +163,7 @@ async function main() {
   }
 
   console.log(
-    `Documentation coverage: ${registryComponents.length} registry components have VitePress live previews and Storybook coverage; internal primitives are not root exports`,
+    `Documentation coverage: ${registryComponents.length} registry components have VitePress live previews and Storybook coverage; internal primitives stay outside the public root package`,
   );
 }
 
