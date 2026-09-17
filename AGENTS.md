@@ -40,7 +40,7 @@ packages/
   hooks/             # Framework-level composables
   form/              # Form state/helpers
   notifications/     # Notification system
-  dates/             # Date components and utilities
+  dates/              # Date components and utilities
   mcp/               # @doctui/mcp-server
 scripts/              # Metadata/docs/llms generators
 docs/                 # Architecture, roadmap and contribution documents
@@ -101,6 +101,8 @@ Before implementing complex overlays or inputs, prefer shared primitives such as
 
 `Floating UI` may be used for positioning. Do not implement a custom popper/positioning engine.
 
+Low-level code under `packages/core/src/primitives` is internal by default. Package-local tests may import it through the internal source barrel, but the published `@doctui/core` root must use the dedicated public entry and must not expose an internal primitive accidentally. Promoting a primitive to public API requires an explicit product decision plus canonical registry metadata, VitePress docs/live preview, Storybook coverage and compatibility treatment.
+
 ## Accessibility
 
 For interactive components:
@@ -142,6 +144,8 @@ block. Register components globally in
 `apps/docs/.vitepress/theme/index.ts` (or import them locally) and load their
 public stylesheet. Do not leave PascalCase doctui tags as unresolved custom
 elements; verify the docs build/SSR output contains real component markup.
+
+`DOCTUI_REGISTRY.components` is the canonical release contract for public visual component coverage. Every component in that registry must have VitePress documentation, a real live VitePress preview, and Storybook coverage that imports and uses the component from its public `@doctui/*` package. Do not use a curated subset such as `QUALITY_PUBLIC_API` to claim complete documentation coverage. Run `bun run test:docs-coverage` whenever component registry metadata, public exports, VitePress previews or Storybook coverage changes.
 
 When the metadata registry exists, treat it as the shared machine-readable representation consumed by generated API docs, LLM artifacts and MCP. Do not manually maintain a conflicting second API description for those outputs.
 
@@ -220,8 +224,9 @@ Before finishing:
 1. Run the repository's existing formatter, lint, typecheck and relevant tests from `package.json`.
 2. Do not change package managers or lockfile format unless requested.
 3. Confirm Storybook/docs examples still build when affected.
-4. Summarize public API changes and compatibility impact.
-5. Leave unrelated files untouched.
-6. Confirm the component passes the visual quality gate; automated checks alone are not sufficient.
+4. Run `bun run test:docs-coverage` for any public component/documentation surface change and confirm registry-wide docs + Storybook coverage remains complete.
+5. Summarize public API changes and compatibility impact.
+6. Leave unrelated files untouched.
+7. Confirm the component passes the visual quality gate; automated checks alone are not sufficient.
 
 If the repository is still being bootstrapped and commands do not exist yet, do not invent passing test results. State exactly what could and could not be run.
