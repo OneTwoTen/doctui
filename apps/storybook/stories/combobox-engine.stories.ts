@@ -83,7 +83,13 @@ export const ControlledSelection: Story = {
           "onUpdate:modelValue": (
             value: string | number | readonly (string | number)[] | null,
           ) => {
-            if (!Array.isArray(value)) selected.value = value;
+            if (
+              value === null ||
+              typeof value === "string" ||
+              typeof value === "number"
+            ) {
+              selected.value = value;
+            }
           },
         }),
         h(
