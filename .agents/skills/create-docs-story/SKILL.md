@@ -13,6 +13,18 @@ For doctui, "documentation" means **both**:
 
 Do not consider a public component documented when only one of these surfaces is complete unless the task explicitly scopes one surface out.
 
+## Canonical coverage contract
+
+`DOCTUI_REGISTRY.components` is the canonical list of public visual components that must be documented. For every component in that registry:
+
+- VitePress must contain user documentation and at least one live rendered preview;
+- Storybook must import the component from its public `@doctui/*` package and actually use it in a story module;
+- `bun run test:docs-coverage` must pass.
+
+Do not use `QUALITY_PUBLIC_API` or another curated subset to claim complete documentation coverage. Those smaller contracts may provide deeper API checks, but full docs/Storybook coverage is registry-wide.
+
+Low-level code under `packages/core/src/primitives` is internal by default. Do not document or expose an internal primitive as normal public API merely because package-local tests use it. If a primitive is deliberately promoted publicly, add it to the canonical registry and give it the same VitePress, Storybook, metadata and compatibility coverage as every other public component.
+
 ## Mandatory live VitePress rendering
 
 Every public component documented in VitePress must be shown at least once as
@@ -43,7 +55,7 @@ attribute), in addition to compiling the Markdown.
 13. Ensure examples use only public APIs, except local Storybook-only demo components used to compose a foundation preview before corresponding public doctui components exist.
 14. Keep VitePress examples small enough to copy without unrelated setup; advanced Storybook stories may be larger when the composition itself is the lesson.
 15. Keep source metadata structured so docs generators can produce API tables and future `llms.txt` output.
-16. Run Storybook/docs builds when available.
+16. Run `bun run test:docs-coverage` plus Storybook/docs builds when available.
 
 ## Storybook coverage rule
 

@@ -21,16 +21,18 @@ Creating a new component under `packages/core` or substantially redesigning an e
 2. Study adjacent doctui components and shared types before designing the API.
 3. If Mantine is a reference, extract behavior/UX concepts only; explicitly translate React patterns into Vue patterns. Compare geometry, state visuals, focus treatment and customization surface in addition to prop names.
 4. Write down the proposed public API: props, emits, slots, exposed methods, state attributes, public CSS variables and style parts when applicable.
-5. Identify reusable lower-level behavior. Build/reuse an internal primitive or composable instead of duplicating it.
+5. Identify reusable lower-level behavior. Build/reuse an internal primitive or composable instead of duplicating it. Low-level core primitives stay internal by default; do not expose one from the public package entry unless it is deliberately promoted into the canonical registry and documented like any other public API.
 6. Write the smallest behavioral/regression tests for the new contract **before implementation**. Run the relevant test and confirm it fails for the expected missing behavior (red). If the environment cannot run tests, state that explicitly instead of claiming a red test.
 7. Implement the minimum semantic markup and behavior required to make the new tests pass (green), then add styling through existing theme tokens/CSS variables.
 8. Add keyboard/focus/ARIA behavior required by the widget pattern, with failing tests first for non-trivial interaction behavior.
 9. Refactor only after the relevant tests are green; keep behavior covered throughout the refactor.
-10. Add Storybook visual documentation: basic usage, meaningful variants/states, interactive behavior when relevant, theming/customization when relevant, and an advanced composition story when enough related doctui components exist.
-11. The advanced Storybook example must demonstrate realistic composition, normally by combining the new component with at least one other exported doctui component into a higher-level UI pattern. Do not treat a single component with many props as advanced composition.
-12. Add/update VitePress documentation and API metadata. Every meaningful public prop, variant, state, slot, theming/customization path or non-obvious behavior introduced by the change must have a representative copy-paste example where practical; do not stop at one minimal example when the API exposes more user-facing behavior.
-13. Run the repository's formatter, lint, typecheck, relevant tests, Storybook build and docs build when affected.
-14. Report public API decisions, accessibility behavior, red-to-green test coverage, Storybook composition coverage and any deliberate differences from the reference.
+10. Add the public visual component to the canonical `DOCTUI_REGISTRY.components` metadata source. Registry membership is the documentation/release contract, not an optional discovery aid.
+11. Add Storybook visual documentation: basic usage, meaningful variants/states, interactive behavior when relevant, theming/customization when relevant, and an advanced composition story when enough related doctui components exist. The story must import and use the component from its public `@doctui/*` package.
+12. The advanced Storybook example must demonstrate realistic composition, normally by combining the new component with at least one other exported doctui component into a higher-level UI pattern. Do not treat a single component with many props as advanced composition.
+13. Add/update VitePress documentation, a real live rendered VitePress preview, and API metadata. Every meaningful public prop, variant, state, slot, theming/customization path or non-obvious behavior introduced by the change must have a representative copy-paste example where practical; do not stop at one minimal example when the API exposes more user-facing behavior.
+14. Run `bun run test:docs-coverage`. A registry component without both live VitePress coverage and Storybook coverage is incomplete and must fail the release gate.
+15. Run the repository's formatter, lint, typecheck, relevant tests, Storybook build and docs build when affected.
+16. Report public API decisions, accessibility behavior, red-to-green test coverage, registry/docs coverage, Storybook composition coverage and any deliberate differences from the reference.
 
 ## Field/input component rule
 
@@ -61,6 +63,8 @@ Do not write implementation first and add tests afterward merely to mirror the i
 
 Documentation is part of the public API contract and includes **both VitePress and Storybook**.
 
+`DOCTUI_REGISTRY.components` is the canonical list for public visual component coverage. Do not use a curated subset such as `QUALITY_PUBLIC_API` to claim full docs coverage. Adding a registry component must be accompanied by both documentation surfaces in the same change, and `bun run test:docs-coverage` must stay green.
+
 VitePress examples should cover the useful API surface with copy-paste code, typically including:
 
 - basic usage,
@@ -86,6 +90,7 @@ Prefer small copy-pasteable VitePress examples over prose-only descriptions. Pre
 - [ ] Vue-first API (`v-model`, slots, emits where appropriate)
 - [ ] no Reka UI/component framework dependency
 - [ ] shared primitives reused
+- [ ] internal primitives remain outside the published root unless deliberately promoted
 - [ ] theme tokens/CSS variables used
 - [ ] `size` scales meaningful geometry when exposed
 - [ ] wrapped native-control attrs have an explicit root/control ownership contract
@@ -94,9 +99,11 @@ Prefer small copy-pasteable VitePress examples over prose-only descriptions. Pre
 - [ ] relevant behavior started with a failing test (red) before implementation
 - [ ] keyboard/focus behavior tested
 - [ ] disabled/loading/error states covered when applicable
-- [ ] Storybook covers basic, meaningful variants/states and interactions
+- [ ] component is present in canonical registry metadata
+- [ ] Storybook covers basic, meaningful variants/states and interactions using the public package import
 - [ ] Storybook includes a realistic advanced multi-component composition when applicable
-- [ ] VitePress docs include sufficient copy-paste examples for the public API surface
+- [ ] VitePress docs include a real live preview and sufficient copy-paste examples for the public API surface
+- [ ] `bun run test:docs-coverage` passes for the full registry
 - [ ] docs/API metadata added and synchronized
 - [ ] Storybook and docs builds pass
 - [ ] no undocumented breaking API change

@@ -7,6 +7,10 @@ alwaysApply: false
 
 - Public examples must use idiomatic Vue and compile.
 - Each public component needs basic usage plus its important variants and states.
+- The canonical `DOCTUI_REGISTRY.components` list is the release contract for public visual components. Every registry component must have VitePress documentation, at least one real live VitePress preview, and Storybook coverage imported from its public `@doctui/*` package.
+- Run `bun run test:docs-coverage` when public component metadata, package exports, VitePress previews or Storybook coverage changes. Adding a registry component without both documentation surfaces is a regression.
+- A text mention is not Storybook coverage. A story must import the component from its public package and actually use it in a story module.
+- Low-level code under `packages/core/src/primitives` is internal by default. Do not expose it from the public core entry unless it is deliberately promoted into the canonical registry and receives the same docs, Storybook, metadata and compatibility treatment as other public APIs.
 - Storybook should demonstrate behavior, not just static appearance.
 - Every public component story module must register the actual component in Storybook metadata and expose functional `args`/`argTypes` Controls for the meaningful public props. The primary `Basic`/`Default`/`Playground` story must consume `args`; a primary story showing `This story has no controls` is a documentation failure.
 - Controlled stories that expose `modelValue`/`v-model` through Controls must keep canvas interactions and the Controls panel synchronized. Use Storybook `useArgs` (or the current supported equivalent) to write `update:modelValue` changes back into args; do not use an isolated local `ref` as the primary Playground source of truth.
